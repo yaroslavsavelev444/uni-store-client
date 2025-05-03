@@ -1,0 +1,149 @@
+/* Основной стиль для кнопки */
+.btn {
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: .9rem;
+  font-weight: 500;
+  width: auto;
+}
+
+/* Кнопка с фоном */
+
+[data-theme="dark"] .btn {
+  background-color: #000000;
+}
+
+[data-theme="light"] .btn {
+  background-color: #fff;
+  color: #333;
+}
+
+.btn-with-bg {
+  background-color: #333;
+}
+
+.btn-with-bg:hover {
+  background-color: #555;
+}
+
+/* Кнопка без фона (просто текст) */
+.btn-no-bg {
+  background-color: transparent;
+  color: black; /* Цвет текста при отсутствии фона */
+}
+
+.btn-no-bg:hover {
+  color: red; 
+}
+
+/* Эффект при нажатии */
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* Кнопка с лайка */
+.like-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 6px;
+  user-select: none;
+  transition: transform 0.1s ease-in-out;
+}
+
+.like-button:active {
+  transform: scale(0.9);
+}
+
+.heart-icon {
+  width: 24px;
+  height: 24px;
+  stroke: #555;
+  transition: stroke 0.2s ease-in-out, fill 0.2s ease-in-out;
+}
+
+.heart-icon.liked {
+  fill: red;
+  stroke: red;
+}
+
+.like-count {
+  font-size: 16px;
+  color: #333;
+}
+
+[data-theme="dark"] .like-count {
+  color: #fff;
+}
+
+
+[data-theme="light"] .like-count {
+  color: #333;
+}
+
+.main-btn{
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  color: white;
+}
+
+.main-download-btn{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.main-download-text{
+  text-align: left;
+}
+.download-buttons {
+  display: flex;
+  gap: 15px;
+  flex-direction: row;
+  margin-top: 20px;
+  width: auto;
+}
+
+.main-download-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 16px;
+  color: white;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.main-download-btn .main-download-text {
+  margin-left: 10px;
+}
+
+.appstore {
+  background-color: #000;
+}
+
+.googleplay {
+  background-color: #3ddc84;
+}
+
+.main-download-btn:hover {
+  opacity: 0.8;
+}
+.main-download-text p, .main-download-text h4{
+  margin: 0;
+}
+
+.arrow-btn{
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}

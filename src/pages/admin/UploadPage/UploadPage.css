@@ -1,0 +1,53 @@
+.image-preview-item img{
+  width: 100px;
+  height: 100px;
+}
+/* Контейнер для всех карточек */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 280px — минимальная ширина для каждой карточки */
+  gap: 20px; /* Отступы между карточками */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.upload-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.upload-page-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.upload-page {
+    width: 50%;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .attributes-section {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .attribute-item {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+  
+
+  .image-preview img {
+    margin-top: 10px;
+  }

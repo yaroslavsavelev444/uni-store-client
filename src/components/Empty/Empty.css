@@ -1,0 +1,32 @@
+.empty-state {
+    text-align: center;
+    padding: 20px;
+    color: black;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .empty-icon {
+    font-size: 24px;
+  }
+  
+  .empty-text {
+    margin-top: 10px;
+    font-size: 18px;
+  }
+
+  .empty-face{
+    font-size: 30px;
+  }
+  [data-theme="dark"] .empty-face,
+  [data-theme="dark"] .empty-text {
+    color: white;
+  }
+
+  [data-theme="light"] .empty-face ,
+  [data-theme="light"] .empty-text {
+    color: black;
+  }

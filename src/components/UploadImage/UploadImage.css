@@ -1,0 +1,15 @@
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 200px; /* ограничиваем высоту */
+    overflow-y: auto;  /* скролл при переполнении */
+    margin-top: 10px;
+  }
+  
+  .image-preview img {
+    width: 80px;  /* или любое подходящее значение */
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+  }

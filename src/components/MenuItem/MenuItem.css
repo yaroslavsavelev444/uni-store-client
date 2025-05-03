@@ -1,0 +1,14 @@
+
+.menu-item {
+    margin: 10px 0;
+  }
+  
+  .menu-link {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .menu-link:hover {
+    color: #0056b3;
+  }

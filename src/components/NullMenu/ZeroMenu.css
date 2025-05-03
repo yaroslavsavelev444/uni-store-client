@@ -1,0 +1,33 @@
+.zero-menu {
+    width: 100%;
+    background-color: gray; /* нежный светлый фон */
+    padding: 8px 0;
+    font-size: 14px;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .zero-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .contact-info a,
+  .social a {
+    color: #212529;
+    text-decoration: none;
+    margin-left: 16px;
+    transition: color 0.3s;
+  }
+  
+  .contact-info a:hover,
+  .social a:hover {
+    color: #007bff;
+  }
