@@ -1,0 +1,60 @@
+.contact-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    padding: 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  
+  .contact-meta {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+  }
+  
+  .contact-meta span {
+    display: inline-block;
+  }
+  
+  .contact-message {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  
+  .contact-date {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  .contact-item .contact-meta a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .contact-item .contact-meta a:hover {
+    text-decoration: underline;
+  }
+  
+  .contact-item .contact-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .contact-item .contact-actions button:first-child {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .contact-item .contact-actions button:last-child {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .contact-item .contact-actions button:hover {
+    opacity: 0.8;
+  }

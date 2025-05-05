@@ -33,6 +33,12 @@ export default class AdminStore {
     });
   }
 
+  setContacts(contacts) {
+    runInAction(() => {
+      this.contacts = contacts;
+      console.log("Contacts set to:", this.contacts);
+    });
+  }
   async fetchUsers() {
     try {
       const response = await AdminService.getUsers();
@@ -165,6 +171,40 @@ export default class AdminStore {
     } catch (error) {
       console.log("Ошибка при редактировании категории:", error.response?.data?.message);
     } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async fetchContacts () {
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.getContacts();
+      console.log("fetchContactsresponse", response.data);
+      this.setContacts(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async updateContactStatus(contactId, status) {
+    if(!contactId || !status){
+      console.log("Не передан контакт");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.updateContactStatus(contactId, status);
+      if(response.status === 200){
+        this.fetchContacts();
+      }
+      console.log("updateContactStatusresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
       this.setIsLoading(false);
     }
   }

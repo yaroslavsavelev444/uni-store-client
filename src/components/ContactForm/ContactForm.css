@@ -1,0 +1,75 @@
+.contact-wrapper {
+  padding: 40px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.contact-card {
+  border-radius: 10px;
+  padding: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#contact_form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.resize-none {
+  resize: none;
+  min-height: 120px;
+}
+
+.form-footer {
+  display: flex;
+  gap: 30px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  border-top: 1px solid #eaeaea;
+  padding-top: 30px;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-column h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.footer-contact,
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-contact a,
+.footer-social a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.footer-contact i,
+.footer-social a {
+  font-size: 20px;
+}

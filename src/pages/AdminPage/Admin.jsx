@@ -8,11 +8,8 @@ export default function Admin() {
     { label: 'Комментарии', section: 'comments', apiEndpoint: 'reviews' },
     { label: 'Отзывы', section: 'goods_comments', apiEndpoint: 'goods_comments' },
     { label: 'Консультация', section: 'consult', apiEndpoint: 'contacts' },
-    { label: 'Консультации по товару', section: 'consult_goods', apiEndpoint: 'consult_good_page' },
-    { label: 'Выгрузка', section: 'upload', apiEndpoint: 'upload' },
     { label: 'Категории', section: 'categories', apiEndpoint: 'categories' },
-    { label: 'Товары', section: 'goods', apiEndpoint: 'item_base_info' },
-    { label: 'Персонал', section: 'state', apiEndpoint: 'state' },
+    { label: 'Товары', section: 'upload', apiEndpoint: 'upload' },
     { label: 'Контактные данные', section: 'data_org', apiEndpoint: 'data_org' },
   ];
 

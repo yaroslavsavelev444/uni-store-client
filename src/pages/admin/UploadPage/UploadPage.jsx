@@ -6,22 +6,24 @@ import Input from "../../../components/Input/Input";
 import Button from "../../../components/Buttons/Button";
 import "./UploadPage.css"; // Стиль для страницы
 import UploadImage from "../../../components/UploadImage/UploadImage"; // Компонент для загрузки изображений
-import { useNavigate } from "react-router-dom";
 import Modal from "../../../components/Modal/Modal";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import Empty from "../../../components/Empty/Empty";
 import { API_URL } from "../../../http/axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import BackBtn from "../../../components/BackBtn/BackBtn";
 
 const UploadPage = () => {
   const { adminStore } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const navigate = useNavigate();
   const [deletedImages, setDeletedImages] = useState([]);
   const [product, setProduct] = useState({
     title: "",
     description: "",
     priceIndividual: "",
+    showOnMainPage: false,
     priceLegalEntity: "",
     isAvailable: true,
     totalQuantity: "",
@@ -221,7 +223,7 @@ const UploadPage = () => {
 
   return (
     <div className="upload-page-wrapper">
-      <Button onClick={() => navigate(-1)}>Назад</Button>
+       <BackBtn />
       <div className="upload-page">
         {productStore.products.length === 0 && (
           <Empty text={"Товары отсуствуют"} />
@@ -321,12 +323,12 @@ const UploadPage = () => {
                     value={attribute.value}
                     onChange={(e) => handleAttributeChange(index, e)}
                   />
-                  <button onClick={() => removeAttribute(index)}>
-                    Удалить
-                  </button>
+                  <Button onClick={() => removeAttribute(index)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
                 </div>
               ))}
-              <button onClick={addAttribute}>Добавить характеристику</button>
+              <Button onClick={addAttribute}>Добавить характеристику</Button>
             </div>
 
             {/* Кнопка отправки */}
@@ -409,6 +411,21 @@ const UploadPage = () => {
               Продукт доступен
             </label>
 
+            <label>
+              <input
+                type="checkbox"
+                name="showOnMainPage"
+                checked={product.showOnMainPage}
+                onChange={(e) =>
+                  setProduct((prev) => ({
+                    ...prev,
+                    showOnMainPage: e.target.checked,
+                  }))
+                }
+              />
+              Показывать на главной
+            </label>
+
             {/* Категория */}
             <select
               name="categoryId"
@@ -445,7 +462,7 @@ const UploadPage = () => {
                   style={{width: "100%"}}
                 />
                 <Button onClick={() => removeAttribute(index)} color="red">
-                  Удалить
+                  <FontAwesomeIcon icon={faTrash} style={{margin: "0"}} color="red" />
                 </Button>
               </div>
             ))}

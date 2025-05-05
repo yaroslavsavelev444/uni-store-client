@@ -37,8 +37,9 @@ import CategoriesPage from "./pages/admin/CategoriesPage/CategoriesPage";
 import GoodsPage from "./pages/admin/GoodsPage/GoodsPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"; // Импортируем новый компонент
 import { Loader } from "lucide-react";
-import DataOrg from "./pages/admin/CompanyData/CompanyData";
 import CompanyData from "./pages/admin/CompanyData/CompanyData";
+import ScrollToTopButton from "./components/ScrollToTopButton/ScrollToTopButton";
+import ShipAndPay from "./pages/ShipAndPay/ShipAndPay";
 
 const AppContent = observer(() => {
   const { store } = useContext(Context);
@@ -53,6 +54,10 @@ const AppContent = observer(() => {
     };
     checkAuthStatus();
   }, []);
+  useEffect(() => {
+    productStore.fetchCompany();
+  }, []);
+  
 
   if (!isLoaded) {
     return (
@@ -65,6 +70,7 @@ const AppContent = observer(() => {
   const hideFooter = ["/chats", "/auth", "/reset-password", "*"].some((path) =>
     location.pathname.startsWith(path)
   );
+
 
   return (
     <div className="App">
@@ -79,13 +85,14 @@ const AppContent = observer(() => {
           <Content />
           {!hideFooter && <FooterBar />}
           <EmailConfirmationOverlay />
+          <ScrollToTopButton /> 
         </ThemeProvider>
       </ToastProvider>
     </div>
   );
 });
 
-const Content = () => {
+const Content = observer(() => {
   const location = useLocation();
   const isSpecialPage = ["/", "/chats", "/chats/:userId", "/auth"].includes(
     location.pathname
@@ -101,9 +108,10 @@ const Content = () => {
         <Routes>
           {/* Обычные маршруты */}
           <Route path="/" element={<Home />} />
-          <Route path="/cataloq" element={<Cataloq />} />
-          <Route path="/items-list" element={<ItemsList />} />
-          <Route path="/item-page" element={<ItemPage />} />
+          <Route path="/category" element={<Cataloq />} />
+          <Route path="/ship-and-pay" element={<ShipAndPay />} />
+          <Route path="/category/:categoryId" element={<ItemsList />} />
+          <Route path="/category/:categoryId/:id" element={<ItemPage />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
@@ -164,12 +172,12 @@ const Content = () => {
       )}
     </div>
   );
-};
+});
 
-const App = () => (
+const App = observer(() => (
   <Router>
     <AppContent />
   </Router>
-);
+));
 
 export default App;

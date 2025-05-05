@@ -24,8 +24,8 @@
   }
   
   .profile-image img {
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
     object-fit: cover;
     border-radius: 100%;
     border: 2px solid #ccc;
@@ -33,7 +33,7 @@
   
   .profile-name a,
   .profile-name p {
-    font-size: 16px;
+    font-size: 25px;
     font-weight: 600;
     color: #333;
     text-decoration: none;

@@ -65,4 +65,14 @@ export default class adminService {
   static async deleteCompany(id){
     return $api.delete(`/admin/deleteOrgData/${id}`);
   }
+
+  //CONTACTS 
+  
+  static async getContacts() {
+    return $api.get("/admin/getContacts");
+  }
+
+  static async updateContactStatus(contactId, status) {
+    return $api.post("/admin/updateContactStatus", { contactId, status });
+  }
 }

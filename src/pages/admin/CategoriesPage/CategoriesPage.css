@@ -6,7 +6,6 @@
     align-items: center;
 }
 .categories-page{
-    width: 60%;
     flex-wrap: wrap;
     flex-direction: row;
     display: flex;

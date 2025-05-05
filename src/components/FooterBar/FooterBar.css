@@ -63,7 +63,7 @@
   text-align: center;
 }
 
-[data-theme="dark"] .footer {
+/* [data-theme="dark"] .footer {
   color: white;
   background-color: #1e1e1e;
 }
@@ -71,7 +71,7 @@
 [data-theme="light"] .footer {
   color: black;
   background-color: #ffffff;
-}
+} */
 
 /* Social Media Icons */
 .social-links {

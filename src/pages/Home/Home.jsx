@@ -1,14 +1,24 @@
 import React from 'react'
 import ContentBlock from '../../components/UploadedMaterial/UploadedMaterial'
-import Slider from '../../components/Slider/Slider'
-import ItemsSelection from '../../components/ItemsSelection/ItemsSelection'
+import PageHeader from '../../components/PageHeader/PageHeader'
+import ProductShell from '../../components/ProductShell/ProductShell'
+import PromoBlock from '../../components/PromoBlock/PromoBlock'
+import FAQSection from '../../components/FAQSection/FAQSection'
 
 export default function Home() {
   return (
-    <div>
+    <div style={{flexDirection:"column", display:"flex", gap:"20px"}}>
       <ContentBlock />
-      <Slider />
-      <ItemsSelection />
+      <PromoBlock
+        title="При заказе от 3 товаров"
+        subtitle="Скидка 10%"
+        image="/promo/complect.png"
+        productId="1"
+        reversed
+      />
+      <PageHeader title="Популярные товары" />
+        <ProductShell showOnMainPage={true}/>
+      <FAQSection />
     </div>
   )
 }

@@ -5,7 +5,7 @@ body {
   }
   
   body.dark-theme {
-    --bg-color: #121212;
+    --bg-color: #000000;
     --text-color: #e0e0e0;
     --nav-color: #1e1e1e;
   }

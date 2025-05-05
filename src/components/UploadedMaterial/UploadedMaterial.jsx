@@ -1,77 +1,66 @@
-// components/UploadedMaterial.jsx
-import React, { useState, useEffect } from 'react';
-import { Typewriter } from 'react-simple-typewriter';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import './UploadedMaterial.css'; // Стилями займёмся отдельно
+import { Typewriter } from 'react-simple-typewriter';
+import './UploadedMaterial.css';
 
-const UploadedMaterial = ({ files = [], overlayText = '', buttonText = 'К покупкам', buttonLink = '/catalog' }) => {
-  const [textFinished, setTextFinished] = useState(false);
-  const [scrollOpacity, setScrollOpacity] = useState(1);
+const UploadedMaterial = () => {
+  const [files, setFiles] = useState([]);
+  const [caption, setCaption] = useState('');
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const newOpacity = Math.max(0, 1 - currentScrollY / 300);
-      setScrollOpacity(newOpacity);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    fetch('/materials.json')
+      .then((res) => res.json())
+      .then((data) => {
+        setFiles(data.files || []);
+        setCaption(data.caption || '');
+      })
+      .catch((err) => console.error('Ошибка загрузки materials.json:', err));
   }, []);
 
+  const renderMedia = () =>
+    files.map((fileUrl, index) => {
+      const ext = fileUrl.split('.').pop().toLowerCase();
+      if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+        return <img key={index} src={fileUrl} alt={`uploaded-${index}`} className="uploaded-image" />;
+      } else if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) {
+        return (
+          <video
+            key={index}
+            src={fileUrl}
+            className="uploaded-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            style={{width:'100%'}}
+          />
+        );
+      }
+      return null;
+    });
+
   return (
-    <div className="uploaded-material-wrapper" style={{ opacity: scrollOpacity, transition: 'opacity 0.3s ease' }}>
-      {overlayText && (
+    <div className="uploaded-material-wrapper">
+      <div className="media-content">{renderMedia()}</div>
+
+      {caption && (
         <div className="overlay-text">
           <Typewriter
-            words={[overlayText]}
+            words={[caption]}
             cursor
             cursorStyle="|"
-            typeSpeed={80}
+            typeSpeed={70}
             delaySpeed={1000}
-            onLoopDone={() => setTextFinished(true)}
-            onType={() => {}}
-            onDone={() => setTextFinished(true)}
           />
         </div>
-      )}
-
-      <div className="media-content">
-        {files.map((file, index) => {
-          const extension = file.split('.').pop().toLowerCase();
-          if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
-            return <img key={index} src={file} alt={`uploaded-${index}`} className="uploaded-image" />;
-          } else if (['mp4', 'avi', 'mov', 'wmv', 'mkv'].includes(extension)) {
-            return (
-              <video
-                key={index}
-                src={file}
-                className="uploaded-video"
-                autoPlay
-                loop
-                muted
-                preload="auto"
-              />
-            );
-          }
-          return null;
-        })}
-      </div>
-
-      {textFinished && (
-        <a href={buttonLink}>
-          <button className="shop-btn">{buttonText}</button>
-        </a>
       )}
     </div>
   );
 };
 
 UploadedMaterial.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.string),
-  overlayText: PropTypes.string,
-  buttonText: PropTypes.string,
-  buttonLink: PropTypes.string,
+  role: PropTypes.string.isRequired,
 };
 
 export default UploadedMaterial;

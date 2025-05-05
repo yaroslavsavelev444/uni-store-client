@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context, productStore } from "../../../main";
-import { useNavigate } from "react-router-dom";
 import Modal from "../../../components/Modal/Modal";
 import Button from "../../../components/Buttons/Button";
 import CompanyItem from "../../../components/CompanyItem/CompanyItem";
 import Input from "../../../components/Input/Input";
 import UploadImage from "../../../components/UploadImage/UploadImage";
 import { observer } from "mobx-react-lite";
+import BackBtn from "../../../components/BackBtn/BackBtn";
 
 const CompanyData = () => {
   const { adminStore } = useContext(Context);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const navigate = useNavigate();
 
   const [companyData, setCompanyData] = useState({
     companyName: "",
@@ -99,7 +98,7 @@ const CompanyData = () => {
 
   return (
     <div>
-      <Button onClick={() => navigate(-1)}>Назад</Button>
+       <BackBtn />
       <h2>Категории</h2>
       <div className="inputs-wrapper">
         {productStore?.company?._id ? (

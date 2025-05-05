@@ -1,0 +1,126 @@
+
+.contact-section-wrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.contact-section {
+  width: 80%;
+    margin: 3% 0;
+    display: flex;
+    border-radius: 20px;
+    padding: 2%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .contact-button {
+    padding: 12px 20px;
+    border: 1px solid #000;
+    cursor: pointer;
+    width: 35%;
+    height: 100px;
+  }
+  
+  .contact-button-text {
+    text-transform: uppercase;
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 100;
+  }
+  
+  .contact-info {
+    display: flex;
+    gap: 40px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+  }
+  
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .contact-desc {
+    text-transform: uppercase;
+    font-size: 1em;
+    margin: 0;
+  }
+  
+  .contact-link {
+    font-size: 1.2em;
+    color: orangered !important;
+    text-decoration: none;
+  }
+  
+  .contact-icons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .contact-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid orangered;
+    border-radius: 50%;
+  }
+  
+  .popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .popup {
+    background-color: #fff;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 8px;
+  }
+  
+  .popup-title,
+  .popup-subtitle {
+    text-align: center;
+  }
+  
+  .popup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .popup-input {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .popup-submit {
+    padding: 10px;
+    border: 1px solid #000;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .popup-success {
+    color: green;
+    text-align: center;
+    margin-top: 10px;
+  }

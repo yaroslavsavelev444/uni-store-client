@@ -1,11 +1,9 @@
 .product-card {
   width: 100%;
   max-width: 300px;
-  background-color: #1e1e2f;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-  font-family: 'Segoe UI', sans-serif;
   color: #f4f4f4;
   transition: transform 0.3s;
 }
@@ -66,12 +64,11 @@
 }
 
 .product-meta {
-  font-size: 0.9rem;
-  margin-bottom: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #cccccc;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px 0;
 }
 
 .product-status {

@@ -1,25 +1,25 @@
 // components/QuantityRegulator.js
 import React from "react";
 import "./QuantityRegulator.css";
+import Button from "../Buttons/Button";
 
-const QuantityRegulator = ({ quantity, onIncrease, onDecrease, max }) => {
+const QuantityRegulator = ({ quantity, onIncrease, onDecrease, max, min }) => {
   return (
     <div className="quantity-regulator">
-      <button
-        className="quantity-btn"
+      <Button
         onClick={onDecrease}
-        disabled={quantity <= 1}
+        disabled={quantity <= min}
       >
         −
-      </button>
+      </Button>
       <span className="quantity-display">{quantity}</span>
-      <button
-        className="quantity-btn"
+      <Button
         onClick={onIncrease}
         disabled={quantity >= max}
+        
       >
         +
-      </button>
+      </Button>
     </div>
   );
 };

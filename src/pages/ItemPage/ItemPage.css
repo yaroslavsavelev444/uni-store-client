@@ -1,0 +1,39 @@
+.item-page-wrapper {
+    padding: 20px;
+  }
+  
+  .item-page-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Четко: 2 колонки */
+    gap: 20px;
+  }
+  
+  .item-block {
+    border-radius: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .product-actions-column{
+    display: flex;
+    flex-direction: row;
+
+    gap: 20px;
+  }
+
+  .actions-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  /* Адаптация под мобилку */
+  @media (max-width: 768px) {
+    .item-page-grid {
+      grid-template-columns: 1fr; /* Только одна колонка */
+    }
+  }

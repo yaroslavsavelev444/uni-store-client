@@ -6,7 +6,7 @@ import { FaTelegram, FaVk, FaYoutube } from "react-icons/fa";
 const FooterBar = () => {
 
   return (
-    <footer className="footer">
+    <footer className="block-background footer">
       <div className="footer-content">
         <div className="footer-body footer-uni">
           <div className="footer-body-content">

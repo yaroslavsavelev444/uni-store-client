@@ -1,0 +1,17 @@
+.description-wrapper {
+    padding: 5% 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.description-container{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.description{
+    width: 90%;
+    text-align: left;
+}

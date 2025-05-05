@@ -4,26 +4,31 @@
     padding: 8px 0;
     font-size: 14px;
     position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
   
   .zero-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
+    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .social{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
   }
   
   .contact-info a,
   .social a {
     color: #212529;
     text-decoration: none;
-    margin-left: 16px;
     transition: color 0.3s;
   }
   

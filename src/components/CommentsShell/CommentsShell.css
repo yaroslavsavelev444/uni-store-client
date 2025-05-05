@@ -1,0 +1,7 @@
+.comments-shell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 20px 0;
+    justify-content: flex-start;
+  }

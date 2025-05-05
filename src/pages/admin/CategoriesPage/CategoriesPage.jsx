@@ -8,11 +8,11 @@ import Button from "../../../components/Buttons/Button";
 import Modal from "../../../components/Modal/Modal";
 import { observer } from "mobx-react-lite";
 import "./CategoriesPage.css";
-import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
+import BackBtn from "../../../components/BackBtn/BackBtn";
 const CategoriesPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-  const navigate = useNavigate(); // Инициализация хука navigate
   const [category, setCategory] = useState({
     title: "",
     subTitle: "",
@@ -89,9 +89,13 @@ const CategoriesPage = () => {
     setModalVisible(true);
   };
 
+  if(productStore.isLoading || adminStore.isLoading){
+    return <Loader size={50}/>
+  }
+
   return (
     <div className="categories-page-wrapper">
-      <Button onClick={() => navigate(-1)}>Назад</Button>
+     <BackBtn />
       <h2>Категории</h2>
       <div className="categories-page">
         {productStore.categories.length === 0 && (

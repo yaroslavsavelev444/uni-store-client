@@ -1,0 +1,16 @@
+.user-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .placeholder-avatar {
+    background-color: #ccc;
+  }

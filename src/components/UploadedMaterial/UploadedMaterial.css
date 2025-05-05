@@ -1,52 +1,39 @@
 .uploaded-material-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    text-align: center;
-    background: #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .overlay-text {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 20px;
-    transition: opacity 0.3s ease;
-  }
-  
-  .media-content {
-    width: 100%;
-    max-height: 70vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .uploaded-image,
-  .uploaded-video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-  }
-  
-  .shop-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    background-color: #ff6f61;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-  }
-  
-  .shop-btn:hover {
-    background-color: #ff3b2e;
-  }
+  position: relative;
+  text-align: center;
+}
+
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 5px #000;
+  pointer-events: none; /* чтобы клик проходил сквозь текст, если нужно */
+}
+.media-content {
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+
+
+.uploaded-video, .uploaded-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.upload-form {
+  margin-bottom: 2rem;
+}
+
+.upload-form input[type="file"],
+.upload-form input[type="text"] {
+  display: block;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+}

@@ -9,7 +9,7 @@ import ThemeToggle from "../ThemeToggler/ThemeToggle";
 
 const NavBar = () => {
   const { store } = useContext(Context);
-  const [lastScrollY, setLastScrollY] = useState(0);  // Последнее положение прокрутки
+  const [lastScrollY, setLastScrollY] = useState(0); // Последнее положение прокрутки
   const [hidden, setHidden] = useState(false); // Состояние скрытого навбара
   const [searchVisible, setSearchVisible] = useState(false);
   const [search, setSearch] = useState("");
@@ -35,8 +35,15 @@ const NavBar = () => {
   }, [lastScrollY]);
 
   return (
-    <header className={`header ${hidden ? "hidden" : ""}`}>
+    <header className={` block-background header ${hidden ? "hidden" : ""}`}>
       <div className="header-container" data-aos="fade-down">
+        <div className="header-logo-wrapper">
+    {store?.user?.logoUrl ? (
+      <img src={store.user.logoUrl} alt="Логотип" className="header-logo" />
+    ) : (
+      <div className="header-logo-placeholder" />
+    )}
+  </div>
         <nav className="header-nav">
           <NavLink
             to="/"
@@ -45,7 +52,7 @@ const NavBar = () => {
             Главная
           </NavLink>
           <NavLink
-            to="/cataloq"
+            to="/category"
             className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
           >
             Каталог
@@ -54,13 +61,16 @@ const NavBar = () => {
             to="/cart"
             className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
           >
-            Корзина
+            <span className="cart-link-wrapper">
+              Корзина
+               <span className="cart-indicator" />
+            </span>
           </NavLink>
           <NavLink
             to="/about"
             className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
           >
-            О нас 
+            О нас
           </NavLink>
           <NavLink
             to="/contacts"
@@ -71,45 +81,53 @@ const NavBar = () => {
           {store.isAuth ? (
             <NavLink
               to="/profile"
-              className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
+              className={({ isActive }) =>
+                isActive ? "nav-active" : "nav-link"
+              }
             >
               {store.user.name}
             </NavLink>
           ) : (
             <NavLink
               to="/auth"
-              className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
+              className={({ isActive }) =>
+                isActive ? "nav-active" : "nav-link"
+              }
             >
               Аккаунт
             </NavLink>
           )}
-        <div className="actions">
-  {!searchVisible && (
-    <i
-      className="fa-solid fa-magnifying-glass"
-      id="searchIcon"
-      style={{ color: "#c0c0c0", cursor: "pointer" }}
-      onClick={() => setSearchVisible(true)}
-    />
-  )}
-  <ThemeToggle />
-</div>
-
-        {searchVisible && (
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Введите слово..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-            />
-            <button onClick={() => { setSearch(""); setSearchVisible(false); }}>
-              ✖
-            </button>
+          <div className="actions">
+            {!searchVisible && (
+              <i
+                className="fa-solid fa-magnifying-glass"
+                id="searchIcon"
+                style={{ color: "#c0c0c0", cursor: "pointer" }}
+                onClick={() => setSearchVisible(true)}
+              />
+            )}
+            <ThemeToggle />
           </div>
-        )}
 
+          {searchVisible && (
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Введите слово..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                autoFocus
+              />
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setSearchVisible(false);
+                }}
+              >
+                ✖
+              </button>
+            </div>
+          )}
         </nav>
       </div>
     </header>

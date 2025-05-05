@@ -2,13 +2,16 @@ import { makeAutoObservable, runInAction } from "mobx";
 import ProductService from "../services/productService";
 
 export default class ProductStore {
+  isLoading = false;
   categories = [];
   products = [];
   reviews = [];
   orderReviews = [];
   company = {};
-
-
+  currentProduct = {};
+  cart = [];
+  mainMaterials = [];
+  comments = [];
   constructor() {
     makeAutoObservable(this);
   }
@@ -17,6 +20,12 @@ export default class ProductStore {
     runInAction(() => {
       this.categories = categories;
       console.log("Categories set to:", this.categories);
+    });
+  }
+  setIsLoading(bool) {
+    runInAction(() => {
+      this.isLoading = bool;
+      console.log("Loading set to:", this.isLoading);
     });
   }
 
@@ -39,57 +48,262 @@ export default class ProductStore {
       console.log("Reviews set to:", this.reviews);
     });
   }
+
+  setCart (cart) {
+    runInAction(() => {
+      this.cart = cart;
+      console.log("Cart set to:", this.cart);
+    });
+  }
   setOrderReviews(orderReviews) {
     runInAction(() => {
       this.orderReviews = orderReviews;
       console.log("Order reviews set to:", this.orderReviews);
     });
   }
+  setComments(comments) {
+    runInAction(() => {
+      this.comments = comments;
+      console.log("Comments set to:", this.comments);
+    });
+  }
+  setCurrentProduct(product) {
+    runInAction(() => {
+      this.currentProduct = product;
+      console.log("Current product set to:", this.currentProduct);
+    });
+  }
+
+  //MATERIALS 
+  setMainMaterials(mainMaterials) {
+    runInAction(() => {
+      this.mainMaterials = mainMaterials;
+      console.log("Main materials set to:", this.mainMaterials);
+    });
+  }
+  
+
+  async fetchCart () {
+    try {
+      const response = await ProductService.getCart();
+      console.log("fetchCartresponse", response.data);
+      this.setCart(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+  }
+
+  async setCartItem (id, quantity, action, showToast) {
+    console.log('id' + id);
+    console.log('quantity' + quantity);
+    console.log('action' + action);
+    
+    if(!id){
+      console.log(id, quantity);
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.setCartItem(id, quantity, action);
+      if(quantity === 0){
+        this.fetchCart();
+        showToast({
+          text1: "Товар удален",
+          type: "success",
+        });
+      }
+      if(response.status === 200){
+        showToast({
+          text1: "Товар добавлен",
+          type: "success",
+        });
+      }
+      console.log("addToCartresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async fetchMaterials() {
+    try {
+      this.setIsLoading(true);
+      this.setMainMaterials([]);
+      const response = await ProductService.getMaterials();
+      console.log("fetchMaterialsresponse", response.data);
+      this.setMainMaterials(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
 
   async fetchCategories() {
     try {
+      this.setIsLoading(true);
+      this.setCategories([]);
       const response = await ProductService.getCategories();
       console.log("fetchCategoriesresponse", response.data);
       this.setCategories(response.data);
     } catch (e) {
       console.log(e.response?.data?.message);
     }
+    finally {
+      this.setIsLoading(false);
+    }
   }
-  async fetchProducts() {
+  async fetchProducts(categoryId, showOnMainPage) {
+    console.log("fetchProducts", categoryId, showOnMainPage);
     try {
-      const response = await ProductService.getProducts();
+      this.setIsLoading(true);
+      this.setProducts([]);
+      const response = await ProductService.getProducts(categoryId, showOnMainPage);
       console.log("fetchProductsresponse", response.data);
       this.setProducts(response.data);
     } catch (e) {
       console.log(e.response?.data?.message);
     }
+    finally {
+      this.setIsLoading(false);
+    }
   }
   async fetchReviews() {
     try {
+      this.setIsLoading(true);
       const response = await ProductService.getReviews();
       console.log("fetchReviewsresponse", response.data);
       this.setReviews(response.data);
     } catch (e) {
       console.log(e.response?.data?.message);
     }
+    finally {
+      this.setIsLoading(false);
+    }
   }
   async fetchOrderReviews() {
     try {
+      this.setIsLoading(true);
       const response = await ProductService.getOrderReviews();
       console.log("fetchOrderReviewsresponse", response.data);
       this.setOrderReviews(response.data);
     } catch (e) {
       console.log(e.response?.data?.message);
     }
+    finally {
+      this.setIsLoading(false);
+    }
   }
 
   async fetchCompany() {
     try {
+      this.setIsLoading(true);
       const response = await ProductService.fetchCompany();
       console.log("fetchfetchCompanyresponse", response.data);
       this.setCompany(response.data[0]);
     } catch (e) {
       console.log(e.response?.data?.message);
     }
+    finally {
+      this.setIsLoading(false);
+    }
   }
+
+  async fetchItemDetails(id) {
+    if(!id){
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.getItemDetails(id);
+      this.setCurrentProduct(response.data);
+      console.log("fetchItemDetailsresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async sendContactForm(data, showToast) {
+    if(!data){
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.sendContactForm(data);
+      console.log("sendContactFormresponse", response.data);
+      if(response.status === 200){
+        showToast({
+          text1: "Сообщение отправлено",
+          type: "success",
+        });
+      }
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+
+  async fetchOrgReviews() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.fetchOrgReviews();
+      console.log("fetchCommentsresponse", response.data);
+      this.setComments(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async addOrgReview(data) {
+    if(!data){
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.addOrgReview(data);
+      console.log("addReviewresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async updateCommentStatus(id, status) {
+    if(!id){
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.updateCommentStatus(id, status);
+      if(response.status === 200){
+        this.fetchOrgReviews();
+      }
+      console.log("updateCommentStatusresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+
 }

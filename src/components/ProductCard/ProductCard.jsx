@@ -5,33 +5,41 @@ import Button from "../Buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import QuantityRegulator from "../QuantityRegulator/QuantityRegulator";
+import StockBadge from "../StockBadge/StockBadge";
+import { productStore } from "../../main";
+import { useToast } from "../../providers/ToastProvider";
 
 
 const ProductCard = ({ product, isAdmin, onClickAction }) => {
   const [quantity, setQuantity] = useState(1); // <-- Сюда
+  const {showToast} = useToast();
+
   if (!product) return null;
   const imageUrl = `${API_URL}/${product.images[0]}`;
 
   // Обработчики для изменения количества
-  const increaseQuantity = () => {
+  const increaseQuantity = (event) => {
+    event.stopPropagation(); 
     if (quantity < product.totalQuantity) {
       setQuantity(quantity + 1);
     }
   };
 
-  const decreaseQuantity = () => {
+  const decreaseQuantity = (event) => {
+    event.stopPropagation(); 
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
-  const addToCart = () => {
-    // Логика добавления товара в корзину
-    console.log(`Добавлено в корзину ${quantity} шт. товара: ${product.title}`);
+  const addToCart = (event) => {
+    event.stopPropagation(); 
+    console.log(`Добавлено в корзину ${quantity} шт. товара: ${product.title} id: ${product._id}`);
+    productStore.setCartItem(product._id, quantity, 'increase', showToast);
   };
 
   return (
-    <div className="product-card" onClick={onClickAction}>
+    <div className="block-background product-card" onClick={onClickAction}>
       <div className="product-image-wrapper">
         <img src={imageUrl} alt={product.title} className="product-image" />
       </div>
@@ -40,12 +48,9 @@ const ProductCard = ({ product, isAdmin, onClickAction }) => {
         <h2 className="product-title">{product.title}</h2>
 
         <div className="product-pricing">
-          <span className="price-individual">
-            {product.priceIndividual?.toFixed(2)} ₽
-          </span>
-          <span className="price-legal">
-            {product.priceLegalEntity?.toFixed(2)} ₽ для юр. лиц
-          </span>
+        <span className="price-individual">
+  {product.priceIndividual.toLocaleString('ru-RU')} ₽
+</span>
           {product.discountPersentage > 0 && (
             <span className="discount">
               −{product.discountPersentage}% от {product.discountFromQuantity} шт.
@@ -54,16 +59,11 @@ const ProductCard = ({ product, isAdmin, onClickAction }) => {
         </div>
 
         <div className="product-meta">
-          <span className="product-status">
-            {product.isAvailable ? "✅ В наличии" : "❌ Нет в наличии"} — {product.status}
-          </span>
-          <span className="product-quantity">
-            Всего: {product.totalQuantity} шт.
-          </span>
+          <StockBadge isAvailable={product.isAvailable} quantity={product.totalQuantity} />
         </div>
 
         {/* Кнопка и регулятор количества */}
-        {!isAdmin && (
+        {!isAdmin && product.isAvailable && (
           <div className="product-actions">
             <QuantityRegulator
               quantity={quantity}

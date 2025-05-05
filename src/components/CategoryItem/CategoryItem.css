@@ -3,16 +3,10 @@
     flex-direction: column;
     width: 260px;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    transition: transform 0.2s ease;
-    background-color: #fff;
     cursor: pointer;
   }
-  
-  .category-card:hover {
-    transform: translateY(-4px);
-  }
+
   
   .category-image {
     width: 100%;

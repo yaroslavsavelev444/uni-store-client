@@ -2,14 +2,6 @@
   width: 100px;
   height: 100px;
 }
-/* Контейнер для всех карточек */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 280px — минимальная ширина для каждой карточки */
-  gap: 20px; /* Отступы между карточками */
-  padding: 20px;
-  box-sizing: border-box;
-}
 
 .upload-form{
   width: 100%;
