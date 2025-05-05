@@ -1,18 +1,16 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { adminStore } from "../../../main";
+import { productStore } from "../../../main";
+import Empty from "../../Empty/Empty";
 import { Loader } from "lucide-react";
-import Empty from "../../../components/Empty/Empty";
-import OrderCard from "../../../components/OrderCard/OrderCard";
+import OrderCard from "../../OrderCard/OrderCard";
 
-const OrdersPage = () => {
-
+const OrderModal = () => {
   useEffect(() => {
-    adminStore.fetchOrders();
+    productStore.fetchOrders();
   }, []);
 
-
-  if (adminStore.isLoading) {
+  if (productStore.isLoading) {
     return <Loader size={50} />;
   }
 
@@ -26,12 +24,12 @@ const OrdersPage = () => {
         alignItems: "center",
       }}
     >
-      <h2>Заказы</h2>
-      {adminStore.orders.length === 0 ? (
+      <h2>Мои отзывы</h2>
+      {productStore.orders.length === 0 ? (
         <Empty text="Отзывы отсутствуют" />
       ) : (
         <>
-          {adminStore.orders.map((order) => (
+          {productStore.orders.map((order) => (
             <OrderCard key={order._id} order={order} />
           ))}
         </>
@@ -40,4 +38,4 @@ const OrdersPage = () => {
   );
 };
 
-export default observer(OrdersPage);
+export default observer(OrderModal);

@@ -1,0 +1,24 @@
+.product-review {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .product-review .rating {
+    font-weight: bold;
+  }
+  
+  .product-review .date {
+    font-size: 12px;
+    opacity: 0.6;
+  }
+  
+  .product-review .text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }

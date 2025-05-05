@@ -18,7 +18,7 @@ export default class productService {
   }
 
   static async getReviews() {
-    return $api.get("/products/getReviews");
+    return $api.get("/reviews/getUserReviews");
   }
 
   static async getOrderReviews() {
@@ -45,5 +45,17 @@ export default class productService {
 
   static async updateCommentStatus(id, status) {
     return $api.post("/admin/updateReviewStatus", { id, status });
+  }
+
+  static async checkAvailableItems(items) {
+    return $api.post("/cart/checkAvailableItems", { items });
+  }
+
+  static async createOrder(data) {
+    return $api.post("/cart/createOrder", data);
+  }
+
+  static async getOrders() {
+    return $api.get("/orders/getOrders");
   }
 }

@@ -1,0 +1,28 @@
+.btn-horizontal-wrapper{
+    margin: 5%;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.input-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 60%;
+    padding: 2%;
+    border-radius: 20px;
+}
+.editable-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .icon {
+    cursor: pointer;
+    color: #555;
+  }

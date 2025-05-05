@@ -1,5 +1,6 @@
+
 .cart-item {
-    width: 50%;
+    width: 65%;
     display: flex;
     gap: 16px;
     align-items: center;
@@ -20,6 +21,7 @@
   }
   
   .cart-item-info {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -71,3 +73,18 @@
     align-items: center;
     gap: 4px;
   }
+
+.remove-item-btn {
+  position: absolute;
+  right: -100px; /* или подберите под ваш layout */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4f;
+}
+
+.remove-item-btn:hover {
+  color: #d9363e;
+}

@@ -35,3 +35,25 @@ export const faqData = [
       answer: 'Да, доступна за дополнительную плату в зависимости от региона.',
     },
   ];
+
+  export const deliveryOptions = [
+    {
+      label: 'CDEK',
+      value: 'cdek',
+    },
+    {
+      label: 'Почта России',
+      value: 'post',
+    },
+  ];
+
+  export const deliveryVariants = [
+    {
+      label: 'Доставка',
+      value: 'delivery',
+    },
+    {
+      label: 'Самовывоз',
+      value: 'pickup',
+    },
+  ];

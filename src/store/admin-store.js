@@ -25,6 +25,12 @@ export default class AdminStore {
       console.log("Loading set to:", this.isLoading);
     });
   }
+  setOrders(orders) {
+    runInAction(() => {
+      this.orders = orders;
+      console.log("Orders set to:", this.orders);
+    });
+  }
 
   setComments(comments) {
     runInAction(() => {
@@ -205,6 +211,20 @@ export default class AdminStore {
       console.log(e.response?.data?.message);
     }
     finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async fetchOrders () {
+    console.log("fetchOrders");
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.fetchOrders();
+      console.log("fetchOrdersresponse", response.data);
+      this.setOrders(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    } finally {
       this.setIsLoading(false);
     }
   }

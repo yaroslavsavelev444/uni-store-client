@@ -75,4 +75,9 @@ export default class adminService {
   static async updateContactStatus(contactId, status) {
     return $api.post("/admin/updateContactStatus", { contactId, status });
   }
+
+  //ORDERS
+  static async fetchOrders() {
+    return $api.get("/admin/getOrders");
+  }
 }

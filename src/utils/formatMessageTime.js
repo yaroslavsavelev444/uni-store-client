@@ -24,3 +24,11 @@ export function formatMessageTime(date) {
       minute: "2-digit",
     });
   };
+
+export function formatPrice(price) {
+  if (typeof price !== 'number') return '';
+
+  return price
+    .toLocaleString('ru-RU') // форматирует число по-русски (с пробелами как разделителями тысяч)
+    .concat(' ₽');           // добавляет символ рубля
+}
