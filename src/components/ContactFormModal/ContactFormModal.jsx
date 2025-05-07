@@ -29,7 +29,13 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    if(!formData.phone || !formData.msg){
+      console.log("Нужно заполнить все поля");
+      showToast({ text1: "Заполните все поля", type: "error" });
+      return;
+    }
+
     let dataToSend = { ...formData };
   
     if (isLoggedIn) {
@@ -83,6 +89,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
                   placeholder="Ваше имя:"
                   required
                   value={!isLoggedIn ? formData.user : store.user.name}
+                  readOnly={isLoggedIn}
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 />
@@ -93,6 +100,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
                   placeholder="Ваш email:"
                   required
                   value={!isLoggedIn ? formData.email : store.user.email}
+                  readOnly={isLoggedIn}
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 />
@@ -125,8 +133,8 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
             </div>
 
             <div className="form-group">
-              <Button type="submit" disabled={productStore.isLoading}>
-                {productStore.isLoading ? <Loader size={10} /> : "Отправить"}
+              <Button type="submit" disabled={productStore.isLoading }>
+                {productStore.isLoading ? <Loader size={15} /> : "Отправить"}
               </Button>
             </div>
           </form>

@@ -124,6 +124,9 @@ const Cart = () => {
     });
   };
 
+  const handleClearCart = () => {
+    productStore.clearCart();
+  }
   if (loading) return <Loader size={50} />;
 
   return (
@@ -136,6 +139,7 @@ const Cart = () => {
           updateQuantity={updateQuantity} // Передаем функцию изменения количества
           onNextStep={nextStep} // Переход на следующий шаг
           handleNavigaeToItemPage={handleNavigaeToItemPage}
+          handleClearCart={handleClearCart}
         />
       )}
 

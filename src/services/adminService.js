@@ -10,14 +10,14 @@ export default class adminService {
   static async addProduct(formData) {
     return $api.post("/admin/addProduct", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  // Указываем, что передаем formData
+        "Content-Type": "multipart/form-data",  
       },
     });
   }
  static async editProduct(id, formData){
   return $api.post(`/admin/editProduct/${id}`, formData, {
     headers: {
-      "Content-Type": "multipart/form-data",  // Указываем, что передаем formData
+      "Content-Type": "multipart/form-data",  
     },
   });
  }
@@ -26,7 +26,7 @@ export default class adminService {
   static async addCategory(formData) {
     return $api.post("/admin/addCategory", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  // Указываем, что передаем formData
+        "Content-Type": "multipart/form-data",  
       },
     });
   }
@@ -80,4 +80,55 @@ export default class adminService {
   static async fetchOrders() {
     return $api.get("/admin/getOrders");
   }
+
+  static async changeOrderStatus(orderId, status) {
+    return $api.patch("/admin/updateOrderStatus", { orderId, status });
+  }
+
+  static async cancelOrder(id, text) {
+    return $api.post("/admin/cancelOrder", { id, text });
+  }
+
+  static async uploadFiles(formData, id){
+    return $api.post(`/admin/uploadOrgFiles/${id}`, formData , {
+      headers: {
+        "Content-Type": "multipart/form-data",  
+      },
+    });
+  }
+
+  static async deleteFile(filePath, id) {
+    return $api.post(`/admin/deleteOrgFile/${id}`, { filePath });
+  }
+
+  static async addSocialLinks(formData, id) {
+    return $api.post(`/admin/addOrgSocialLinks/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",  
+      },
+    }
+    );
+  }
+
+  static async uploadOrderFile(formData , id) {
+    return $api.post(`/admin/uploadOrderFile/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",  
+      },
+    }
+    );
+  }
+
+  static async deleteOrderFile(id){
+    return $api.delete(`/admin/deleteOrderFile/${id}`);
+  }
+
+  static async getReviews() {
+    return $api.get("/admin/getReviews");
+  }
+
+  static async changeReviewStatus(id, action) {
+    return $api.post(`/admin/updateReviewStatus/${id}`, { action });
+  }
+
 }

@@ -10,19 +10,6 @@ export default function ContactSection({ setModalVisible, phone, email }) {
 
         <div className="contact-info">
           <div className="contact-item">
-            <div className="contact-icons">
-              <span className="contact-icon">
-                <i className="fa-brands fa-telegram"></i>
-              </span>
-              <span className="contact-icon">
-                <i className="fa-brands fa-whatsapp"></i>
-              </span>
-              <span className="contact-icon">
-                <i className="fa-solid fa-envelope"></i>
-              </span>
-            </div>
-          </div>
-          <div className="contact-item">
             <a href={`tel:${phone}`} className="contact-link">
               {phone || "Нет номера"}
             </a>

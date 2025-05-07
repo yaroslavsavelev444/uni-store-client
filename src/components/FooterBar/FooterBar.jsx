@@ -1,41 +1,49 @@
 import React from "react";
 import "./FooterBar.css";
-import FooterIcon from "../FooterIcon/FooterIcon";
-import { FaTelegram, FaVk, FaYoutube } from "react-icons/fa";
+import { observer } from "mobx-react-lite";
+import { productStore } from "../../main";
+import FileItem from "../FileItem/FileItem";
+import SocialItems from "../SocialItem/SocialItems";
 
 const FooterBar = () => {
-
   return (
     <footer className="block-background footer">
-      <div className="footer-content">
-        <div className="footer-body footer-uni">
-          <div className="footer-body-content">
-            <div className="footer-hrefs">
-              <h3>Lorem, ipsum.</h3>
-            </div>
-
-            <div className="footer-docs">
-              <p>Связаться с нами</p>
-            </div>
-          </div>
+      <div className="footer-top">
+        <div className="footer-column">
+          <h4>Информация</h4>
+          <ul style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {productStore.company?.files?.length > 0 &&
+              productStore.company.files.map((file, index) => (
+                <FileItem file={file} index={index} role={"user"} key={index} />
+              ))}
+          </ul>
         </div>
-
-        <div className="footer-bottom footer-uni">
-          <div className="footer-bottom-links">
-            <FooterIcon icon={<FaVk size={30} />} />
-            <FooterIcon icon={<FaTelegram size={30} />} />
-            <FooterIcon icon={<FaYoutube size={30} />} />
-          </div>
+        <div className="footer-column">
+          <h4>Страницы</h4>
+          <ul>
+            <li>
+              <a href="#">Главная</a>
+            </li>
+            <li>
+              <a href="#">Услуги</a>
+            </li>
+            <li>
+              <a href="#">Цены</a>
+            </li>
+          </ul>
         </div>
-
-        <div className="footer-footer">
-          <div className="footer-footer-content">
-            <p>Copyright ©{new Date().getFullYear()} Сервис. Все права защищены.</p>
-          </div>
+        <div className="footer-column">
+          <h4>Соцсети</h4>
+          <SocialItems links={productStore.company.socialLinks} />
         </div>
+      </div>
+
+      <div className="footer-bottom">
+        <hr />
+        <p>© {new Date().getFullYear()} ООО КПБ "Полёт". Все права защищены.</p>
       </div>
     </footer>
   );
 };
 
-export default FooterBar;
+export default observer(FooterBar);

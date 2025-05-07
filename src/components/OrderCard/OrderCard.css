@@ -64,7 +64,7 @@
 
   }
   
-  .product-image {
+  .product-order-image {
     width: 4rem;
     height: 4rem;
     object-fit: cover;
@@ -115,4 +115,18 @@
   
   .cancel-date {
     font-size: 0.75rem;
+  }
+  .order-actions{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  .modal-cancel-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }

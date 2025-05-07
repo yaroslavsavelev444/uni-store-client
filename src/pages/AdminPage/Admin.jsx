@@ -5,8 +5,8 @@ export default function Admin() {
   const menuItems = [
     { label: 'Пользователи', section: 'users', apiEndpoint: 'users' },
     { label: 'Заказы', section: 'orders', apiEndpoint: 'orders' },
-    { label: 'Комментарии', section: 'comments', apiEndpoint: 'reviews' },
-    { label: 'Отзывы', section: 'goods_comments', apiEndpoint: 'goods_comments' },
+    { label: 'Комментарии', section: 'comments', apiEndpoint: 'comments' },
+    { label: 'Отзывы', section: 'reviews', apiEndpoint: 'reviews' },
     { label: 'Консультация', section: 'consult', apiEndpoint: 'contacts' },
     { label: 'Категории', section: 'categories', apiEndpoint: 'categories' },
     { label: 'Товары', section: 'upload', apiEndpoint: 'upload' },

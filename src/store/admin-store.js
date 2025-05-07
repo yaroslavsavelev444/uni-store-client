@@ -1,6 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import AdminService from "../services/adminService";
-import { API_URL } from "../http/axios";
 import { productStore } from "../main";
 export default class AdminStore {
  users=[];
@@ -8,7 +7,7 @@ export default class AdminStore {
  orders=[];
  contacts=[];
  isLoading = false;
-
+reviews = [];
   constructor() {
     makeAutoObservable(this);
   }
@@ -36,6 +35,13 @@ export default class AdminStore {
     runInAction(() => {
       this.comments = comments;
       console.log("Comments set to:", this.comments);
+    });
+  }
+
+  setReviews(reviews) {
+    runInAction(() => {
+      this.reviews = reviews;
+      console.log("Reviews set to:", this.reviews);
     });
   }
 
@@ -229,4 +235,154 @@ export default class AdminStore {
     }
   }
 
+  async changeOrderStatus(orderId, status) {
+    if(!orderId || !status){
+      console.log("Не передан контакт");
+      return;
+    }
+    console.log("changeOrderStatus", orderId, status);
+    
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.changeOrderStatus(orderId, status);
+      if(response.status === 200){
+        this.fetchOrders();
+      }
+      console.log("changeOrderStatusresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    }
+    finally {
+      this.setIsLoading(false);
+    }
+  }
+  async cancelOrder(id, text) {
+      if (!id || !text) {
+        console.log("Не передана ");
+        return;
+      }
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.cancelOrder(id, text);
+        console.log("cancelOrderresponse", response.data);
+        if(response.status === 200){
+          this.fetchOrders();
+        }
+      } catch (e) {
+        console.log(e.response?.data?.message);
+      } finally {
+        this.setIsLoading(false);
+      }
+    }
+    async uploadFiles(formData, id) {
+      console.log('uploadedFiles', formData, id);
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.uploadFiles(formData, id); // Отправляем FormData через сервис
+        console.log("Файлы успешно добавлены:", response.data);
+      } catch (error) {
+        console.log("Ошибка при выгрузке файлов:", error.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async deleteFile(filePath, id) {
+      console.log('deleteFile', filePath,'id', id);
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.deleteFile(filePath, id); // Отправляем FormData через сервис
+        console.log("Файл успешно удален:", response.data);
+        if(response.status === 200){
+          productStore.fetchCompany();
+        }
+      } catch (error) {
+        console.log("Ошибка при удалении файлов:", error.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async addSocialLinks(formData, id) {
+      console.log('addSocialLinks', formData, id);
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.addSocialLinks(formData, id); // Отправляем FormData через сервис
+        console.log("Социальные ссылки успешно добавлены:", response.data);
+      } catch (error) {
+        console.log("Ошибка при добавлении социальных ссылок:", error.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async uploadOrderFile(formData , id) {
+      console.log('uploadOrderFile', formData, id);
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.uploadOrderFile(formData, id); // Отправляем FormData через сервис
+        if(response.status === 200){
+          this.fetchOrders();
+        }
+        console.log("Файлы успешно добавлены:", response.data);
+      } catch (error) {
+        console.log("Ошибка при выгрузке файлов:", error.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async deleteOrderFile(id) {
+      console.log('deleteOrderFile', id);
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.deleteOrderFile(id); // Отправляем FormData через сервис
+        if(response.status === 200){
+          this.fetchOrders();
+        }
+        console.log("Файл успешно удален:", response.data);
+      } catch (error) {
+        console.log("Ошибка при удалении файлов:", error.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async fetchReviews() {
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.getReviews();
+        console.log("fetchReviewsresponse", response.data);
+        this.setReviews(response.data);
+      } catch (e) {
+        console.log(e.response?.data?.message);
+      } finally {
+        this.setIsLoading(false);
+      }
+    }
+
+    async changeReviewStatus(id, action) {
+      if(!id){
+        console.log("Не передана категория");
+        return;
+      }
+      try {
+        this.setIsLoading(true);
+        const response = await AdminService.changeReviewStatus(id, action);
+        if(response.status === 200){
+          this.fetchReviews();
+        }
+        console.log("changeReviewStatusresponse", response.data);
+      } catch (e) {
+        console.log(e.response?.data?.message);
+      }
+      finally {
+        this.setIsLoading(false);
+      }
+    }
 }

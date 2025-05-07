@@ -20,7 +20,15 @@ const Cataloq = () => {
   };
 
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", gap  : "20px" }}>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "20px",
+      }}
+    >
       <div className="product-grid">
         {productStore.categories.length === 0 ? (
           <Empty text="Категории отсутствуют" />
@@ -41,7 +49,9 @@ const Cataloq = () => {
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
-          <Button onClick={() => navigation("/category/all")}>Все товары</Button>
+          <Button onClick={() => navigation("/category/all")}>
+            Все товары
+          </Button>
         </div>
       )}
       <PromoBlock
@@ -51,7 +61,7 @@ const Cataloq = () => {
         productId="1"
         reversed
       />
-      <ContactFormModal isLoggedIn={store.isAuth}/>
+      <ContactFormModal isLoggedIn={store.isAuth} />
     </div>
   );
 };

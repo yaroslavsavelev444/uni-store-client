@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "./Button.css";
+import "./Button.css"; // Оставляем ripple и кастомные стили здесь
 
 const Button = ({ children, onClick, disabled = false, ...props }) => {
   const buttonRef = useRef(null);
@@ -25,14 +25,14 @@ const Button = ({ children, onClick, disabled = false, ...props }) => {
 
     setTimeout(() => {
       ripple.remove();
-    }, 500); // Длительность анимации
+    }, 500);
 
     onClick?.(e);
   };
 
   return (
     <button
-      className={`btn ripple-container ${props.className || ''}`}
+      className={`btn ripple-container ${props.className || ""}`}
       onClick={handleClick}
       disabled={disabled}
       ref={buttonRef}

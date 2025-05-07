@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { adminStore, store } from '../../../main'
+import Empty from '../../../components/Empty/Empty';
+import ProductReviews from '../../../components/ProductReviews/ProductReviews';
+import { observer } from 'mobx-react-lite';
 
-export default function ReviewsPage() {
+const  ReviewsPage = () => {
+
+  useEffect(() => {
+    adminStore.fetchReviews();
+  }, [])
+
   return (
     <div>
-      
+      {adminStore.reviews.length === 0 ? (
+        <Empty text="Отзывы отсутствуют" />
+      ) : (
+        <ProductReviews reviews={adminStore.reviews} role={store.user.role} />
+      )}
     </div>
   )
 }
+
+
+export default observer(ReviewsPage)

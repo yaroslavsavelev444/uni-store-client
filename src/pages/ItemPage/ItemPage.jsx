@@ -16,6 +16,8 @@ import StockBadge from "../../components/StockBadge/StockBadge";
 import ContactSection from "../../components/ContactSection/ContactSection";
 import { useToast } from "../../providers/ToastProvider";
 import BackBtn from "../../components/BackBtn/BackBtn";
+import LeaveReview from "../../components/LeaveReview/LeaveReview";
+import ProductReviews from "../../components/ProductReviews/ProductReviews";
 
 const ItemPage = () => {
   const { categoryId, id } = useParams();
@@ -87,7 +89,15 @@ const ItemPage = () => {
               <ItemDescription description={product.description} />
             </div>
           </div>
-          <ContactSection />
+          {product.hasPurchased && (
+            <>
+            {!product.isUserLeftReview.hasLeftReview && (
+              <LeaveReview productId={product._id} />
+            )}
+            </>
+          )}
+          <ProductReviews productId={product._id} reviews={product.reviews} />
+          <ContactSection phone={productStore.company.phone} email={productStore.company.email} />
         </>
       ) : (
         <Empty text="Товар не найден" />

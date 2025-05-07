@@ -126,11 +126,6 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
               }
             />
             <EditableField
-              label="Телефон компании"
-              value={order.companyData.phone}
-              onChange={(value) => updateOrder("companyData.phone", value)}
-            />
-            <EditableField
               label="ИНН"
               value={order.companyData.inn}
               onChange={(value) => updateOrder("companyData.inn", value)}

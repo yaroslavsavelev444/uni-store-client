@@ -11,13 +11,11 @@ const ItemsList = () => {
   return (
     <div>
       <BackBtn />
-      <div className="items-list">
         {categoryId === "all" ? (
           <ProductShell />
         ) : (
           <ProductShell categoryId={categoryId} />
         )}
-      </div>
     </div>
   );
 };

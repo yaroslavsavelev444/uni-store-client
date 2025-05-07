@@ -57,3 +57,78 @@ export const faqData = [
       value: 'pickup',
     },
   ];
+
+  export function getStatusClass(status) {
+    switch (status) {
+      case 'pending': return 'status-pending';
+      case 'confirmed': return 'status-confirmed';
+      case 'packed': return 'status-packed';
+      case 'sent': return 'status-sent';
+      case 'cancelled': return 'status-cancelled';
+      case 'rejected': return 'status-rejected';
+      default: return 'status-pending';
+    }
+  }
+  
+  export function statusLabel(status) {
+    const map = {
+      pending: 'В ожидании',
+      confirmed: 'Подтвержден',
+      rejected: 'Отклонён',
+      packed: 'Упакован',
+      sent: 'Отправлен',
+      cancelled: 'Отменён',
+      ready : 'Готов к выдаче',
+      wait : 'Ожидание оплаты',
+    };
+    return map[status] || status;
+  }
+
+export const orderDeliveryStatusOptions = [
+  {
+    label: 'Подтвержден',
+    value: 'accepted',
+  },
+  {
+    label: 'Сборка',
+    value: 'packed',
+  },
+  {
+    label: 'Ожидание оплаты',
+    value: 'waiting',
+  },
+  {
+    label: 'Отправлен',
+    value: 'sent',
+  },
+];
+
+export const orderPickupStatusOptions = [
+  {
+    label: 'Подтвержден',
+    value: 'accepted',
+  },
+  {
+    label: 'Сборка',
+    value: 'packed',
+  },
+  {
+    label: 'Готов к выдаче',
+    value: 'ready',
+  },
+];
+
+export const reviewStatus = [
+  {
+    label: 'Подтвержден',
+    value: 'active',
+  },
+  {
+    label: 'Отклонён',
+    value: 'reject',
+  },
+  {
+    label: 'В ожидании',
+    value: 'pending',
+  },
+];

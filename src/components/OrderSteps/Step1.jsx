@@ -4,14 +4,23 @@ import CartItem from "../../components/CartItem/CartItem";
 import { formatPrice } from "../../utils/formatMessageTime";
 import Button from '../Buttons/Button';
 import Empty from '../Empty/Empty';
+import { Trash, X } from 'lucide-react';
 
-const Step1 = ({ cart, totalPrice, oldTotal, updateQuantity, onNextStep, handleNavigaeToItemPage }) => {
+
+const Step1 = ({ cart, totalPrice, oldTotal, updateQuantity, onNextStep, handleNavigaeToItemPage , handleClearCart}) => {
   return (
-    <div className="cart-list">
+    <div >
       {cart.length === 0 ? (
               <Empty text="Корзина пуста" />
             ) : (
               <div className="cart-list">
+                <div className="cart-summary">
+                  <div style={{display: "flex", flexDirection: "row", alignItems: "center", cursor: "pointer"}} onClick={handleClearCart} >
+                    <X color='red' size={20}/>
+                    <p style={{fontSize: "12px"}}>Удалить все</p>
+                  </div>
+                </div>
+
                 {cart.map((product) => (
                   <CartItem
                     key={product._id}

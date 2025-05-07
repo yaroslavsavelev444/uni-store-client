@@ -7,7 +7,7 @@ import FAQSection from '../../components/FAQSection/FAQSection'
 
 export default function Home() {
   return (
-    <div style={{flexDirection:"column", display:"flex", gap:"20px"}}>
+    <div className="">
       <ContentBlock />
       <PromoBlock
         title="При заказе от 3 товаров"

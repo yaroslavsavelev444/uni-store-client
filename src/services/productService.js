@@ -1,31 +1,28 @@
 import $api from "../http/axios";
 
 export default class productService {
-
   static async getCart() {
     return $api.get("/cart/getCart");
   }
   static async setCartItem(id, quantity, action) {
-    return $api.post("/cart/setCartItem", { id , quantity, action});
+    return $api.post("/cart/setCartItem", { id, quantity, action });
   }
-  
+
   static async getCategories() {
     return $api.get("/categories/getCategories");
   }
 
-  static async getProducts(categoryId, showOnMainPage) {
-    return $api.get("/products/getProducts", { params: { categoryId, showOnMainPage } });
+  static async getProducts(categoryId, selectedValue, showOnMainPage) {
+    console.log("getProducts", categoryId, selectedValue, showOnMainPage);
+    return $api.get("/products/getProducts", {
+      params: { categoryId, selectedValue, showOnMainPage },
+    });
   }
-
-  static async getReviews() {
+  static async getUserReviews() {
     return $api.get("/reviews/getUserReviews");
   }
 
-  static async getOrderReviews() {
-    return $api.get("/products/getOrderReviews");
-  }
-
-  static async fetchCompany(){
+  static async fetchCompany() {
     return $api.get("/org/getOrg");
   }
   static async getItemDetails(id) {
@@ -52,10 +49,30 @@ export default class productService {
   }
 
   static async createOrder(data) {
-    return $api.post("/cart/createOrder", data);
+    return $api.post("/orders/createOrder", data);
   }
 
   static async getOrders() {
     return $api.get("/orders/getOrders");
+  }
+
+  static async cancelOrder(id) {
+    return $api.post("/orders/cancelOrder", { id });
+  }
+
+  static async clearCart() {
+    return $api.post("/cart/clearCart");
+  }
+
+  static async getUserCompanies() {
+    return $api.get("/orders/getCompanies");
+  }
+
+  static async deleteUserCompany(id) {
+    return $api.post("/orders/deleteCompany", { id });
+  }
+
+  static async sendOrderReviewData(reviewData, productId) {
+    return $api.post(`/reviews/addProductReview/${productId}`, reviewData);
   }
 }

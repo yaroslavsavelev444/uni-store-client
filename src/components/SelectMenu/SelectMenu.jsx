@@ -1,14 +1,21 @@
+// SelectMenu.js
 import React from "react";
 import "./SelectMenu.css";
 
+const arrowIcons = {
+  asc: "▲",
+  desc: "▼",
+};
+
 const SelectMenu = ({
   options = [],
-  value,
+  value = "",
   onChange,
   disabled = false,
   className = "",
   placeholder = "Выбрать...",
-  label = "", // Новый пропс
+  label = "",
+  showIcons = false,
 }) => {
   return (
     <div className="select-wrapper">
@@ -24,7 +31,9 @@ const SelectMenu = ({
         </option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
-            {opt.label}
+            {showIcons && opt.direction
+              ? `${opt.label} ${arrowIcons[opt.direction] || ""}`
+              : opt.label}
           </option>
         ))}
       </select>

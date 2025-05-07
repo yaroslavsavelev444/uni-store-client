@@ -7,12 +7,15 @@ export default class ProductStore {
   orders = [];
   products = [];
   reviews = [];
-  orderReviews = [];
+  userReviews = [];
   company = {};
   currentProduct = {};
   cart = [];
   mainMaterials = [];
   comments = [];
+  files = [];
+  userCompanies = [];
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -30,10 +33,23 @@ export default class ProductStore {
     });
   }
 
+  setFiles(files) {
+    runInAction(() => {
+      this.files = files;
+      console.log("Files set to:", this.files);
+    });
+  }
   setProducts(products) {
     runInAction(() => {
       this.products = products;
       console.log("Products set to:", this.products);
+    });
+  }
+
+  setUserCompanies(userCompanies) {
+    runInAction(() => {
+      this.userCompanies = userCompanies;
+      console.log("User companies set to:", this.userCompanies);
     });
   }
   setCompany(company) {
@@ -56,10 +72,10 @@ export default class ProductStore {
       console.log("Cart set to:", this.cart);
     });
   }
-  setOrderReviews(orderReviews) {
+  setUserReviews(userReviews) {
     runInAction(() => {
-      this.orderReviews = orderReviews;
-      console.log("Order reviews set to:", this.orderReviews);
+      this.userReviews = userReviews;
+      console.log("userReviews set to:", this.userReviews);
     });
   }
   setComments(comments) {
@@ -160,13 +176,14 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
-  async fetchProducts(categoryId, showOnMainPage) {
-    console.log("fetchProducts", categoryId, showOnMainPage);
+  async fetchProducts(categoryId, selectedValue, showOnMainPage) {
+    console.log("fetchProducts", categoryId,selectedValue,  showOnMainPage);
     try {
       this.setIsLoading(true);
       this.setProducts([]);
       const response = await ProductService.getProducts(
         categoryId,
+        selectedValue,
         showOnMainPage
       );
       console.log("fetchProductsresponse", response.data);
@@ -177,24 +194,12 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
-  async fetchReviews() {
+  async fetchUserReviews() {
     try {
       this.setIsLoading(true);
-      const response = await ProductService.getReviews();
-      console.log("fetchReviewsresponse", response.data);
-      this.setReviews(response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-  async fetchOrderReviews() {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.getOrderReviews();
-      console.log("fetchOrderReviewsresponse", response.data);
-      this.setOrderReviews(response.data);
+      const response = await ProductService.getUserReviews();
+      console.log("fetchsetProductReviewsresponse", response.data);
+      this.setUserReviews(response.data);
     } catch (e) {
       console.log(e.response?.data?.message);
     } finally {
@@ -234,7 +239,7 @@ export default class ProductStore {
 
   async sendContactForm(data, showToast) {
     if (!data) {
-      console.log("Не передана категория");
+      console.log("Не передана данные");
       return;
     }
     try {
@@ -316,6 +321,25 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
+
+  async cancelOrder(id) {
+    if (!id) {
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.cancelOrder(id);
+      if(response.status === 200){
+        this.fetchOrders();
+      }
+      console.log("cancelOrderresponse", response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
   async createOrder(data, showToast) {
     if (!data ) {
       console.log("Не передана категория");
@@ -337,6 +361,77 @@ export default class ProductStore {
         text1: e.response?.data?.message || "Неизвестная ошибка",
         type: "error",
       });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async clearCart() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.clearCart();
+      console.log("clearCartresponse", response.data);
+      if (response.status === 200) {
+        this.fetchCart();
+      }
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async fetchUserCompanies() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.getUserCompanies();
+      console.log("fetchUserCompaniesresponse", response.data);
+      this.setUserCompanies(response.data);
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async deleteUserCompany(id) {
+    if(!id) return console.log("Не передан id");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.deleteUserCompany(id);
+      console.log("deleteUserCompanyresponse", response.data);
+      if (response.status === 200) {
+        this.fetchUserCompanies();
+      }
+    } catch (e) {
+      console.log(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async sendOrderReviewData (data, productId, showToast) {
+    if (!data || !productId) {
+      console.log("Не передана категория");
+      return;
+    }
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.sendOrderReviewData(data, productId);
+      console.log("sendOrderReviewDataresponse", response.data);
+      if(response.status === 200){
+        this.fetchItemDetails();
+        showToast({
+          text1: "Отзыв отправлен",
+          type: "success",
+        })
+      }
+    } catch (e) {
+      console.log(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message || "Неизвестная ошибка",
+        type: "error",
+      })
     } finally {
       this.setIsLoading(false);
     }

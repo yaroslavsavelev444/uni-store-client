@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { productStore } from "../../../main";
+import { productStore, store } from "../../../main";
 import Empty from "../../Empty/Empty";
 import { Loader } from "lucide-react";
 import OrderCard from "../../OrderCard/OrderCard";
@@ -30,7 +30,7 @@ const OrderModal = () => {
       ) : (
         <>
           {productStore.orders.map((order) => (
-            <OrderCard key={order._id} order={order} />
+            <OrderCard key={order._id} order={order} role={'user'} />
           ))}
         </>
       )}

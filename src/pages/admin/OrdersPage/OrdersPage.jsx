@@ -1,9 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { adminStore } from "../../../main";
+import { adminStore, store } from "../../../main";
 import { Loader } from "lucide-react";
 import Empty from "../../../components/Empty/Empty";
 import OrderCard from "../../../components/OrderCard/OrderCard";
+import BackBtn from "../../../components/BackBtn/BackBtn";
 
 const OrdersPage = () => {
 
@@ -26,13 +27,14 @@ const OrdersPage = () => {
         alignItems: "center",
       }}
     >
+      <BackBtn />
       <h2>Заказы</h2>
       {adminStore.orders.length === 0 ? (
         <Empty text="Отзывы отсутствуют" />
       ) : (
         <>
           {adminStore.orders.map((order) => (
-            <OrderCard key={order._id} order={order} />
+            <OrderCard key={order._id} order={order} role={store.user.role}/>
           ))}
         </>
       )}

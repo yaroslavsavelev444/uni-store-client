@@ -12,6 +12,7 @@
   }
   
   .select-menu {
+    text-align: center;
     appearance: none;
     padding: 12px 20px;
     border: none;
