@@ -29,11 +29,11 @@ const Cataloq = () => {
         gap: "20px",
       }}
     >
-      <div className="product-grid">
+      <>
         {productStore.categories.length === 0 ? (
           <Empty text="Категории отсутствуют" />
         ) : (
-          <>
+          <div className="product-grid">
             {productStore.categories.map((category) => (
               <CategoryItem
                 key={category._id}
@@ -42,9 +42,9 @@ const Cataloq = () => {
                 productCount={category.productCount}
               />
             ))}
-          </>
+          </div>
         )}
-      </div>
+      </>
       {productStore.categories.length > 2 && (
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}

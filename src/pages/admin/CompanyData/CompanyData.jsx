@@ -10,6 +10,7 @@ import BackBtn from "../../../components/BackBtn/BackBtn";
 import { API_URL } from "../../../http/axios";
 import FileItem from "../../../components/FileItem/FileItem";
 import SocialInputBlock from "../../../components/SocialInputBlock/SocialInputBlock";
+import { error } from "../../../utils/logger";
 
 const CompanyData = () => {
   const { adminStore } = useContext(Context);
@@ -123,7 +124,7 @@ const CompanyData = () => {
   };
 
   const handleDeleteFile = (filePath) => {
-    console.log("handleDeleteFile", filePath);
+    error("handleDeleteFile", filePath);
 
     adminStore.deleteFile(filePath, productStore.company._id);
   };

@@ -2,12 +2,13 @@ import React from 'react'
 import Empty from '../Empty/Empty'
 import ProductReviewItem from '../ProductReviewItem/ProductReviewItem'
 import { adminStore } from '../../main'
+import { error } from '../../utils/logger'
 
 export default function ProductReviews({reviews, role}) {
 
     const handleReviewAction = (id, action) => {
         if(!action){
-            console.log("Не передано действие");
+            error("Не передано действие");
             return;
         }
         

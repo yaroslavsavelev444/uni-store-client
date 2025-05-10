@@ -5,6 +5,7 @@ import Empty from "../../../components/Empty/Empty";
 import ContactItem from "../../../components/ContactItem/ContactItem";
 import { Loader } from "lucide-react";
 import BackBtn from "../../../components/BackBtn/BackBtn";
+import { error } from "../../../utils/logger";
 
 const  ConsultPage = function () {
   useEffect(() => {
@@ -13,7 +14,7 @@ const  ConsultPage = function () {
 
   const handleUpdateContactStatus = async (contactId, status) => {
     if(!contactId || !status){
-      console.log("Не передан контакт");
+      error("Не передан контакт");
       return;
     }
       await adminStore.updateContactStatus(contactId, status);
@@ -23,8 +24,9 @@ const  ConsultPage = function () {
     return <Loader size={50}/>
   }
   return (
-    <div>
-      <BackBtn />
+    <>
+    <BackBtn />
+    <div style={{display:"flex", flexDirection:"column", width:"100%", alignItems:"center"}}>
       {adminStore.contacts.length === 0 ? (
         <Empty text="Сообщения отсутствуют" />
       ) : (
@@ -35,6 +37,7 @@ const  ConsultPage = function () {
         </div>
       )}
     </div>
+    </>
   );
 }
 

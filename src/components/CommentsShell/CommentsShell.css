@@ -5,3 +5,12 @@
     padding: 20px 0;
     justify-content: flex-start;
   }
+
+  @media screen and (max-width: 768px) {
+    .comments-shell {
+      justify-content: center;
+      flex-direction: column;
+      gap: 20;
+    }
+    
+  }

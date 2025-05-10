@@ -3,39 +3,44 @@ import "./ProductCard.css";
 import { API_URL } from "../../http/axios";
 import Button from "../Buttons/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faLock } from "@fortawesome/free-solid-svg-icons";
 import QuantityRegulator from "../QuantityRegulator/QuantityRegulator";
 import StockBadge from "../StockBadge/StockBadge";
 import { productStore } from "../../main";
 import { useToast } from "../../providers/ToastProvider";
+import { useAuthAction } from "../../hooks/useAuthAction";
+import { log } from "../../utils/logger";
 
-
-const ProductCard = ({ product, isAdmin, onClickAction }) => {
+const ProductCard = ({ product, isAdmin, onClickAction, isAuth }) => {
   const [quantity, setQuantity] = useState(1); // <-- Сюда
-  const {showToast} = useToast();
-
+  const { showToast } = useToast();
+  const authGuard = useAuthAction();
   if (!product) return null;
   const imageUrl = `${API_URL}/${product.images[0]}`;
 
   // Обработчики для изменения количества
   const increaseQuantity = (event) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
     if (quantity < product.totalQuantity) {
       setQuantity(quantity + 1);
     }
   };
 
   const decreaseQuantity = (event) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
   };
 
   const addToCart = (event) => {
-    event.stopPropagation(); 
-    console.log(`Добавлено в корзину ${quantity} шт. товара: ${product.title} id: ${product._id}`);
-    productStore.setCartItem(product._id, quantity, 'increase', showToast);
+    event.stopPropagation(); // Останавливаем распространение события на родительский элемент
+    authGuard(() => {
+      log(
+        `Добавлено в корзину ${quantity} шт. товара: ${product.title} id: ${product._id}`
+      );
+      productStore.setCartItem(product._id, quantity, "increase", showToast);
+    });
   };
 
   return (
@@ -48,18 +53,22 @@ const ProductCard = ({ product, isAdmin, onClickAction }) => {
         <h2 className="product-title">{product.title}</h2>
 
         <div className="product-pricing">
-        <span className="price-individual">
-  {product.priceIndividual.toLocaleString('ru-RU')} ₽
-</span>
+          <span className="price-individual">
+            {product.priceIndividual.toLocaleString("ru-RU")} ₽
+          </span>
           {product.discountPersentage > 0 && (
             <span className="discount">
-              −{product.discountPersentage}% от {product.discountFromQuantity} шт.
+              −{product.discountPersentage}% от {product.discountFromQuantity}{" "}
+              шт.
             </span>
           )}
         </div>
 
         <div className="product-meta">
-          <StockBadge isAvailable={product.isAvailable} quantity={product.totalQuantity} />
+          <StockBadge
+            isAvailable={product.isAvailable}
+            quantity={product.totalQuantity}
+          />
         </div>
 
         {/* Кнопка и регулятор количества */}
@@ -72,7 +81,11 @@ const ProductCard = ({ product, isAdmin, onClickAction }) => {
               max={product.totalQuantity}
             />
             <Button onClick={addToCart}>
-              <FontAwesomeIcon icon={faCartShopping} />
+              {isAuth ? (
+                <FontAwesomeIcon icon={faCartShopping} />
+              ) : (
+                <FontAwesomeIcon icon={faLock} color="red" />
+              )}
             </Button>
           </div>
         )}

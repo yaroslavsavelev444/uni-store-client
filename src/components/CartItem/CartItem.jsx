@@ -7,12 +7,13 @@ import useDebouncedValue from "../../hooks/useDebouncedValue";
 import { productStore } from "../../main";
 import { formatPrice } from "../../utils/formatMessageTime";
 
+
 const CartItem = ({
   item,
   onClickAction,
   showToast,
   onQuantityChange,
-  mode = "edit", // <== новый проп
+  mode = "edit", 
 }) => {
   const { productId, quantity, wasQuantityReduced } = item;
   const [localQuantity, setLocalQuantity] = useState(quantity);
@@ -40,13 +41,17 @@ const CartItem = ({
     }
   }, [localQuantity]);
 
-  const applyDiscount = localQuantity >= discountFromQuantity;
-  const discountedPrice = applyDiscount
-    ? priceIndividual * (1 - discountPersentage / 100)
-    : priceIndividual;
+  const hasDiscount = discountPersentage > 0 && discountFromQuantity > 0;
+const applyDiscount = hasDiscount && localQuantity >= discountFromQuantity;
 
-  const totalPrice = discountedPrice * localQuantity;
-  const oldTotalPrice = priceIndividual * localQuantity;
+const discountedPrice = applyDiscount
+  ? priceIndividual * (1 - discountPersentage / 100)
+  : priceIndividual;
+
+const totalPrice = discountedPrice * localQuantity;
+const oldTotalPrice = hasDiscount && applyDiscount
+  ? priceIndividual * localQuantity
+  : null;
   const imageUrl = images?.[0] ? `${API_URL}/${images[0]}` : "/placeholder.png";
 
   const Wrapper = mode === "edit" ? "div" : "div";
@@ -149,9 +154,8 @@ const CartItem = ({
     onClick={(e) => {
       e.stopPropagation();
       // Сначала обновляем локальное состояние
-      setLocalQuantity(0);
-      // И сразу (без debounce) обновляем стор
-      productStore.setCartItem(_id, 0, showToast);
+
+      productStore.deleteItemFromCart(_id);
     }}
   >
     <Trash size={20} />

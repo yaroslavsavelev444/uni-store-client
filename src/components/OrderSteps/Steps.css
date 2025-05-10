@@ -1,3 +1,4 @@
+
 .btn-horizontal-wrapper{
     margin: 5%;
     width: 100%;
@@ -26,3 +27,26 @@
     cursor: pointer;
     color: #555;
   }
+
+  .scroll-container{
+    flex-direction: column;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media screen and (max-width: 768px) {
+   
+  .scroll-container {
+    overflow-x: auto;
+    white-space: nowrap; /* Чтобы дети не переносились */
+  }
+
+  .scroll-content > * {
+    display: inline-block; /* Элементы в одну строку */
+  }
+
+  .input-wrapper{
+    width: 90%;
+  }
+}

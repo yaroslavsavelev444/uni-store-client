@@ -6,6 +6,7 @@ import Button from "../Buttons/Button";
 import Loader from "../Loader/Loader";
 import { useToast } from "../../providers/ToastProvider";
 import { contactFormSchema } from "../../utils/validator";
+import SocialItems from "../SocialItem/SocialItems";
 
 const ContactForm = ({ isLoggedIn = false, phone, email }) => {
   const { showToast } = useToast();
@@ -144,12 +145,7 @@ const ContactForm = ({ isLoggedIn = false, phone, email }) => {
           <div className="footer-column">
             <h3>ПИШИТЕ НАМ В СОЦСЕТЯХ</h3>
             <div className="footer-social">
-              <a
-                href="https://t.me/Perehvatnet"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fa-brands fa-telegram"
-              ></a>
+              <SocialItems links={productStore?.company?.socialLinks} />
             </div>
           </div>
         </div>

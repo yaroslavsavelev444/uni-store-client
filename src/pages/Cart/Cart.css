@@ -43,3 +43,10 @@
     color: #e53935;
     font-weight: bold;
   }
+
+  @media screen and (max-width: 768px) {
+    .cart-summary {
+      width: 90%;
+    }
+    
+  }

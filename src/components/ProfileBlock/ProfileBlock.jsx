@@ -1,11 +1,9 @@
-import React from "react";
+
 import "./ProfileBlock.css";
 import { store } from "../../main";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
 
-export default function ProfileBlock({ handleOpenSettingsModal }) {
+export default function ProfileBlock() {
   return (
     <div className="profile-block-wrapper">
       <div className="profile-block">
@@ -20,13 +18,6 @@ export default function ProfileBlock({ handleOpenSettingsModal }) {
               <p>{store.user.name}</p>
             )}
           </div>
-        </div>
-        <div className="settings-wrapper">
-          {/* Иконка настроек */}
-          <FontAwesomeIcon
-            icon={faGear}
-            onClick={() => handleOpenSettingsModal()}
-          />
         </div>
       </div>
     </div>

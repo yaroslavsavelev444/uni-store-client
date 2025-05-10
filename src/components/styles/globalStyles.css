@@ -75,6 +75,15 @@
     padding: 2%;
 }
 
+.btn-vert-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    padding: 2%;
+}
+
 .form-wrapper{
     display: "flex";
     flex-direction: "column";
@@ -141,4 +150,16 @@
 
 .decline-button{
   border-color: red !important;
+}
+
+
+@media screen and (max-width: 768px) {
+  .product-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  
 }

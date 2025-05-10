@@ -55,6 +55,7 @@ export default function Step3({
             <Input
               placeholder="Адрес доставки"
               value={order.deliveryData.address || ""}
+              label="Вводите адрес удобного вам пункта выдачи выбранной ТК"
               onChange={(e) =>
                 handleDeliveryDataChange("address", e.target.value)
               }

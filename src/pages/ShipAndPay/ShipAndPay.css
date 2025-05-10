@@ -5,3 +5,10 @@
     justify-content: center;
     gap: 20px;
 }
+
+@media screen and (max-width: 768px) {
+    .tabs{
+        flex-direction: column;
+    }
+    
+}

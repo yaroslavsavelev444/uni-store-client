@@ -1,4 +1,5 @@
 import $api from "../http/axios";
+import { log } from "../utils/logger";
 
 export default class productService {
   static async getCart() {
@@ -13,7 +14,7 @@ export default class productService {
   }
 
   static async getProducts(categoryId, selectedValue, showOnMainPage) {
-    console.log("getProducts", categoryId, selectedValue, showOnMainPage);
+    log("getProducts", categoryId, selectedValue, showOnMainPage);
     return $api.get("/products/getProducts", {
       params: { categoryId, selectedValue, showOnMainPage },
     });
@@ -29,7 +30,7 @@ export default class productService {
     return $api.get(`/products/getProductDetails`, { params: { id } });
   }
   static async sendContactForm(data) {
-    console.log("sendContactForm", data);
+    log("sendContactForm", data);
     return $api.post("/contacts/sendContactForm", data);
   }
   static async fetchOrgReviews() {
@@ -41,7 +42,7 @@ export default class productService {
   }
 
   static async updateCommentStatus(id, status) {
-    return $api.post("/admin/updateReviewStatus", { id, status });
+    return $api.post(`/admin/updateOrgReviewStatus/${id}`, { status });
   }
 
   static async checkAvailableItems(items) {
@@ -72,7 +73,12 @@ export default class productService {
     return $api.post("/orders/deleteCompany", { id });
   }
 
-  static async sendOrderReviewData(reviewData, productId) {
+  static async createOrderReview(reviewData, productId) {
     return $api.post(`/reviews/addProductReview/${productId}`, reviewData);
   }
+
+  static async deleteItemFromCart(id) {
+    return $api.post("/cart/deleteItem", { id });
+  }
+  
 }

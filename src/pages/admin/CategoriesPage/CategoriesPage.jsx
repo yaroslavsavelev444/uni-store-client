@@ -10,47 +10,85 @@ import { observer } from "mobx-react-lite";
 import "./CategoriesPage.css";
 import { Loader } from "lucide-react";
 import BackBtn from "../../../components/BackBtn/BackBtn";
+import { useToast } from "../../../providers/ToastProvider";
+
+// Начальное состояние категории
+const defaultCategory = {
+  title: "",
+  subTitle: "",
+  description: "",
+  image: null,
+  _id: null,
+};
+
 const CategoriesPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
-  const [category, setCategory] = useState({
-    title: "",
-    subTitle: "",
-    description: "",
-    image: null,
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCategory((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
-  };
-
-  // Обработчик загрузки изображений
-  const handleImageUpload = (newImage) => {
-    const image = Array.isArray(newImage) ? newImage[0] : newImage;
-    setCategory((prevProduct) => ({
-      ...prevProduct,
-      image,
-    }));
-  };
+  const [modalType, setModalType] = useState(null);
+  const { showToast } = useToast();
+  const [category, setCategory] = useState(defaultCategory);
 
   useEffect(() => {
     productStore.fetchCategories();
   }, []);
 
-  const handleDeleteCategory = () => {
-    adminStore.deleteCategory(category._id);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCategory((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  const handleImageUpload = (newImage) => {
+    const image = Array.isArray(newImage) ? newImage[0] : newImage;
+    setCategory((prev) => ({
+      ...prev,
+      image,
+    }));
+  };
+
+  const resetForm = () => {
+    setCategory(defaultCategory);
+    setModalType(null);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    resetForm();
+  };
+
+  const validateCategory = () => {
+    if (!category.title.trim()) {
+      showToast({ text1: "Название категории обязательно", type: "error" });
+      return false;
+    }
+
+    if (category.title.length > 50) {
+      showToast({ text1: "Название категории не может превышать 50 символов", type: "error" });
+      return false;
+    }
+
+    if (category.subTitle && category.subTitle.length > 50) {
+      showToast({ text1: "Подзаголовок не может превышать 50 символов", type: "error" });
+      return false;
+    }
+
+    if (category.description && category.description.length > 200) {
+      showToast({ text1: "Описание не может превышать 200 символов", type: "error" });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = () => {
+    if (!validateCategory()) return;
+
     const formData = new FormData();
     formData.append("title", category.title);
-    formData.append("subTitle", category.subTitle);
-    formData.append("description", category.description);
+    formData.append("subTitle", category.subTitle || "");
+    formData.append("description", category.description || "");
 
-    // добавляем только если новое изображение — File
     if (category.image instanceof File) {
       formData.append("image", category.image);
     }
@@ -61,96 +99,65 @@ const CategoriesPage = () => {
       adminStore.addCategory(formData);
     }
 
-    setModalVisible(false);
-    setCategory({
-      title: "",
-      subTitle: "",
-      description: "",
-      image: null,
-    });
+    closeModal();
   };
 
-  const openModalCategoryItem = (data) => {
-    console.log(data);
+  const handleDeleteCategory = () => {
+    if (category._id) {
+      adminStore.deleteCategory(category._id);
+    }
+    closeModal();
+  };
 
+  const openModalToEdit = (data) => {
     setCategory({
       title: data.title,
       subTitle: data.subTitle,
       description: data.description,
-      image: data.image, // строка (путь), не File
-      _id: data._id, // для отправки на сервер
+      image: data.image,
+      _id: data._id,
     });
-    setModalContent({ type: "editCategory" });
+    setModalType("edit");
     setModalVisible(true);
   };
 
-  const openModalAddCategory = (data) => {
-    setModalContent({ type: "addCategory", data });
+  const openModalToAdd = () => {
+    resetForm();
+    setModalType("add");
     setModalVisible(true);
   };
 
-  if(productStore.isLoading || adminStore.isLoading){
-    return <Loader size={50}/>
+  if (productStore.isLoading || adminStore.isLoading) {
+    return <Loader size={50} />;
   }
 
   return (
-    <div className="categories-page-wrapper">
+    <>
      <BackBtn />
-      <h2>Категории</h2>
+      <div className="categories-page-wrapper">
       <div className="categories-page">
-        {productStore.categories.length === 0 && (
+        {productStore.categories.length === 0 ? (
           <Empty text="Категории отсутствуют" />
+        ) : (
+          productStore.categories.map((cat) => (
+            <CategoryItem
+              key={cat._id}
+              title={cat.title}
+              subTitle={cat.subTitle}
+              description={cat.description}
+              image={cat.image}
+              onClick={() => openModalToEdit(cat)}
+            />
+          ))
         )}
-        {productStore.categories.map((category) => (
-          <CategoryItem
-            key={category.id}
-            title={category.title}
-            subTitle={category.subTitle}
-            description={category.description}
-            image={category.image}
-            onClick={() => openModalCategoryItem(category)}
-          />
-        ))}
       </div>
-      <Button onClick={() => openModalAddCategory()}>Добавить категорию</Button>
-      <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
-        {modalContent?.type === "addCategory" && (
-          <div className="upload-page-wrapper">
-            <h2>Добавить категорию</h2>
-            <div className="form-group">
-              <Input
-                name="title"
-                type="text"
-                placeholder="Название категории"
-                value={category.title}
-                onChange={handleChange}
-              />
-              <Input
-                name="description"
-                type="text"
-                placeholder="Описание категории"
-                value={category.description}
-                onChange={handleChange}
-              />
-              <Input
-                name="subTitle"
-                type="text"
-                placeholder="Подзаголовок категории"
-                value={category.subTitle}
-                onChange={handleChange}
-              />
-              <UploadImage
-                quantity={1}
-                onImageUpload={handleImageUpload}
-                name="image"
-              />
 
-              <Button onClick={handleSubmit}>Добавить</Button>
-            </div>
-          </div>
-        )}
-        {modalContent?.type === "editCategory" && (
-          <>
+      <Button onClick={openModalToAdd}>Добавить категорию</Button>
+
+      <Modal isOpen={modalVisible} onClose={closeModal}>
+        <div className="upload-page-wrapper">
+          <h2>{modalType === "edit" ? "Редактировать категорию" : "Добавить категорию"}</h2>
+          <div className="form-group">
             <Input
               name="title"
               type="text"
@@ -161,14 +168,14 @@ const CategoriesPage = () => {
             <Input
               name="description"
               type="text"
-              placeholder="Описание категории"
+              placeholder="Описание категории (до 200 символов)"
               value={category.description}
               onChange={handleChange}
             />
             <Input
               name="subTitle"
               type="text"
-              placeholder="Подзаголовок категории"
+              placeholder="Подзаголовок категории (до 50 символов)"
               value={category.subTitle}
               onChange={handleChange}
             />
@@ -176,13 +183,22 @@ const CategoriesPage = () => {
               quantity={1}
               onImageUpload={handleImageUpload}
               name="image"
+              preview={category.image}
             />
-            <Button onClick={handleSubmit}>Изменить</Button>
-            <Button onClick={handleDeleteCategory}>Удалить</Button>
-          </>
-        )}
+            <Button onClick={handleSubmit}>
+              {modalType === "edit" ? "Изменить" : "Добавить"}
+            </Button>
+            {modalType === "edit" && (
+              <Button onClick={handleDeleteCategory} className="btn-danger">
+                Удалить
+              </Button>
+            )}
+          </div>
+        </div>
       </Modal>
     </div>
+     </>
+   
   );
 };
 

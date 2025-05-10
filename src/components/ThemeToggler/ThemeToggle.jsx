@@ -1,23 +1,17 @@
 // components/ThemeToggle.jsx
-import React, { useEffect, useState } from "react";
-import "./ThemeToggle.css"; // стили отдельно
+import React from "react";
+import { useTheme } from "../context/ThemeContext";
+import "./ThemeToggle.css";
 
 const ThemeToggle = () => {
-  const [darkTheme, setDarkTheme] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  useEffect(() => {
-    document.body.classList.toggle("dark-theme", darkTheme);
-    localStorage.setItem("theme", darkTheme ? "dark" : "light");
-  }, [darkTheme]);
+  const { darkTheme, toggleTheme } = useTheme();
 
   return (
     <label className="theme-toggle">
       <input
         type="checkbox"
         checked={darkTheme}
-        onChange={() => setDarkTheme(!darkTheme)}
+        onChange={toggleTheme}
       />
       <span className="slider"></span>
     </label>

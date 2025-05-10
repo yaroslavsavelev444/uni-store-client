@@ -12,8 +12,8 @@ const FooterBar = () => {
         <div className="footer-column">
           <h4>Информация</h4>
           <ul style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {productStore.company?.files?.length > 0 &&
-              productStore.company.files.map((file, index) => (
+            {productStore?.company?.files?.length > 0 &&
+              productStore?.company.files.map((file, index) => (
                 <FileItem file={file} index={index} role={"user"} key={index} />
               ))}
           </ul>
@@ -34,7 +34,7 @@ const FooterBar = () => {
         </div>
         <div className="footer-column">
           <h4>Соцсети</h4>
-          <SocialItems links={productStore.company.socialLinks} />
+          <SocialItems links={productStore?.company?.socialLinks} />
         </div>
       </div>
 

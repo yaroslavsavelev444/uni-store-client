@@ -130,3 +130,20 @@
     align-items: center;
     gap: 20px;
   }
+
+  @media screen and (max-width: 768px) {
+    .order-card {
+      width: 100%;
+      padding: 1rem;
+    }
+    .order-product{
+      gap: 5px;
+    }
+    .product-info{
+      gap: 0;
+    }
+    .product-order-title, .product-order-quantity p, .product-info p{
+      font-size: 0.75rem;
+    }
+    
+  }

@@ -3,15 +3,31 @@ import "./CategoryItem.css";
 import { API_URL } from "../../http/axios";
 import CategoryProductCountBadge from "../CategoryProductCountBadge/CategoryProductCountBadge";
 
-const CategoryItem = ({ title, subTitle, description, image, onClick, productCount}) => {
+const truncate = (text, maxLength = 50) => {
+  if (!text) return "";
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+};
+
+const CategoryItem = ({
+  title = "",
+  subTitle = "",
+  description = "",
+  image,
+  onClick,
+  productCount = 0,
+}) => {
   return (
     <div className="category-card block-background" onClick={onClick}>
-      <img src={`${API_URL}/${image}`} alt={title} className="category-image" />
+      <img
+        src={image ? `${API_URL}/${image}` : "/fallback.jpg"}
+        alt={title || "Изображение категории"}
+        className="category-image"
+      />
       <div className="category-content">
-        <h2 className="category-title">{title}</h2>
-        <h4 className="category-subtitle">{subTitle}</h4>
-        <p className="category-description">{description}</p>
-        <CategoryProductCountBadge count={productCount} />
+        <h2 className="category-title">{truncate(title, 40)}</h2>
+        <h4 className="category-subtitle">{truncate(subTitle, 40)}</h4>
+        <p className="category-description">{truncate(description, 60)}</p>
+         <CategoryProductCountBadge count={productCount} />
       </div>
     </div>
   );

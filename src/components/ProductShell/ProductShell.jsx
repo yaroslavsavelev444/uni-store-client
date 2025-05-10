@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { productStore } from "../../main";
+import { productStore, store } from "../../main";
 import { useNavigate } from "react-router-dom";
 import Empty from "../Empty/Empty";
 import ProductCard from "../ProductCard/ProductCard";
 import { observer } from "mobx-react-lite";
 import Loader from "../Loader/Loader";
 import SelectMenu from "../SelectMenu/SelectMenu";
+import { error } from "../../utils/logger";
 
 const ProductShell = function ({ categoryId = null, showOnMainPage = false }) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const ProductShell = function ({ categoryId = null, showOnMainPage = false }) {
   }, [categoryId, showOnMainPage, selectedValue]);
 
   const handleNavigateToItemPage = (id) => {
-    if (!id) return console.log("Не передан товар");
+    if (!id) return error("Не передан товар");
     navigate(`/category/${categoryId}/${id}`);
   };
 
@@ -58,6 +59,7 @@ const ProductShell = function ({ categoryId = null, showOnMainPage = false }) {
                 key={product._id}
                 product={product}
                 onClickAction={() => handleNavigateToItemPage(product._id)}
+                isAuth={store.isAuth}
               />
             ))}
           </div>

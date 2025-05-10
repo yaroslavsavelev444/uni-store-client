@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./OrderCard.css";
 import { API_URL } from "../../http/axios";
-import { formatDate } from "../../utils/formatMessageTime";
+import { formatDate, formatPrice } from "../../utils/formatMessageTime";
 import {
   deliveryOptions,
   getStatusClass,
@@ -15,9 +15,10 @@ import Button from "../Buttons/Button";
 import Modal from "../Modal/Modal";
 import Input from "../Input/Input";
 import { Download, X } from "lucide-react";
+import { log } from "../../utils/logger";
 
 export default function OrderCard({ order, role }) {
-  console.log("order", order.file);
+  log("order", order.file);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -27,7 +28,7 @@ export default function OrderCard({ order, role }) {
       await adminStore.changeOrderStatus(order._id, status);
       adminStore.fetchOrders();
     } catch (error) {
-      console.log(error);
+      log(error);
     }
   };
 
@@ -41,7 +42,7 @@ export default function OrderCard({ order, role }) {
       setIsModalOpen(false);
       setText("");
     } catch (error) {
-      console.log(error);
+      log(error);
     }
   };
 
@@ -146,13 +147,13 @@ export default function OrderCard({ order, role }) {
               className="product-order-image"
             />
             <div className="product-info">
-              <h2 className="product-order-title">{item.product?.title}</h2>
-              <p className="product-order-quantity">Кол-во: {item.quantity}</p>
-              <p>Цена: {item.price}₽</p>
+              <h2 className="product-order-title">{item.product?.title || "Удаленный товар"}</h2>
+              <p className="product-order-quantity">Кол-во: {item.quantity || "?"}</p>
+              <p>Цена: {formatPrice(item.price) || "?"}</p>
               {item.priceWithDiscount && (
-                <p>Скидка: {item.priceWithDiscount}₽</p>
+                <p>Скидка: {formatPrice(item.priceWithDiscount) || "?"}</p>
               )}
-              <p>Итого: {item.totalPriceWithDiscount || item.totalPrice}₽</p>
+              <p>Итого: {formatPrice(item.totalPriceWithDiscount || item.totalPrice) || "?"}</p>
             </div>
           </div>
         ))}
@@ -160,11 +161,11 @@ export default function OrderCard({ order, role }) {
 
       <div className="order-total">
         <h3>
-          Сумма без скидки: <strong>{order.priceDetails.totalPrice}₽</strong>
+          Сумма без скидки: <strong>{formatPrice(order.priceDetails.totalPrice) || "?"}</strong>
         </h3>
         <h3>
           Сумма со скидкой:{" "}
-          <strong>{order.priceDetails.totalPriceWithDiscount}₽</strong>
+          <strong>{formatPrice(order.priceDetails.totalPriceWithDiscount) || "?"}</strong>
         </h3>
       </div>
 
@@ -196,6 +197,7 @@ export default function OrderCard({ order, role }) {
         </div>
       )}
       {order.status !== "cancelled" && order.status !== "ready" && (
+        <div className="btn-wrapper-i" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Button
             className="cancel-button"
             onClick={() => {
@@ -205,11 +207,14 @@ export default function OrderCard({ order, role }) {
           >
             Отменить заказ
           </Button>
+        </div>
+          
         )}
       {role === "admin" &&
         order.status !== "cancelled" &&
         order.status !== "ready" &&
         !order?.file?.name && (
+          <div className="btn-wrapper-i" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Button
             className="attach-button"
             onClick={() => {
@@ -219,6 +224,7 @@ export default function OrderCard({ order, role }) {
           >
             Прикрепить файл
           </Button>
+          </div>
         )}
       {order?.file?.name && (
         <div

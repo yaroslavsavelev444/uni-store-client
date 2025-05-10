@@ -1,0 +1,28 @@
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+flex-direction: row;
+justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+}
+
+.custom-checkbox input {
+  accent-color: #3b82f6; /* или любой цвет */
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.custom-checkbox .checkbox-label {
+
+  white-space: nowrap
+}
+
+.custom-checkbox input:disabled + .checkmark {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

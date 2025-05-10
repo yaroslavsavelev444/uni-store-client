@@ -5,6 +5,7 @@ import "./Steps.css";
 import Input from "../Input/Input";
 import { productStore } from "../../main";
 import OfferUserCompany from "../OfferUserCompany/OfferUserCompany";
+import { log } from "../../utils/logger";
 
 export default function Step2({
   order,
@@ -14,14 +15,73 @@ export default function Step2({
   onBack,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({});
   const [selectedUserCompany, setSelectedUserCompany] = useState(null);
-  const handleNextStep = () => {
-    if (order.recipientData.name && order.recipientData.phone) {
-      onNextStep();
-    } else {
-      setErrorMessage("Заполните все поля");
+ const handleNextStep = () => {
+  const newErrors = {};
+
+  const phone = order.recipientData.phone?.trim();
+  log(phone.length);
+  
+  if (!phone) {
+    newErrors.phone = "Укажите номер телефона";
+  } else if (phone.length < 18) {
+    newErrors.phone = "Неправильный номер телефона";
+  }
+
+  if (!order.recipientData.name?.trim()) {
+    newErrors.name = "Укажите имя получателя";
+  }
+
+  if (order.isCompany) {
+    const cd = order.companyData;
+
+    if (!cd.companyName?.trim()) newErrors.companyName = "Укажите название компании";
+    if (!cd.legalAddress?.trim()) newErrors.legalAddress = "Укажите юридический адрес";
+
+    if (!cd.inn?.trim()) {
+      newErrors.inn = "Укажите ИНН";
+    } else if (cd.inn.replace(/\D/g, "").length !== 10) {
+      newErrors.inn = "Неправильный ИНН";
     }
-  };
+
+    if (!cd.kpp?.trim()) {
+      newErrors.kpp = "Укажите КПП";
+    } else if (cd.kpp.replace(/\D/g, "").length !== 9) {
+      newErrors.kpp = "Неправильный КПП";
+    }
+
+    if (!cd.ogrn?.trim()) {
+      newErrors.ogrn = "Укажите ОГРН";
+    } else if (![13, 15].includes(cd.ogrn.replace(/\D/g, "").length)) {
+      newErrors.ogrn = "Неправильный ОГРН";
+    }
+
+    if (!cd.checkingAccount?.trim()) {
+      newErrors.checkingAccount = "Укажите расчетный счет";
+    }
+
+    if (!cd.bankName?.trim()) {
+      newErrors.bankName = "Укажите название банка";
+    }
+
+    if (!cd.bik?.trim()) {
+      newErrors.bik = "Укажите БИК";
+    } else if (cd.bik.replace(/\D/g, "").length !== 9) {
+      newErrors.bik = "Неправильный БИК";
+    }
+
+    if (!cd.correspondentAccount?.trim()) {
+      newErrors.correspondentAccount = "Укажите корреспондентский счет";
+    }
+  }
+
+  setErrors(newErrors);
+
+  if (Object.keys(newErrors).length === 0) {
+    onNextStep();
+  }
+};
 
   const handleCompanyChange = (field, value) => {
     updateOrder(`companyData.${field}`, value);
@@ -63,15 +123,16 @@ export default function Step2({
           value={order.recipientData.name || ""}
           onChange={(e) => updateOrder("recipientData.name", e.target.value)}
           style={{ width: "100%" }}
-          errorMessage={errorMessage}
+          errorMessage={errors.name}
         />
 
         <Input
           placeholder="Телефон"
           value={order.recipientData.phone || ""}
           onChange={(e) => updateOrder("recipientData.phone", e.target.value)}
+          
           style={{ width: "100%" }}
-          errorMessage={errorMessage}
+          errorMessage={errors.phone}
           mask="+7 (999) 999-99-99"
         />
 
@@ -105,6 +166,7 @@ export default function Step2({
                 handleCompanyChange("companyName", e.target.value)
               }
               style={{ width: "100%" }}
+              errorMessage={errors.companyName}
             />
             <Input
               placeholder="Юридический адрес"
@@ -113,6 +175,7 @@ export default function Step2({
                 handleCompanyChange("legalAddress", e.target.value)
               }
               style={{ width: "100%" }}
+              errorMessage={errors.legalAddress}
             />
             <Input
               placeholder="ИНН"
@@ -120,6 +183,7 @@ export default function Step2({
               onChange={(e) => handleCompanyChange("inn", e.target.value)}
               style={{ width: "100%" }}
               mask={"9999999999"}
+              errorMessage={errors.inn}
             />
             <Input
               placeholder="КПП"
@@ -127,6 +191,7 @@ export default function Step2({
               onChange={(e) => handleCompanyChange("kpp", e.target.value)}
               style={{ width: "100%" }}
               mask={"999999999"}
+              errorMessage={errors.kpp}
             />
             <Input
               placeholder="ОГРН"
@@ -134,12 +199,21 @@ export default function Step2({
               onChange={(e) => handleCompanyChange("ogrn", e.target.value)}
               style={{ width: "100%" }}
               mask={"999999999999999"}
+              errorMessage={errors.ogrn}
+            />
+            <Input
+            placeholder={"Расчетный счет"}
+            value={order.companyData.checkingAccount || ""}
+            onChange={(e) => handleCompanyChange("checkingAccount", e.target.value)}
+            style={{ width: "100%" }}
+            errorMessage={errors.checkingAccount}
             />
             <Input
               placeholder="Банк"
               value={order.companyData.bankName || ""}
               onChange={(e) => handleCompanyChange("bankName", e.target.value)}
               style={{ width: "100%" }}
+              errorMessage={errors.bankName}
             />
             <Input
               placeholder="БИК"
@@ -147,6 +221,7 @@ export default function Step2({
               onChange={(e) => handleCompanyChange("bik", e.target.value)}
               style={{ width: "100%" }}
               mask={"999999999"}
+              errorMessage={errors.bik}
             />
             <Input
               placeholder="Корр. счёт"
@@ -155,6 +230,7 @@ export default function Step2({
                 handleCompanyChange("correspondentAccount", e.target.value)
               }
               style={{ width: "100%" }}
+              errorMessage={errors.correspondentAccount}
             />
             {productStore.userCompanies.length > 0 && (
               <>

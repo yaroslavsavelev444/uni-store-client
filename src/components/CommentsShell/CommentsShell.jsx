@@ -5,20 +5,19 @@ import { productStore } from "../../main";
 import ReviewItem from "../ReviewItem/ReviewItem";
 import "./CommentsShell.css";
 
-const CommentsShell = function () {
+const CommentsShell = ({showStatuses}) => {
   useEffect(() => {
     productStore.fetchOrgReviews();
   }, []);
 
   return (
     <div className="comments-shell">
-      {productStore?.comments.length === 0 ? (
-        <Empty text="Комментарии отсутствуют" />
-      ) : (
-        productStore?.comments.map((comment) => (
-          <ReviewItem key={comment._id} review={comment} />
-        ))
-      )}
+        {productStore.reviews.map((review) =>(
+            <ReviewItem key={review._id} review={review} isEditable={false}  showStatuses={showStatuses}/>
+        ))}
+        {productStore.reviews.length === 0 && (
+            <Empty text="Нет отзывов" />
+        )}
     </div>
   );
 };

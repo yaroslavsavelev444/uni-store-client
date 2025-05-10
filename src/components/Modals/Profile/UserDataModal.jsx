@@ -4,6 +4,7 @@ import UserCompanyItem from "../../UserCompanyItem/UserCompanyItem";
 import Empty from "../../Empty/Empty";
 import { observer } from "mobx-react-lite";
 import Button from "../../Buttons/Button";
+import { log } from "../../../utils/logger";
 
 const UserDataModal = function () {
   useEffect(() => {
@@ -11,7 +12,7 @@ const UserDataModal = function () {
   }, []);
 
   const handleDeleteCompany = (id) => {
-    if(!id) return console.log("Не передан id");
+    if(!id) return log("Не передан id");
     productStore.deleteUserCompany(id);
   };
 

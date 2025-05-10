@@ -11,13 +11,19 @@
   }
 
   
+  .email-input-wrapper{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
   .form-container h2 {
     text-align: center;
   }
 
   .form-group label {
+    text-align: left;
     display: block;
-    margin-bottom: 5px;
     font-weight: bold;
   }
   

@@ -124,3 +124,10 @@
     text-align: center;
     margin-top: 10px;
   }
+
+  @media screen and (max-width: 768px) {
+    .contact-section {
+      justify-content: center;
+    }
+    
+  }

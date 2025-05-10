@@ -15,7 +15,7 @@
   /* Контент модального окна */
  /* Контент модального окна */
 .modal-content {
-  background: white;
+  background: dimgray;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
@@ -50,4 +50,13 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+  }
+
+
+  @media screen and (max-width: 768px) {
+    .modal-content {
+      min-width: auto;
+      width: 100%;
+    }
+    
   }

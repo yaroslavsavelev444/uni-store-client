@@ -9,7 +9,7 @@ const ProtectedRoute = observer(({ element }) => {
 
   if (!store?.isAuth || !(store?.user?.role === 'admin' || store?.user?.role === 'superadmin')) {
     // Если пользователь не авторизован или не является админом, перенаправляем его на страницу входа
-    return <Navigate to="/auth" />;
+    return <Navigate to="/register" />;
   }
 
   return element; // Просто возвращаем переданный элемент

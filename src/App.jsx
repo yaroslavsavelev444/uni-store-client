@@ -11,7 +11,6 @@ import FooterBar from "./components/FooterBar/FooterBar";
 import "./App.css";
 import { observer } from "mobx-react-lite";
 import ToastProvider from "./providers/ToastProvider";
-import { ThemeProvider } from "./providers/ThemeProvider";
 import EmailConfirmationOverlay from "./components/EmailConfirmationOverlay/EmailConfirmationOverlay";
 import { Context, productStore } from "./main";
 import Home from "./pages/Home/Home";
@@ -26,7 +25,6 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Admin from "./pages/AdminPage/Admin";
 import NotFound from "./pages/NotFound/NotFound";
 import ZeroMenu from "./components/NullMenu/ZeroMenu";
-import Auth from "./pages/Auth/Auth";
 import UsersPage from "./pages/admin/UsersPage/UsersPage";
 import OrdersPage from "./pages/admin/OrdersPage/OrdersPage";
 import CommentsPage from "./pages/admin/CommentsPage/CommentsPage";
@@ -40,10 +38,19 @@ import { Loader } from "lucide-react";
 import CompanyData from "./pages/admin/CompanyData/CompanyData";
 import ScrollToTopButton from "./components/ScrollToTopButton/ScrollToTopButton";
 import ShipAndPay from "./pages/ShipAndPay/ShipAndPay";
+import AuthRequiredModal from "./components/Modals/AuthRequiredModal";
+import useIsMobile from "./hooks/useIsMobile";
+import MobileNavBar from "./components/navbar/MobileNavBar";
+import { ThemeProvider } from "./components/context/ThemeContext";
+import ResetPasswordPage from "./pages/ResetPasswordPage/ResetPasswordPage";
+import RegisterPage from "./pages/Register/Register";
+import LoginPage from "./pages/Login/Login";
 
 const AppContent = observer(() => {
+  const location = useLocation(); // добавь это
   const { store } = useContext(Context);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -54,10 +61,10 @@ const AppContent = observer(() => {
     };
     checkAuthStatus();
   }, []);
+
   useEffect(() => {
     productStore.fetchCompany();
   }, []);
-  
 
   if (!isLoaded) {
     return (
@@ -67,10 +74,21 @@ const AppContent = observer(() => {
     );
   }
 
-  const hideFooter = ["/chats", "/auth", "/reset-password", "*"].some((path) =>
-    location.pathname.startsWith(path)
-  );
+  const hideFooter = [
+    "/reset-password",
+    "/register",
+    "/login",
+    "/register",
+    "/404",
+    "*",
+  ].some((path) => location.pathname.startsWith(path));
 
+  const isSpecialPage = [
+    "/",
+    "/reset-password",
+    "/login",
+    "/register",
+  ].includes(location.pathname);
 
   return (
     <div className="App">
@@ -79,25 +97,21 @@ const AppContent = observer(() => {
         address={productStore?.company?.address}
         phone={productStore?.company?.phone}
       />
-      <ToastProvider>
-        <ThemeProvider>
-          <NavBar />
-          <Content />
+      <ThemeProvider>
+        <ToastProvider>
+          {isMobile ? <MobileNavBar /> : <NavBar />}
+          <AuthRequiredModal />
+          <Content isSpecialPage={isSpecialPage} />
           {!hideFooter && <FooterBar />}
           <EmailConfirmationOverlay />
-          <ScrollToTopButton /> 
-        </ThemeProvider>
-      </ToastProvider>
+          <ScrollToTopButton />
+        </ToastProvider>
+      </ThemeProvider>
     </div>
   );
 });
 
-const Content = observer(() => {
-  const location = useLocation();
-  const isSpecialPage = ["/", "/chats", "/chats/:userId", "/auth"].includes(
-    location.pathname
-  );
-
+const Content = observer(({ isSpecialPage }) => {
   const { store } = useContext(Context);
 
   return (
@@ -116,12 +130,24 @@ const Content = observer(() => {
           <Route path="/about" element={<About />} />
           <Route path="/cart" element={<Cart />} />
           <Route
-            path="/auth"
-            element={store.isAuth ? <Navigate to="/profile" /> : <Auth />}
+            path="/login"
+            element={store.isAuth ? <Navigate to="/profile" /> : <LoginPage />}
+          />
+          <Route
+            path="/register"
+            element={
+              store.isAuth ? <Navigate to="/profile" /> : <RegisterPage />
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              store.isAuth ? <Navigate to="/profile" /> : <ResetPasswordPage />
+            }
           />
           <Route
             path="/profile"
-            element={store.isAuth ? <Profile /> : <Navigate to="/auth" />}
+            element={store.isAuth ? <Profile /> : <Navigate to="/register" />}
           />
           <Route path="/reset-password" element={<ResetPassword />} />
 
@@ -154,7 +180,7 @@ const Content = observer(() => {
             path="/admin/upload"
             element={<ProtectedRoute element={<UploadPage />} />}
           />
-           <Route
+          <Route
             path="/admin/data_org"
             element={<ProtectedRoute element={<CompanyData />} />}
           />

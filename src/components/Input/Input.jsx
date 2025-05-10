@@ -6,6 +6,7 @@ import "./Input.css"; // Стилевые классы для кастомиза
 const Input = ({
   mask,
   errorMessage,
+  label,
   isPassword,
   placeholder,
   onChange,
@@ -23,19 +24,24 @@ const Input = ({
   };
 
   // Функция для удаления букв
-  const handleInputChange = (e) => {
-    const { value } = e.target;
+ const sanitize = (str) => str.replace(/[<>/'"`]/g, '');
 
-    const numericValue = value.replace(/[^\d]/g, '');
-    if (onChange) {
-      onChange(e, numericValue); 
-    }
-  };
+const handleInputChange = (e) => {
+  const rawValue = e.target.value;
+  const sanitized = sanitize(rawValue);
+  
+  // Если есть незаполненные части маски — не валидно
+  const isComplete = !rawValue.includes('_');
+
+  if (onChange) {
+    onChange(e, sanitized, isComplete);
+  }
+};
 
   const renderInput = () => {
     if (mask) {
       return (
-        <InputMask {...props} mask={mask} onChange={handleInputChange}>
+        <InputMask {...props} mask={mask} onChange={handleInputChange} maskChar={null} >
           {(inputProps) => (
             <input
               {...inputProps}
@@ -59,8 +65,9 @@ const Input = ({
 
   return (
     <div className="input-wrapper">
+      {label && <label className="input-label">{label}</label>}
       {renderInput()}
-      
+
       {isPassword && (
         <span className="eye-icon" onClick={togglePasswordVisibility}>
           {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -71,5 +78,6 @@ const Input = ({
     </div>
   );
 };
+
 
 export default Input;

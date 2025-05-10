@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import ReactDOM from "react-dom";
 import "./Modal.css";
+import { useTheme } from "../context/ThemeContext";
 
 const Modal = ({ isOpen, onClose, children }) => {
+    const { darkTheme, toggleTheme } = useTheme();
+  
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden"; 

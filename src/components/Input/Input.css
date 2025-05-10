@@ -15,7 +15,7 @@
   
   .eye-icon {
     position: absolute;
-    right: -40px;
+    right: 0;
     cursor: pointer;
     font-size: 20px;
     color: #888;
@@ -31,3 +31,8 @@
     font-size: 12px;
     margin-top: 5px;
   }
+  .input-label {
+    text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+}

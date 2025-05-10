@@ -17,7 +17,7 @@
     flex-direction: column;
 }
 .upload-page {
-    width: 50%;
+    width: 90%;
     flex-direction: column;
     gap: 20px;
   }
@@ -42,4 +42,20 @@
 
   .image-preview img {
     margin-top: 10px;
+  }
+
+  .attribute-row{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+  }
+  .custom-attributes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
   }

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import "./EmailConfirmationOverlay.css";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
+import { log } from "../../utils/logger";
 
 const EmailConfirmationOverlay = () => {
   const { store } = useContext(Context);
@@ -20,7 +21,7 @@ const EmailConfirmationOverlay = () => {
           navigate("/profile");
         }
         else{
-          console.log("errors in EmailConfirmationOverlay");
+          log("errors in EmailConfirmationOverlay");
         }
       } catch (e) {
         console.error("Ошибка при проверке подтверждения email:", e);

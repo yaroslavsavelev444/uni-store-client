@@ -5,6 +5,7 @@ import { formatPrice } from "../../utils/formatMessageTime";
 import Button from '../Buttons/Button';
 import Empty from '../Empty/Empty';
 import { Trash, X } from 'lucide-react';
+import "./Steps.css";
 
 
 const Step1 = ({ cart, totalPrice, oldTotal, updateQuantity, onNextStep, handleNavigaeToItemPage , handleClearCart}) => {
@@ -21,6 +22,8 @@ const Step1 = ({ cart, totalPrice, oldTotal, updateQuantity, onNextStep, handleN
                   </div>
                 </div>
 
+
+<div className="scroll-container">
                 {cart.map((product) => (
                   <CartItem
                     key={product._id}
@@ -29,6 +32,7 @@ const Step1 = ({ cart, totalPrice, oldTotal, updateQuantity, onNextStep, handleN
                     onQuantityChange={updateQuantity} // <== передаём колбэк
                   />
                 ))}
+                </div>
       
                 <div className="cart-summary">
                   <div className="total-label">

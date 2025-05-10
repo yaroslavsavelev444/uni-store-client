@@ -3,6 +3,7 @@ import { adminStore } from "../../../main";
 import { observer } from "mobx-react-lite";
 import Button from "../../Buttons/Button";
 import "./UsersList.css";
+import { log } from "../../../utils/logger";
 const UserItem = ({ user, currentUser }) => {
   // Функция для изменения статуса админа
   const toggleAdminStatus = () => {
@@ -12,8 +13,8 @@ const UserItem = ({ user, currentUser }) => {
       adminStore.addAdmin(user.id); // Даем админку
     }
   };
-  console.log("user", user);
-  console.log("currentUser", currentUser);
+  log("user", user);
+  log("currentUser", currentUser);
   
   
 

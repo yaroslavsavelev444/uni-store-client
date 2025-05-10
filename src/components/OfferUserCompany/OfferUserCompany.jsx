@@ -1,8 +1,9 @@
 import React from 'react'
 import './OfferUserCompany.css'
 import { Check, X } from 'lucide-react';
+import { log } from '../../utils/logger';
 export default function OfferUserCompany({company, onSelect, selected, onCancelSelection}) {
-    console.log("company", company);
+    log("company", company);
     const handleCancelSelection = (e) => {
         e.stopPropagation(); // ⬅️ ВАЖНО: останавливает всплытие
         onCancelSelection();

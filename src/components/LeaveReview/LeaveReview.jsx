@@ -9,6 +9,7 @@ import Input from "../Input/Input";
 import { useToast } from "../../providers/ToastProvider";
 import { productStore } from "../../main";
 import PageHeader from "../PageHeader/PageHeader";
+import { log } from "../../utils/logger";
 
 export default function LeaveReview({ productId }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -23,11 +24,11 @@ export default function LeaveReview({ productId }) {
 
   const handleSubmit = () => {
     if(!reviewData.pros || !reviewData.cons || !reviewData.comment || !reviewData.rating) {
-        console.log("Заполните все поля");
+        log("Заполните все поля");
         showToast({ text1: "Заполните все поля", type: "error" });
         return;
     }
-    productStore.sendOrderReviewData(reviewData, productId, showToast);
+    productStore.createOrderReview(reviewData, productId, showToast);
     setModalOpen(false);
   };
 

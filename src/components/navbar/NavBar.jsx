@@ -13,6 +13,7 @@ const NavBar = () => {
   const [hidden, setHidden] = useState(false); // Состояние скрытого навбара
   const [searchVisible, setSearchVisible] = useState(false);
   const [search, setSearch] = useState("");
+  const cartQuantity = store.user?.cartQuantity || 0;
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -58,14 +59,16 @@ const NavBar = () => {
             Каталог
           </NavLink>
           <NavLink
-            to="/cart"
-            className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
-          >
-            <span className="cart-link-wrapper">
-              Корзина
-               <span className="cart-indicator" />
-            </span>
-          </NavLink>
+      to="/cart"
+      className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
+    >
+      <span className="cart-link-wrapper" style={{ position: "relative" }}>
+  Корзина
+  {cartQuantity > 0 && (
+    <span className="cart-indicator">{cartQuantity}</span>
+  )}
+</span>
+    </NavLink>
           <NavLink
             to="/about"
             className={({ isActive }) => (isActive ? "nav-active" : "nav-link")}
@@ -89,7 +92,7 @@ const NavBar = () => {
             </NavLink>
           ) : (
             <NavLink
-              to="/auth"
+              to="/register"
               className={({ isActive }) =>
                 isActive ? "nav-active" : "nav-link"
               }

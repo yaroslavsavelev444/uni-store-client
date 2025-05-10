@@ -41,3 +41,16 @@
   .thumb-image:hover {
     opacity: 1;
   }
+  /* Стили для серых боковых кнопок */
+.swiper-button-next,
+.swiper-button-prev {
+  color: rgb(153, 153, 153); /* Серый цвет для иконок */
+  border-radius: 50%; /* Округлость кнопок */
+  padding: 10px; /* Добавим немного отступа */
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #ffffff; /* Темно-серый при наведении */
+}
+

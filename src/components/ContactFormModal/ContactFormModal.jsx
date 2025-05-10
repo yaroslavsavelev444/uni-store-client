@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import Modal from "../Modal/Modal";
 import Input from "../Input/Input";
 import Button from "../Buttons/Button";
@@ -11,6 +12,7 @@ import ContactSection from "../ContactSection/ContactSection";
 const ContactFormModal = ({ isLoggedIn = false }) => {
   const { showToast } = useToast();
   const [modalVisible, setModalVisible] = useState(false);
+  const recaptchaRef = useRef(null);
 
   const [formData, setFormData] = useState({
     user: "",
@@ -30,31 +32,39 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!formData.phone || !formData.msg){
-      console.log("Нужно заполнить все поля");
+    if (!formData.phone || !formData.msg) {
       showToast({ text1: "Заполните все поля", type: "error" });
       return;
     }
 
     let dataToSend = { ...formData };
-  
+
     if (isLoggedIn) {
       dataToSend.user = store?.user?.name;
       dataToSend.email = store?.user?.email;
     }
-  
+
+    // Проверка капчи только в продакшене
+    const isProd = import.meta.env.VITE_PROJECT === "prod";
+    let captchaToken = "";
+
+    if (isProd && recaptchaRef.current) {
+      captchaToken = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      dataToSend.captcha = captchaToken;
+    }
+
     try {
       await contactFormSchema.validate(dataToSend, { abortEarly: false });
-  
       await productStore.sendContactForm(dataToSend, showToast);
-  
+
       setFormData({
         user: "",
         email: "",
         phone: "",
         msg: "",
       });
-  
+
       setModalVisible(false);
     } catch (error) {
       if (error.name === "ValidationError") {
@@ -69,7 +79,11 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
 
   return (
     <>
-    <ContactSection  setModalVisible={setModalVisible} phone={productStore?.company?.phone} email={productStore?.company?.email} />
+      <ContactSection
+        setModalVisible={setModalVisible}
+        phone={productStore?.company?.phone}
+        email={productStore?.company?.email}
+      />
 
       {modalVisible && (
         <Modal onClose={() => setModalVisible(false)} isOpen={modalVisible}>
@@ -88,8 +102,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
                   type="text"
                   placeholder="Ваше имя:"
                   required
-                  value={!isLoggedIn ? formData.user : store.user.name}
-                  readOnly={isLoggedIn}
+                  value={formData.user}
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 />
@@ -99,8 +112,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
                   type="email"
                   placeholder="Ваш email:"
                   required
-                  value={!isLoggedIn ? formData.email : store.user.email}
-                  readOnly={isLoggedIn}
+                  value={formData.email}
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 />
@@ -119,21 +131,30 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
             />
             <div className="form-group">
               <div className="input-wrapper">
-                <textarea
-                  id="msg"
-                  name="msg"
-                  placeholder="Ваше сообщение:"
-                  required
-                  className="form-input resize-none"
-                  value={formData.msg}
-                  onChange={handleChange}
-                  style={{ width: "100%" }}
-                />
+              <textarea
+                id="msg"
+                name="msg"
+                placeholder="Ваше сообщение:"
+                required
+                className="form-input resize-none"
+                value={formData.msg}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
               </div>
             </div>
 
+            {import.meta.env.VITE_PROJECT === "dev" && (
+  <div>
+    <ReCAPTCHA
+      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+      ref={recaptchaRef}
+    />
+  </div>
+)}
+
             <div className="form-group">
-              <Button type="submit" disabled={productStore.isLoading }>
+              <Button type="submit" disabled={productStore.isLoading}>
                 {productStore.isLoading ? <Loader size={15} /> : "Отправить"}
               </Button>
             </div>

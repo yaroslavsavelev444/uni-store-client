@@ -1,19 +1,19 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import ProductService from "../services/productService";
+import { error, log } from "../utils/logger";
 
 export default class ProductStore {
   isLoading = false;
   categories = [];
   orders = [];
   products = [];
+  orgReviews = [];
   reviews = [];
   userReviews = [];
   company = {};
   currentProduct = {};
   cart = [];
   mainMaterials = [];
-  comments = [];
-  files = [];
   userCompanies = [];
 
   constructor() {
@@ -23,108 +23,90 @@ export default class ProductStore {
   setCategories(categories) {
     runInAction(() => {
       this.categories = categories;
-      console.log("Categories set to:", this.categories);
+      log("Categories set to:", this.categories);
     });
   }
   setIsLoading(bool) {
     runInAction(() => {
       this.isLoading = bool;
-      console.log("Loading set to:", this.isLoading);
+      log("Loading set to:", this.isLoading);
     });
   }
 
-  setFiles(files) {
-    runInAction(() => {
-      this.files = files;
-      console.log("Files set to:", this.files);
-    });
-  }
   setProducts(products) {
     runInAction(() => {
       this.products = products;
-      console.log("Products set to:", this.products);
+      log("Products set to:", this.products);
     });
   }
 
   setUserCompanies(userCompanies) {
     runInAction(() => {
       this.userCompanies = userCompanies;
-      console.log("User companies set to:", this.userCompanies);
+      log("User companies set to:", this.userCompanies);
     });
   }
   setCompany(company) {
     runInAction(() => {
       this.company = company;
-      console.log("Company set to:", this.company);
-    });
-  }
-
-  setReviews(reviews) {
-    runInAction(() => {
-      this.reviews = reviews;
-      console.log("Reviews set to:", this.reviews);
+      log("Company set to:", this.company);
     });
   }
 
   setCart(cart) {
     runInAction(() => {
       this.cart = cart;
-      console.log("Cart set to:", this.cart);
+      log("Cart set to:", this.cart);
     });
   }
   setUserReviews(userReviews) {
     runInAction(() => {
       this.userReviews = userReviews;
-      console.log("userReviews set to:", this.userReviews);
+      log("userReviews set to:", this.userReviews);
     });
   }
-  setComments(comments) {
-    runInAction(() => {
-      this.comments = comments;
-      console.log("Comments set to:", this.comments);
-    });
-  }
+
   setCurrentProduct(product) {
     runInAction(() => {
       this.currentProduct = product;
-      console.log("Current product set to:", this.currentProduct);
+      log("Current product set to:", this.currentProduct);
     });
   }
 
   setOrders(orders) {
     runInAction(() => {
       this.orders = orders;
-      console.log("Orders set to:", this.orders);
-    });
-  }
-  //MATERIALS
-  setMainMaterials(mainMaterials) {
-    runInAction(() => {
-      this.mainMaterials = mainMaterials;
-      console.log("Main materials set to:", this.mainMaterials);
+      log("Orders set to:", this.orders);
     });
   }
 
+  setMainMaterials(mainMaterials) {
+    runInAction(() => {
+      this.mainMaterials = mainMaterials;
+      log("Main materials set to:", this.mainMaterials);
+    });
+  }
+
+  setOrgReviews(reviews) {
+    runInAction(() => {
+      this.reviews = reviews;
+      log("reviews set to:", this.reviews);
+    });
+  }
+
+  //КОРЗИНА
   async fetchCart() {
     try {
       const response = await ProductService.getCart();
-      console.log("fetchCartresponse", response.data);
+      log("fetchCartresponse", response.data);
       this.setCart(response.data);
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     }
   }
 
   async setCartItem(id, quantity, action, showToast) {
-    console.log("id" + id);
-    console.log("quantity" + quantity);
-    console.log("action" + action);
-
-    if (!id) {
-      console.log(id, quantity);
-      console.log("Не передана категория");
-      return;
-    }
+    if (!id) return error("Не передан id", id);
     try {
       this.setIsLoading(true);
       const response = await ProductService.setCartItem(id, quantity, action);
@@ -141,43 +123,60 @@ export default class ProductStore {
           type: "success",
         });
       }
-      console.log("addToCartresponse", response.data);
+      log("addToCartresponse", response.data);
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     } finally {
       this.setIsLoading(false);
     }
   }
-
-  async fetchMaterials() {
+  async clearCart() {
     try {
       this.setIsLoading(true);
-      this.setMainMaterials([]);
-      const response = await ProductService.getMaterials();
-      console.log("fetchMaterialsresponse", response.data);
-      this.setMainMaterials(response.data);
+      const response = await ProductService.clearCart();
+      log("clearCartresponse", response.data);
+      if (response.status === 200) {
+        this.fetchCart();
+      }
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+  async deleteItemFromCart(id) {
+    if (!id) return error("Не передан id", id);
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.deleteItemFromCart(id);
+      log("deleteItemFromCartresponse", response.data);
+      if (response.status === 200) {
+        this.fetchCart();
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
     } finally {
       this.setIsLoading(false);
     }
   }
 
+  //КАТЕГОРИИ
   async fetchCategories() {
     try {
       this.setIsLoading(true);
       this.setCategories([]);
       const response = await ProductService.getCategories();
-      console.log("fetchCategoriesresponse", response.data);
+      log("fetchCategoriesresponse", response.data);
       this.setCategories(response.data);
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     } finally {
       this.setIsLoading(false);
     }
   }
+  //ПРОДУКТЫ
+
   async fetchProducts(categoryId, selectedValue, showOnMainPage) {
-    console.log("fetchProducts", categoryId,selectedValue,  showOnMainPage);
     try {
       this.setIsLoading(true);
       this.setProducts([]);
@@ -186,10 +185,206 @@ export default class ProductStore {
         selectedValue,
         showOnMainPage
       );
-      console.log("fetchProductsresponse", response.data);
+      log("fetchProductsresponse", response.data);
       this.setProducts(response.data);
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+  async fetchItemDetails(id) {
+    if (!id) return error("Не передан id", id);
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.getItemDetails(id);
+      this.setCurrentProduct(response.data);
+      log("fetchItemDetailsresponse", response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  //ОТЗЫВЫ НА КОМПАНИЮ
+
+  async fetchOrgReviews() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.fetchOrgReviews();
+      log("fetchOrgReviewsresponse", response.data);
+      this.setOrgReviews(response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+  async addOrgReview(data, showToast) {
+    if (!data) return error("Не переданы данные");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.addOrgReview(data);
+      log("addReviewresponse", response.data);
+      if(response.status === 200){
+       showToast({
+          text1: "Отзыв отправлен",
+          type: "success",
+        });
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  //МАТЕРИАЛЫ
+  async fetchMaterials() {
+    try {
+      this.setIsLoading(true);
+      this.setMainMaterials([]);
+      const response = await ProductService.getMaterials();
+      log("fetchMaterialsresponse", response.data);
+      this.setMainMaterials(response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  //ДАННЫЕ КОМПАНИИ
+  async fetchCompany() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.fetchCompany();
+      log("fetchfetchCompanyresponse", response.data);
+      this.setCompany(response.data[0]);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async sendContactForm(data, showToast) {
+    if (!data) return error("Не переданы данные");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.sendContactForm(data);
+      log("sendContactFormresponse", response.data);
+      if (response.status === 200) {
+        showToast({
+          text1: "Сообщение отправлено",
+          type: "success",
+        });
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  //ORDER
+  async fetchOrders() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.getOrders();
+      log("fetchOrdersresponse", response.data);
+      this.setOrders(response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async cancelOrder(id) {
+    if (!id) return error("Не передан id");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.cancelOrder(id);
+      if (response.status === 200) {
+        this.fetchOrders();
+      }
+      log("cancelOrderresponse", response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+  async createOrder(data, showToast) {
+    if (!data) return error("Не переданы данные");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.createOrder(data);
+      if (response.status === 200) {
+        this.fetchCart();
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message || "Неизвестная ошибка",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+  async createOrderReview(data, productId, showToast) {
+    if (!data || !productId)
+      return error("Не переданы данные", data, productId);
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.createOrderReview(data, productId);
+      log("createOrderReview", response.data);
+      if (response.status === 200) {
+        this.fetchItemDetails();
+        showToast({
+          text1: "Отзыв отправлен",
+          type: "success",
+        });
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message || "Неизвестная ошибка",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  //USER
+  async fetchUserCompanies() {
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.getUserCompanies();
+      log("fetchUserCompaniesresponse", response.data);
+      this.setUserCompanies(response.data);
+    } catch (e) {
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async deleteUserCompany(id) {
+    if (!id) return error("Не передан id");
+    try {
+      this.setIsLoading(true);
+      const response = await ProductService.deleteUserCompany(id);
+      log("deleteUserCompanyresponse", response.data);
+      if (response.status === 200) {
+        this.fetchUserCompanies();
+      }
+    } catch (e) {
+      error(e.response?.data?.message);
     } finally {
       this.setIsLoading(false);
     }
@@ -198,240 +393,10 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.getUserReviews();
-      console.log("fetchsetProductReviewsresponse", response.data);
+      log("fetchsetProductReviewsresponse", response.data);
       this.setUserReviews(response.data);
     } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async fetchCompany() {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.fetchCompany();
-      console.log("fetchfetchCompanyresponse", response.data);
-      this.setCompany(response.data[0]);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async fetchItemDetails(id) {
-    if (!id) {
-      console.log("Не передана категория");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.getItemDetails(id);
-      this.setCurrentProduct(response.data);
-      console.log("fetchItemDetailsresponse", response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async sendContactForm(data, showToast) {
-    if (!data) {
-      console.log("Не передана данные");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.sendContactForm(data);
-      console.log("sendContactFormresponse", response.data);
-      if (response.status === 200) {
-        showToast({
-          text1: "Сообщение отправлено",
-          type: "success",
-        });
-      }
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async fetchOrgReviews() {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.fetchOrgReviews();
-      console.log("fetchCommentsresponse", response.data);
-      this.setComments(response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async addOrgReview(data) {
-    if (!data) {
-      console.log("Не передана категория");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.addOrgReview(data);
-      console.log("addReviewresponse", response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async updateCommentStatus(id, status) {
-    if (!id) {
-      console.log("Не передана категория");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.updateCommentStatus(id, status);
-      if (response.status === 200) {
-        this.fetchOrgReviews();
-      }
-      console.log("updateCommentStatusresponse", response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  //ORDER
-
-  async fetchOrders () {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.getOrders();
-      console.log("fetchOrdersresponse", response.data);
-      this.setOrders(response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async cancelOrder(id) {
-    if (!id) {
-      console.log("Не передана категория");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.cancelOrder(id);
-      if(response.status === 200){
-        this.fetchOrders();
-      }
-      console.log("cancelOrderresponse", response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-  async createOrder(data, showToast) {
-    if (!data ) {
-      console.log("Не передана категория");
-      showToast({
-        text1: "Нужно выбрать товары",
-        type: "error",
-      });
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-        const response = await ProductService.createOrder(data);
-        if (response.status === 200) {
-          this.fetchCart();
-        }
-      } catch (e) {
-      console.log(e.response?.data?.message);
-      showToast({
-        text1: e.response?.data?.message || "Неизвестная ошибка",
-        type: "error",
-      });
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async clearCart() {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.clearCart();
-      console.log("clearCartresponse", response.data);
-      if (response.status === 200) {
-        this.fetchCart();
-      }
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async fetchUserCompanies() {
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.getUserCompanies();
-      console.log("fetchUserCompaniesresponse", response.data);
-      this.setUserCompanies(response.data);
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async deleteUserCompany(id) {
-    if(!id) return console.log("Не передан id");
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.deleteUserCompany(id);
-      console.log("deleteUserCompanyresponse", response.data);
-      if (response.status === 200) {
-        this.fetchUserCompanies();
-      }
-    } catch (e) {
-      console.log(e.response?.data?.message);
-    } finally {
-      this.setIsLoading(false);
-    }
-  }
-
-  async sendOrderReviewData (data, productId, showToast) {
-    if (!data || !productId) {
-      console.log("Не передана категория");
-      return;
-    }
-    try {
-      this.setIsLoading(true);
-      const response = await ProductService.sendOrderReviewData(data, productId);
-      console.log("sendOrderReviewDataresponse", response.data);
-      if(response.status === 200){
-        this.fetchItemDetails();
-        showToast({
-          text1: "Отзыв отправлен",
-          type: "success",
-        })
-      }
-    } catch (e) {
-      console.log(e.response?.data?.message);
-      showToast({
-        text1: e.response?.data?.message || "Неизвестная ошибка",
-        type: "error",
-      })
+      error(e.response?.data?.message);
     } finally {
       this.setIsLoading(false);
     }

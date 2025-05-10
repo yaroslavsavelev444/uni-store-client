@@ -131,4 +131,7 @@ export default class adminService {
     return $api.post(`/admin/updateReviewStatus/${id}`, { action });
   }
 
+  static async fetchOrgReviews() {
+    return $api.get("/admin/getOrgReviews");
+  }
 }

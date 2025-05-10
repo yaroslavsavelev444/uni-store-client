@@ -42,3 +42,11 @@
   .profile-name a:hover {
     text-decoration: underline;
   }
+
+  @media screen and (max-width: 768px) {
+    .profile-image img{
+        width: 80px;
+        height: 80px;
+    }
+    
+  }

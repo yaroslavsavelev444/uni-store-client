@@ -34,6 +34,19 @@
   /* Адаптация под мобилку */
   @media (max-width: 768px) {
     .item-page-grid {
-      grid-template-columns: 1fr; /* Только одна колонка */
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+
+    }
+    .item-block{
+      width: 100%;
+    }
+    .actions-wrapper{
+      flex-direction: column;
+      padding: 5% 0;
+    }
+    .item-page-wrapper{
+      padding: 0 20px;
     }
   }

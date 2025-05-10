@@ -20,10 +20,4 @@ const ZeroMenu = ({ time , address, phone}) => {
   );
 };
 
-ZeroMenu.propTypes = {
-  time: PropTypes.string.isRequired,
-  address: PropTypes.string.isRequired,
-  phone: PropTypes.string.isRequired,
-};
-
 export default ZeroMenu;

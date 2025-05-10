@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { productStore, store } from "../../../main";
+import { productStore } from "../../../main";
 import Empty from "../../Empty/Empty";
 import { Loader } from "lucide-react";
 import OrderCard from "../../OrderCard/OrderCard";

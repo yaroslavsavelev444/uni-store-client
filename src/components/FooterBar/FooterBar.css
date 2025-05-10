@@ -57,3 +57,10 @@ hr {
   border-color: #888;
   margin: 0 auto 1rem;
 }
+
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column-reverse;
+    justify-content: center;
+  }
+}

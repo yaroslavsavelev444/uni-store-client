@@ -7,6 +7,7 @@ import { deliveryOptions, deliveryVariants } from "../../utils/options";
 import CartItem from "../CartItem/CartItem";
 import { formatPrice } from "../../utils/formatMessageTime";
 import ReCAPTCHA from "react-google-recaptcha";
+import { log } from "../../utils/logger";
 
 const EditableField = ({ label, value, onChange, canEdit = true,  }) => {
   const [isEditing, setEditing] = useState(false);
@@ -53,7 +54,7 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
     };
 
     const handleCheckToOrder = () => {
-        console.log('handleCheckToOrder', handleCheckToOrder);
+        log('handleCheckToOrder', handleCheckToOrder);
         handleOrder();
     };
 
@@ -194,7 +195,7 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
           ) : (
             <div>
               <span style={{ fontWeight: "bold", fontSize: 18 }}>
-                Итого: {formatPrice(prices[0])}
+ {formatPrice(prices[0])}
               </span>
             </div>
           )}

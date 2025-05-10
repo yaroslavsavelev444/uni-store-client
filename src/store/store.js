@@ -2,10 +2,12 @@ import { makeAutoObservable, runInAction } from "mobx";
 import AuthService from "../services/userService";
 import axios from "axios";
 import { API_URL } from "../http/axios";
+import { error, log } from "../utils/logger";
 export default class Store {
   user = {};
   isAuth = false;
   isLoading = false;
+  authModalVisible = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -14,28 +16,42 @@ export default class Store {
   setAuth(bool) {
     runInAction(() => {
       this.isAuth = bool;
-      console.log("Auth set to:", this.isAuth);
+      log("Auth set to:", this.isAuth);
     });
   }
+  openAuthModal = () => {
+     runInAction(() => {
+      this.authModalVisible = true;
+      log("AuthModalVisible set to:", this.authModalVisible);
+    });
+  };
+
+  closeAuthModal = () => {
+    runInAction(() => {
+      this.authModalVisible = false;
+      log("AuthModalVisible set to:", this.authModalVisible);
+    });
+  };
+  
 
   setUser(user) {
     runInAction(() => {
       this.user = user;
-      console.log("User set to:", this.user);
+      log("User set to:", this.user);
     });
   }
 
   setLoading(bool) {
     runInAction(() => {
       this.isLoading = bool;
-      console.log("Loading set to:", this.isLoading);
+      log("Loading set to:", this.isLoading);
     });
   }
 
   setWaitingForEmailConfirmation(bool) {
     runInAction(() => {
       this.waitingForEmailConfirmation = bool;
-      console.log(
+      log(
         "waitingForEmailConfirmation set to:",
         this.waitingForEmailConfirmation
       );
@@ -45,12 +61,12 @@ export default class Store {
   setEmailNeedConfirmed(email) {
     runInAction(() => {
       this.emailNeedConfirmed = email;
-      console.log("emailNeedConfirmed set to:", this.emailNeedConfirmed);
+      log("emailNeedConfirmed set to:", this.emailNeedConfirmed);
     });
   }
 
   async checkEmailExists(email) {
-    console.log("checkEmailExists", email);
+    log("checkEmailExists", email);
     try {
       const res = await AuthService.checkEmailExists(email);
       return res.data.exists;
@@ -63,7 +79,7 @@ export default class Store {
   async login(email, password, showToast) {
     try {
       const response = await AuthService.login(email, password);
-      console.log("response", response.data);
+      log("response", response.data);
       if (response.data.user) {
         localStorage.setItem("token", response.data.accessToken);
         this.setAuth(true);
@@ -75,7 +91,7 @@ export default class Store {
       } 
       return response.data.user;
     } catch (e) {
-      console.log(e);
+      error(e);
       showToast({ text1: e?.message, type: "error" });
       throw new Error(e);
     }
@@ -90,10 +106,10 @@ export default class Store {
         name,
         surname
       );
-      console.log("response", response.data);
+      log("response", response.data);
       return response.data.user;
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     }
   }
 
@@ -106,7 +122,7 @@ export default class Store {
       this.setAuth(false);
       this.setUser({});
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     }
   }
 
@@ -121,7 +137,7 @@ export default class Store {
       localStorage.setItem("token", response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
-
+      
       // //ЕСЛИ ПОЧТА НЕ ПОТДВЕРЖДЕНА
       // if (response.data.user.isActivated === false) {
       //   this.setEmailNeedConfirmed(response.data.user.email);
@@ -129,7 +145,7 @@ export default class Store {
       // }
 
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
     } finally {
       this.setLoading(false);
     }
@@ -138,17 +154,17 @@ export default class Store {
   async resendVerificationEmail(email) {
     try {
       await AuthService.resendActivation(email);
-      console.log("Email sent successfully");
+      log("Email sent successfully");
       this.checkAuth();
     } catch (e) {
-      console.log(e.response?.data?.message);
+      error(e.response?.data?.message);
       throw e;
     }
   }
 
   async changePassword(oldPassword, newPassword, userId, showToast) {
     try {
-      console.log(
+      log(
         "changePassword",
         oldPassword,
         "newPassword",
@@ -168,7 +184,7 @@ export default class Store {
           text1: "Пароль успешно изменен",
           type: "success",
         });
-        console.log("Password changed successfully");
+        log("Password changed successfully");
       }
     } catch (e) {
       // Обработка ошибок от сервера
@@ -177,21 +193,21 @@ export default class Store {
         text1: errorMessage,
         type: "error",
       });
-      console.log("Error:", errorMessage);
+      error("Error:", errorMessage);
       throw e;
     }
   }
   async forgotPassword(email, showToast) {
     try {
-      console.log("forgotPassword", email);
+      log("forgotPassword", email);
       const res = await AuthService.forgotPassword(email);
-      console.log(res);
+      log(res);
       if (res.status === 200) {
         showToast({
           text1: "Письмо отправлено",
           type: "success",
         });
-        console.log("Email sent successfully");
+        log("Email sent successfully");
       }
     } catch (e) {
       showToast({
@@ -199,7 +215,7 @@ export default class Store {
         type: "error",
       });
       const errorMessage = e.response?.data?.message || "Неизвестная ошибка";
-      console.log("Error:", errorMessage);
+      error("Error:", errorMessage);
       throw e;
     }
   }
@@ -207,26 +223,26 @@ export default class Store {
   async resetForgottenPassword(token, newPassword) {
     try {
       const res = await AuthService.resetForgottenPasswod(token, newPassword);
-      console.log(res);
+      log(res);
       if (res.status === 200) {
-        console.log("Password changed successfully");
+        log("Password changed successfully");
       }
     } catch (e) {
       const errorMessage = e.response?.data?.message || "Неизвестная ошибка";
-      console.log("Error:", errorMessage);
+      error("Error:", errorMessage);
       throw e;
     }
   }
 
   async checkEmailConfirmed() {
     if (!this.emailNeedConfirmed) {
-      console.log("Email need confirmed not set");
+      log("Email need confirmed not set");
       return false;
     }
     const response = await AuthService.checkEmailConfirmed(
       this.emailNeedConfirmed
     );
-    console.log("response.", response.data);
+    log("response.", response.data);
 
     if (response.data.isVerified === true) {
       localStorage.setItem("token", response.data.accessToken);
