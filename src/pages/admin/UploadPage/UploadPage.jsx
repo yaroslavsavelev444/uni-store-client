@@ -8,6 +8,7 @@ import Empty from "../../../components/Empty/Empty";
 import BackBtn from "../../../components/BackBtn/BackBtn";
 import ProductForm from "./ProductForm";
 import "./UploadPage.css";
+import Loader from "../../../components/Loader/Loader";
 
 const UploadPage = () => {
   const { adminStore } = useContext(Context);
@@ -37,8 +38,6 @@ const UploadPage = () => {
     productStore.fetchProducts();
     productStore.fetchCategories();
   }, []);
-
-
 
   const openModalAddProduct = () => {
     setProduct(getEmptyProduct());
@@ -81,7 +80,9 @@ const UploadPage = () => {
     const formData = new FormData();
 
     const images = product.images.filter((img) => img instanceof File);
-    const existingPaths = product.images.filter((img) => typeof img === "string");
+    const existingPaths = product.images.filter(
+      (img) => typeof img === "string"
+    );
 
     const productData = {
       ...product,
@@ -122,36 +123,44 @@ const UploadPage = () => {
   );
 
   return (
-    <div className="upload-page-wrapper">
+    <>
       <BackBtn />
-      <div className="upload-page">
-        {productStore.products.length === 0 ? (
-          <Empty text="Товары отсутствуют" />
+      <div className="upload-page-wrapper">
+        <div className="upload-page">
+          {productStore.isLoading ? (
+            <Loader size={50} />
+          ) : (
+            <>
+              {productStore.products.length === 0 ? (
+                <Empty text="Товары отсутствуют" />
+              ) : (
+                <ProductGrid products={productStore.products} />
+              )}
+            </>
+          )}
+        </div>
+        {productStore.categories.length > 0 ? (
+          <Button onClick={openModalAddProduct}>Добавить товар</Button>
         ) : (
-          <ProductGrid products={productStore.products} />
+          <Empty text="Добавьте категорию" />
         )}
+        <Modal onClose={() => setModalVisible(false)} isOpen={modalVisible}>
+          <ProductForm
+            product={product}
+            setProduct={setProduct}
+            onSubmit={
+              modalContent?.type === "editProduct"
+                ? handleEditProductSubmit
+                : handleSubmit
+            }
+            isEdit={modalContent?.type === "editProduct"}
+            onClose={() => setModalVisible(false)}
+            deletedImages={deletedImages}
+            setDeletedImages={setDeletedImages}
+          />
+        </Modal>
       </div>
-      {productStore.categories.length > 0 ? (
-        <Button onClick={openModalAddProduct}>Добавить товар</Button>
-      ) : (
-        <Empty text="Добавьте категорию" />
-      )}
-      <Modal onClose={() => setModalVisible(false)} isOpen={modalVisible}>
-        <ProductForm
-          product={product}
-          setProduct={setProduct}
-          onSubmit={
-            modalContent?.type === "editProduct"
-              ? handleEditProductSubmit
-              : handleSubmit
-          }
-          isEdit={modalContent?.type === "editProduct"}
-          onClose={() => setModalVisible(false)}
-          deletedImages={deletedImages}
-          setDeletedImages={setDeletedImages}
-        />
-      </Modal>
-    </div>
+    </>
   );
 };
 

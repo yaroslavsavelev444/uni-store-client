@@ -224,6 +224,12 @@ export default function Step4({
               error={errors.bankName}
             />
             <EditableField
+              label="Расчетный счет"
+              value={order.companyData.checkingAccount}
+              onChange={(value) => updateOrder("companyData.checkingAccount", value)}
+              error={errors.checkingAccount}
+            />
+            <EditableField
               label="БИК"
               value={order.companyData.bik}
               onChange={(value) => updateOrder("companyData.bik", value)}
@@ -231,7 +237,7 @@ export default function Step4({
               mask="999999999"
             />
             <EditableField
-              label="Р/С"
+              label="Корреспондентский счет"
               value={order.companyData.correspondentAccount}
               onChange={(value) =>
                 updateOrder("companyData.correspondentAccount", value)

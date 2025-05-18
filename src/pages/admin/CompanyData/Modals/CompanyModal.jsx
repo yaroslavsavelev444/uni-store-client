@@ -16,7 +16,7 @@ const defaultCompanyData = {
   image: null,
 };
 
-const CompanyModal = observer((onClose) => {
+const CompanyModal = observer(({ onClose }) => {
   const existingCompany = productStore?.company || null;
   const [companyData, setCompanyData] = useState(defaultCompanyData);
 
@@ -65,7 +65,8 @@ const CompanyModal = observer((onClose) => {
     }
 
     if (companyData._id) {
-      await adminStore.editCompany(companyData._id, formData);
+      formData.append("_id", companyData._id); // Добавь ID в formData
+     await adminStore.editCompany(formData);
     } else {
       await adminStore.addCompany(formData);
     }

@@ -58,7 +58,11 @@ export default class adminService {
     });
   }
   static async editCompany(formData) {
-    return $api.put(`/admin/editOrgData`, formData);
+   return $api.post(`/admin/editOrgData`, formData, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
   }
   static async deleteCompany(id) {
     return $api.delete(`/admin/deleteOrgData/${id}`);

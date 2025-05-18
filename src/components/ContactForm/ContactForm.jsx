@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import "./ContactForm.css";
 import { productStore } from "../../main";
 import Input from "../Input/Input";
@@ -7,14 +8,17 @@ import Loader from "../Loader/Loader";
 import { contactFormSchema } from "../../utils/validator";
 import SocialItems from "../SocialItem/SocialItems";
 import { showToast } from "../../providers/toastService";
+import { observer } from "mobx-react-lite";
 
 const ContactForm = ({ isLoggedIn = false, phone }) => {
+  const recaptchaRef = useRef(null);
 
   const [formData, setFormData] = useState({
     user: "",
     email: "",
     phone: "",
     msg: "",
+    captchaToken: "",
   });
 
   const handleChange = (e) => {
@@ -26,13 +30,18 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
     }));
   };
 
+  const handleCaptchaChange = (token) => {
+    setFormData((prev) => ({
+      ...prev,
+      captchaToken: token,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Копируем и обрабатываем данные
     const dataToSend = { ...formData };
 
-    // Удаляем поля, если залогинен
     if (isLoggedIn) {
       delete dataToSend.user;
       delete dataToSend.email;
@@ -41,29 +50,29 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
     try {
       await contactFormSchema.validate(dataToSend, { abortEarly: false });
 
-      // Отправка
-      productStore.sendContactForm(dataToSend); // Предположим, теперь sendContactForm принимает объект
-      
-      // Очистка формы
+      if (process.env.NODE_ENV !== "development" && !dataToSend.captchaToken) {
+        showToast({ text1: "Пожалуйста, подтвердите, что вы не робот", type: "error" });
+        return;
+      }
+
+      await productStore.sendContactForm(dataToSend);
+
       setFormData({
         user: "",
         email: "",
         phone: "",
         msg: "",
+        captchaToken: "",
       });
+
+      if (recaptchaRef.current) recaptchaRef.current.reset();
     } catch (error) {
       if (error.name === "ValidationError") {
         error.inner.forEach((err) => {
-         showToast({
-          text1: err.message,
-          type: "error",
-         })
+          showToast({ text1: err.message, type: "error" });
         });
       } else {
-        showToast({
-          text1: "Ошибка отправки формы",
-          type: "error",
-        });
+        showToast({ text1: "Ошибка отправки формы", type: "error" });
       }
     }
   };
@@ -84,6 +93,7 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
                   className="form-input"
                   value={formData.user}
                   onChange={handleChange}
+                  label={formData.user ? "Ваше имя:" : ""}
                 />
               </div>
               <div className="form-group">
@@ -96,6 +106,7 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
                   className="form-input"
                   value={formData.email}
                   onChange={handleChange}
+                  label={formData.email ? "Ваш email:" : ""}
                 />
               </div>
             </>
@@ -111,6 +122,7 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
               value={formData.phone}
               onChange={handleChange}
               mask={"+7 (999) 999-99-99"}
+              label={formData.phone ? "Ваш телефон:" : ""}
             />
           </div>
           <div className="form-group">
@@ -126,9 +138,20 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
               />
             </div>
           </div>
+
+          {import.meta.env.VITE_PROJECT !== "dev" && (
+            <div className="form-group">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                onChange={handleCaptchaChange}
+              />
+            </div>
+          )}
+
           <div className="form-group">
             <Button type="submit" disabled={productStore.isLoading}>
-              {productStore.isLoading ? <Loader size={10} /> : "Отправить"}
+              {productStore.isLoading ? <Loader size={20} /> : "Отправить"}
             </Button>
           </div>
         </form>
@@ -153,4 +176,4 @@ const ContactForm = ({ isLoggedIn = false, phone }) => {
   );
 };
 
-export default ContactForm;
+export default observer(ContactForm);

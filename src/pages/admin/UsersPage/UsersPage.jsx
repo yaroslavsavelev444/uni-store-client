@@ -33,7 +33,7 @@ const UsersPage = () => {
   };
 
   const handleConfirm = () => {
-    if(!selectedUser) return error("Не выбран пользователь");
+    if (!selectedUser) return error("Не выбран пользователь");
     if (actionType === "delete") {
       adminStore.deleteUser(selectedUser._id);
     } else if (actionType === "toggleAdmin") {
@@ -71,7 +71,11 @@ const UsersPage = () => {
       return (
         <ConfirmModal
           isOpen={modalOpen}
-          title={isGivingAdmin ? "Назначить админом?" : "Отнять права администратора?"}
+          title={
+            isGivingAdmin
+              ? "Назначить админом?"
+              : "Отнять права администратора?"
+          }
           text={
             isGivingAdmin
               ? `Пользователь получит права администратора.`
@@ -95,21 +99,27 @@ const UsersPage = () => {
   return (
     <div>
       <BackBtn />
-      {adminStore.users.length === 0 ? (
-        <Empty text="Пользователи отсутствуют" />
+      {adminStore.isLoading ? (
+        <Loader size={50} />
       ) : (
         <>
-          {adminStore.users.map((user) => (
-            <UserItem
-              key={user._id}
-              user={user}
-              currentUser={store.user}
-              onDeleteClick={handleDeleteClick}
-              onToggleAdminClick={handleToggleAdminClick}
-            />
-          ))}
+          {adminStore.users.length === 0 ? (
+            <Empty text="Пользователи отсутствуют" />
+          ) : (
+            <>
+              {adminStore.users.map((user) => (
+                <UserItem
+                  key={user._id}
+                  user={user}
+                  currentUser={store.user}
+                  onDeleteClick={handleDeleteClick}
+                  onToggleAdminClick={handleToggleAdminClick}
+                />
+              ))}
 
-          {renderModal()}
+              {renderModal()}
+            </>
+          )}
         </>
       )}
     </div>

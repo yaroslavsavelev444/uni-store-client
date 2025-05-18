@@ -29,52 +29,62 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.phone || !formData.msg) {
-      showToast({ text1: "Заполните все поля", type: "error" });
-      return;
-    }
+  if (!formData.phone || !formData.msg) {
+    showToast({ text1: "Заполните все поля", type: "error" });
+    return;
+  }
 
-    let dataToSend = { ...formData };
+  let dataToSend = { ...formData };
 
-    if (isLoggedIn) {
-      dataToSend.user = store?.user?.name;
-      dataToSend.email = store?.user?.email;
-    }
+  if (isLoggedIn) {
+    dataToSend.user = store?.user?.name;
+    dataToSend.email = store?.user?.email;
+  }
 
-    // Проверка капчи только в продакшене
-    const isProd = import.meta.env.VITE_PROJECT === "prod";
-    let captchaToken = "";
+  const isProd = import.meta.env.VITE_PROJECT === "prod";
+  let captchaToken = "";
 
-    if (isProd && recaptchaRef.current) {
+  if (recaptchaRef.current) {
+    try {
       captchaToken = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();
-      dataToSend.captcha = captchaToken;
+    } catch (e) {
+      showToast({ text1: "Подтвердите, что вы не робот", type: "error" });
+      return;
     }
+  }
 
-    try {
-      await contactFormSchema.validate(dataToSend, { abortEarly: false });
-      await productStore.sendContactForm(dataToSend);
+  if (!captchaToken && isProd) {
+    showToast({ text1: "Подтвердите капчу", type: "error" });
+    return;
+  }
 
-      setFormData({
-        user: "",
-        email: "",
-        phone: "",
-        msg: "",
+  dataToSend.captcha = captchaToken; // добавляем токен
+
+  try {
+    await contactFormSchema.validate(dataToSend, { abortEarly: false });
+    await productStore.sendContactForm(dataToSend);
+
+    setFormData({
+      user: "",
+      email: "",
+      phone: "",
+      msg: "",
+    });
+
+    setModalVisible(false);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      error.inner.forEach((err) => {
+        showToast({ text1: err.message, type: "error" });
       });
-
-      setModalVisible(false);
-    } catch (error) {
-      if (error.name === "ValidationError") {
-        error.inner.forEach((err) => {
-          showToast({ text1: err.message, type: "error" });
-        });
-      } else {
-        showToast({ text1: "Ошибка отправки формы", type: "error" });
-      }
+    } else {
+      showToast({ text1: "Ошибка отправки формы", type: "error" });
     }
-  };
+  }
+};
 
   return (
     <>
@@ -130,27 +140,27 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
             />
             <div className="form-group">
               <div className="input-wrapper">
-              <textarea
-                id="msg"
-                name="msg"
-                placeholder="Ваше сообщение:"
-                required
-                className="form-input resize-none"
-                value={formData.msg}
-                onChange={handleChange}
-                style={{ width: "100%" }}
-              />
+                <textarea
+                  id="msg"
+                  name="msg"
+                  placeholder="Ваше сообщение:"
+                  required
+                  className="form-input resize-none"
+                  value={formData.msg}
+                  onChange={handleChange}
+                  style={{ width: "100%" }}
+                />
               </div>
             </div>
 
-            {import.meta.env.VITE_PROJECT === "dev" && (
-  <div>
-    <ReCAPTCHA
-      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-      ref={recaptchaRef}
-    />
-  </div>
-)}
+            {import.meta.env.VITE_PROJECT !== "dev" && (
+              <div>
+                <ReCAPTCHA
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  ref={recaptchaRef}
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <Button type="submit" disabled={productStore.isLoading}>

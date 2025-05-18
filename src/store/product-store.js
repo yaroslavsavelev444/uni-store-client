@@ -97,12 +97,21 @@ export default class ProductStore {
 
   //КОРЗИНА
   async fetchCart() {
+    this.setIsLoading(true);
     try {
       const response = await ProductService.getCart();
       log("fetchCartresponse", response.data);
-      this.setCart(response.data);
+      if (response.status === 200) {
+        this.setCart(response.data);
+      }
     } catch (e) {
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
       error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
     }
   }
 
@@ -119,14 +128,14 @@ export default class ProductStore {
         });
       }
       if (response.status === 200) {
-        showToast({
-          text1: "Товар добавлен",
-          type: "success",
-        });
+        log("addToCartresponse", response.data);
       }
-      log("addToCartresponse", response.data);
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -138,9 +147,17 @@ export default class ProductStore {
       log("clearCartresponse", response.data);
       if (response.status === 200) {
         this.fetchCart();
+        showToast({
+          text1: "Корзина очищена",
+          type: "success",
+        });
       }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -167,10 +184,16 @@ export default class ProductStore {
       this.setIsLoading(true);
       this.setCategories([]);
       const response = await ProductService.getCategories();
-      log("fetchCategoriesresponse", response.data);
-      this.setCategories(response.data);
+      if (response.status === 200) {
+        log("fetchCategoriesresponse", response.data);
+        this.setCategories(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -186,10 +209,16 @@ export default class ProductStore {
         selectedValue,
         showOnMainPage
       );
-      log("fetchProductsresponse", response.data);
-      this.setProducts(response.data);
+      if (response.status === 200) {
+        log("fetchProductsresponse", response.data);
+        this.setProducts(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -199,10 +228,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.getItemDetails(id);
-      this.setCurrentProduct(response.data);
-      log("fetchItemDetailsresponse", response.data);
+      if (response.status === 200) {
+        this.setCurrentProduct(response.data);
+        log("fetchItemDetailsresponse", response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -214,10 +249,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.fetchOrgReviews();
-      log("fetchOrgReviewsresponse", response.data);
-      this.setOrgReviews(response.data);
+      if (response.status === 200) {
+        log("fetchOrgReviewsresponse", response.data);
+        this.setOrgReviews(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -227,15 +268,20 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.addOrgReview(data);
-      log("addReviewresponse", response.data);
-      if(response.status === 200){
-       showToast({
+      if (response.status === 200) {
+        log("addReviewresponse", response.data);
+        this.fetchOrgReviews();
+        showToast({
           text1: "Отзыв отправлен",
           type: "success",
         });
       }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -247,10 +293,16 @@ export default class ProductStore {
       this.setIsLoading(true);
       this.setMainMaterials([]);
       const response = await ProductService.getMaterials();
-      log("fetchMaterialsresponse", response.data);
-      this.setMainMaterials(response.data);
+      if (response.status === 200) {
+        log("fetchMaterialsresponse", response.data);
+        this.setMainMaterials(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -261,10 +313,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.fetchCompany();
-      log("fetchfetchCompanyresponse", response.data);
-      this.setCompany(response.data[0]);
+      if (response.status === 200) {
+        log("fetchfetchCompanyresponse", response.data);
+        this.setCompany(response.data[0]);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -284,6 +342,10 @@ export default class ProductStore {
       }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -294,10 +356,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.getOrders();
-      log("fetchOrdersresponse", response.data);
-      this.setOrders(response.data);
+      if (response.status === 200) {
+        log("fetchOrdersresponse", response.data);
+        this.setOrders(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -314,6 +382,10 @@ export default class ProductStore {
       log("cancelOrderresponse", response.data);
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -325,6 +397,10 @@ export default class ProductStore {
       const response = await ProductService.createOrder(data);
       if (response.status === 200) {
         this.fetchCart();
+        showToast({
+          text1: "Заказ успешно создан",
+          type: "success",
+        });
       }
     } catch (e) {
       error(e.response?.data?.message);
@@ -366,10 +442,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.getUserCompanies();
-      log("fetchUserCompaniesresponse", response.data);
-      this.setUserCompanies(response.data);
+      if (response.status === 200) {
+        log("fetchUserCompaniesresponse", response.data);
+        this.setUserCompanies(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -386,6 +468,10 @@ export default class ProductStore {
       }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }
@@ -394,10 +480,16 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       const response = await ProductService.getUserReviews();
-      log("fetchsetProductReviewsresponse", response.data);
-      this.setUserReviews(response.data);
+      if (response.status === 200) {
+        log("fetchsetProductReviewsresponse", response.data);
+        this.setUserReviews(response.data);
+      }
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setIsLoading(false);
     }

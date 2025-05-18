@@ -8,7 +8,7 @@ import FAQSection from '../../components/FAQSection/FAQSection'
 export default function Home() {
   return (
     <div className="">
-      <ContentBlock />
+      {/* <ContentBlock /> */}
       <PromoBlock
         title="При заказе от 3 товаров"
         subtitle="Скидка 10%"

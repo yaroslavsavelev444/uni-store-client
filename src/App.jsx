@@ -68,9 +68,7 @@ const AppContent = observer(() => {
 
   if (!isLoaded) {
     return (
-      <div className="App">
         <Loader />
-      </div>
     );
   }
 
@@ -117,7 +115,7 @@ const Content = observer(({ isSpecialPage }) => {
   return (
     <div className={isSpecialPage ? "" : "content"}>
       {store.isLoading ? (
-        <p>Loading...</p>
+       <Loader  />
       ) : (
         <Routes>
           {/* Обычные маршруты */}

@@ -20,6 +20,7 @@ import { useAuthAction } from "../../hooks/useAuthAction";
 import ContactFormModal from "../../components/ContactFormModal/ContactFormModal";
 import ProductPrice from "../../components/ProductPrice/ProductPrice";
 import { log } from "../../utils/logger";
+import Loader from "../../components/Loader/Loader";
 
 const ItemPage = () => {
   const { categoryId, id } = useParams();
@@ -55,80 +56,89 @@ const ItemPage = () => {
   return (
     <div className="item-page-wrapper">
       <BackBtn />
-      {product ? (
-        <>
-          <h2 style={{ marginTop: "0px" }}>{product.title}</h2>
-          <div className="item-page-grid">
-            <div className="item-block block-background">
-              <ImageSlider images={product.images} />
-            </div>
-
-            <div className="item-block block-background">
-              {product.customAttributes?.length > 0 && (
-                <CustomFields customAttributes={product.customAttributes} />
-              )}
-              {product.instructionPath && (
-                <div>
-                  <a
-                    href={product.instructionPath}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button>Скачать инструкцию</Button>
-                  </a>
-                </div>
-              )}
-            </div>
-            <div className="item-block block-background">
-              <div className="actions-wrapper">
-                <StockBadge
-                  isAvailable={product.isAvailable}
-                  quantity={product.totalQuantity}
-                />
-                <ProductPrice
-                  price={product.priceIndividual}
-                  discountPercentage={product.discountPercentage}
-                  discountFromQuantity={product.discountFromQuantity}
-                />
-                {product.isAvailable && (
-                  <div className="btn-wrapper">
-                    <div className="product-actions-column">
-                      <QuantityRegulator
-                        quantity={quantity}
-                        onIncrease={increaseQuantity}
-                        onDecrease={decreaseQuantity}
-                        max={product.totalQuantity}
-                      />
-                      <Button onClick={addToCart}>
-                        {store.isAuth ? (
-                          <FontAwesomeIcon icon={faCartShopping} />
-                        ) : (
-                          <FontAwesomeIcon icon={faLock} color="red" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="item-block block-background">
-              <ItemDescription description={product.description} />
-            </div>
-          </div>
-          {product.hasPurchased && (
-            <>
-              {!product.isUserLeftReview.hasLeftReview && (
-                <LeaveReview productId={product._id} />
-              )}
-            </>
-          )}
-          <ProductReviews productId={product._id} reviews={product.reviews} />
-          <ContactFormModal isLoggedIn={store.isAuth} />
-        </>
+      {productStore.isLoading ? (
+        <Loader size={50} />
       ) : (
-        <Empty text="Товар не найден" />
+        <>
+          {product ? (
+            <>
+              <h2 style={{ marginTop: "0px" }}>{product.title}</h2>
+              <div className="item-page-grid">
+                <div className="item-block block-background">
+                  <ImageSlider images={product.images} />
+                </div>
+
+                <div className="item-block block-background">
+                  {product.customAttributes?.length > 0 && (
+                    <CustomFields customAttributes={product.customAttributes} />
+                  )}
+                  {product.instructionPath && (
+                    <div>
+                      <a
+                        href={product.instructionPath}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button>Скачать инструкцию</Button>
+                      </a>
+                    </div>
+                  )}
+                </div>
+                <div className="item-block block-background">
+                  <div className="actions-wrapper">
+                    <StockBadge
+                      isAvailable={product.isAvailable}
+                      quantity={product.totalQuantity}
+                    />
+                    <ProductPrice
+                      price={product.priceIndividual}
+                      discountPercentage={product.discountPercentage}
+                      discountFromQuantity={product.discountFromQuantity}
+                    />
+                    {product.isAvailable && (
+                      <div className="btn-wrapper">
+                        <div className="product-actions-column">
+                          <QuantityRegulator
+                            quantity={quantity}
+                            onIncrease={increaseQuantity}
+                            onDecrease={decreaseQuantity}
+                            max={product.totalQuantity}
+                          />
+                          <Button onClick={addToCart}>
+                            {store.isAuth ? (
+                              <FontAwesomeIcon icon={faCartShopping} />
+                            ) : (
+                              <FontAwesomeIcon icon={faLock} color="red" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="item-block block-background">
+                  <ItemDescription description={product.description} />
+                </div>
+              </div>
+              {product.hasPurchased && (
+                <>
+                  {!product.isUserLeftReview.hasLeftReview && (
+                    <LeaveReview productId={product._id} />
+                  )}
+                </>
+              )}
+              <ProductReviews
+                productId={product._id}
+                reviews={product.reviews}
+              />
+              <ContactFormModal isLoggedIn={store.isAuth} />
+            </>
+          ) : (
+            <Empty text="Товар не найден" />
+          )}
+        </>
       )}
     </div>
   );

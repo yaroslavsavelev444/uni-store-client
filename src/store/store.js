@@ -21,7 +21,7 @@ export default class Store {
     });
   }
   openAuthModal = () => {
-     runInAction(() => {
+    runInAction(() => {
       this.authModalVisible = true;
       log("AuthModalVisible set to:", this.authModalVisible);
     });
@@ -33,7 +33,6 @@ export default class Store {
       log("AuthModalVisible set to:", this.authModalVisible);
     });
   };
-  
 
   setUser(user) {
     runInAction(() => {
@@ -68,17 +67,25 @@ export default class Store {
 
   async checkEmailExists(email) {
     log("checkEmailExists", email);
+    this.setLoading(true);
     try {
       const res = await AuthService.checkEmailExists(email);
       return res.data.exists;
     } catch (e) {
       console.error("Ошибка проверки email:", e);
+      showToast({
+        text1: e.response?.data?.message || "Неизвестная ошибка",
+        type: "error",
+      });
       return false;
+    } finally {
+      this.setLoading(false);
     }
   }
 
   async login(email, password) {
     try {
+      this.setLoading(true);
       const response = await AuthService.login(email, password);
       log("response", response.data);
       if (response.data.user) {
@@ -89,16 +96,19 @@ export default class Store {
           this.setEmailNeedConfirmed(response.user.email);
           this.setWaitingForEmailConfirmation(true);
         }
-      } 
+      }
       return response.data.user;
     } catch (e) {
       error(e);
       showToast({ text1: e?.message, type: "error" });
       throw new Error(e);
+    } finally {
+      this.setLoading(false);
     }
   }
 
   async registration(email, password, phone, name, surname) {
+    this.setLoading(true);
     try {
       const response = await AuthService.registration(
         email,
@@ -111,10 +121,17 @@ export default class Store {
       return response.data.user;
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
+    } finally {
+      this.setLoading(false);
     }
   }
 
   async logout() {
+    this.setLoading(true);
     try {
       await AuthService.logout();
       localStorage.removeItem("token");
@@ -122,8 +139,18 @@ export default class Store {
         "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       this.setAuth(false);
       this.setUser({});
+      showToast({
+        text1: "Вы успешно вышли",
+        type: "success",
+      });
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
+    } finally {
+      this.setLoading(false);
     }
   }
 
@@ -134,19 +161,22 @@ export default class Store {
         withCredentials: true,
         headers: { "X-Refresh-Flag": "true" },
       });
-      
+
       localStorage.setItem("token", response.data.accessToken);
       this.setAuth(true);
       this.setUser(response.data.user);
-      
+
       // //ЕСЛИ ПОЧТА НЕ ПОТДВЕРЖДЕНА
       // if (response.data.user.isActivated === false) {
       //   this.setEmailNeedConfirmed(response.data.user.email);
       //   this.setWaitingForEmailConfirmation(true);
       // }
-
     } catch (e) {
       error(e.response?.data?.message);
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
     } finally {
       this.setLoading(false);
     }
@@ -164,17 +194,10 @@ export default class Store {
   }
 
   async changePassword(oldPassword, newPassword) {
+    this.setLoading(true);
     try {
-      log(
-        "changePassword",
-        oldPassword,
-        "newPassword",
-        newPassword,
-      );
-      const res = await AuthService.changePassword(
-        oldPassword,
-        newPassword,
-      );
+      log("changePassword", oldPassword, "newPassword", newPassword);
+      const res = await AuthService.changePassword(oldPassword, newPassword);
 
       if (res.status === 200) {
         showToast({
@@ -190,6 +213,8 @@ export default class Store {
       });
       error("Error:", errorMessage);
       throw e;
+    } finally {
+      this.setLoading(false);
     }
   }
   async forgotPassword(email) {
@@ -218,13 +243,20 @@ export default class Store {
   async resetForgottenPassword(token, newPassword) {
     try {
       const res = await AuthService.resetForgottenPasswod(token, newPassword);
-      log(res);
       if (res.status === 200) {
+        showToast({
+          text1: "Пароль успешно изменен",
+          type: "success",
+        });
         log("Password changed successfully");
       }
     } catch (e) {
       const errorMessage = e.response?.data?.message || "Неизвестная ошибка";
       error("Error:", errorMessage);
+      showToast({
+        text1: errorMessage,
+        type: "error",
+      });
       throw e;
     }
   }

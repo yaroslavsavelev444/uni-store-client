@@ -11,7 +11,6 @@ import { NavLink } from "react-router-dom";
 import { error } from "../../utils/logger";
 
 const Cart = () => {
-  const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({}); // <-- локальное хранилище количеств
   const [step, setStep] = useState(1); // Состояние текущего шага
   const [order, setOrder] = useState({
@@ -44,7 +43,6 @@ const Cart = () => {
   useEffect(() => {
     const fetchData = async () => {
       await productStore.fetchCart();
-      setLoading(false);
     };
     fetchData();
   }, []);
@@ -128,7 +126,8 @@ const Cart = () => {
   const handleClearCart = () => {
     productStore.clearCart();
   };
-  if (loading) return <Loader size={50} />;
+
+  if (productStore.isLoading) return <Loader size={50} />;
 
   return (
     <div>

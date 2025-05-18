@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import Button from "../../Buttons/Button";
 import { log } from "../../../utils/logger";
 import ConfirmModal from "../../ConfirmModal/ConfirmModal";
+import Loader from "../../Loader/Loader";
 
 const UserDataModal = function () {
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,7 +22,11 @@ const UserDataModal = function () {
   return (
     <div className="modal-wrapper">
       <h2>Мои данные</h2>
-      {productStore.userCompanies.length == 0 ? (
+      {productStore.isLoading ? (
+        <Loader size={50} />
+      ): (
+<>
+{productStore.userCompanies.length == 0 ? (
         <Empty text="Компании отсутствуют" />
       ) : (
         <>
@@ -38,6 +43,9 @@ const UserDataModal = function () {
           />
         </>
       )}
+      </>
+      )}
+
     </div>
   );
 }

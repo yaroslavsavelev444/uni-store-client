@@ -75,9 +75,7 @@ export function validateOrder(order) {
 
     if (!cd.checkingAccount?.trim()) {
       errors.checkingAccount = "Укажите расчетный счет";
-    } else if (!/^\d{20}$/.test(cd.checkingAccount.trim())) {
-      errors.checkingAccount = "Расчетный счет должен содержать 20 цифр";
-    }
+    } 
 
     if (!cd.bankName?.trim()) {
       errors.bankName = "Укажите название банка";
@@ -91,9 +89,7 @@ export function validateOrder(order) {
 
     if (!cd.correspondentAccount?.trim()) {
       errors.correspondentAccount = "Укажите корреспондентский счет";
-    } else if (!/^\d{20}$/.test(cd.correspondentAccount.trim())) {
-      errors.correspondentAccount = "Корр. счет должен содержать 20 цифр";
-    }
+    } 
   }
 
   return errors;

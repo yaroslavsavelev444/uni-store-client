@@ -1,12 +1,9 @@
-import React from "react";
-import Empty from "../Empty/Empty";
 import SocialItem from "./SocialItem";
 import "./SocialItem.css";
 
 export default function SocialItems({ links }) {
   if (!links) {
-    // Если links не определены, возвращаем пустой компонент
-    return <Empty text="Ссылки отсутствуют" />;
+    return <h4>---</h4>;
   }
 
   return (
@@ -18,7 +15,7 @@ export default function SocialItems({ links }) {
           ))}
         </>
       ) : (
-        <Empty text="Ссылки отсутствуют" />
+       <h4>---</h4>
       )}
     </div>
   );

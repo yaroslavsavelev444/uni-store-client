@@ -7,17 +7,20 @@ import Empty from "../../components/Empty/Empty";
 import Button from "../../components/Buttons/Button";
 import PromoBlock from "../../components/PromoBlock/PromoBlock";
 import ContactFormModal from "../../components/ContactFormModal/ContactFormModal";
+import Loader from "../../components/Loader/Loader"; 
 
 const Cataloq = () => {
   const navigation = useNavigate();
+
   useEffect(() => {
     productStore.fetchCategories();
   }, []);
 
-  //Навигация на страницу категории
   const handleCategoryClick = (id) => {
     navigation(`/category/${id}`);
   };
+
+  const { categories, isLoading } = productStore;
 
   return (
     <div
@@ -29,23 +32,24 @@ const Cataloq = () => {
         gap: "20px",
       }}
     >
-      <>
-        {productStore.categories.length === 0 ? (
-          <Empty text="Категории отсутствуют" />
-        ) : (
-          <div className="product-grid">
-            {productStore.categories.map((category) => (
-              <CategoryItem
-                key={category._id}
-                {...category}
-                onClick={() => handleCategoryClick(category._id)}
-                productCount={category.productCount}
-              />
-            ))}
-          </div>
-        )}
-      </>
-      {productStore.categories.length > 2 && (
+      {isLoading ? (
+        <Loader /> 
+      ) : categories.length === 0 ? (
+        <Empty text="Категории отсутствуют" />
+      ) : (
+        <div className="product-grid">
+          {categories.map((category) => (
+            <CategoryItem
+              key={category._id}
+              {...category}
+              onClick={() => handleCategoryClick(category._id)}
+              productCount={category.productCount}
+            />
+          ))}
+        </div>
+      )}
+
+      {categories.length > 2 && (
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >
@@ -54,6 +58,7 @@ const Cataloq = () => {
           </Button>
         </div>
       )}
+
       <PromoBlock
         title="При заказе от 3 товаров"
         subtitle="Скидка 10%"
