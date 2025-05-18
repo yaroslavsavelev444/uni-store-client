@@ -4,7 +4,7 @@ import Modal from "./Modal"; // Можно использовать любую �
 const UniversalModal = ({ children, onClose }) => {
   return (
     <Modal isOpen={true} onClose={onClose}>
-      <div>{children}</div>
+      {children}
     </Modal>
   );
 };

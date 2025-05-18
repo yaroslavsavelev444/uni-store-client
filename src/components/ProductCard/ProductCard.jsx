@@ -7,13 +7,12 @@ import { faCartShopping, faLock } from "@fortawesome/free-solid-svg-icons";
 import QuantityRegulator from "../QuantityRegulator/QuantityRegulator";
 import StockBadge from "../StockBadge/StockBadge";
 import { productStore } from "../../main";
-import { useToast } from "../../providers/ToastProvider";
 import { useAuthAction } from "../../hooks/useAuthAction";
 import { log } from "../../utils/logger";
+import ProductPrice from "../ProductPrice/ProductPrice";
 
 const ProductCard = ({ product, isAdmin, onClickAction, isAuth }) => {
   const [quantity, setQuantity] = useState(1); // <-- Сюда
-  const { showToast } = useToast();
   const authGuard = useAuthAction();
   if (!product) return null;
   const imageUrl = `${API_URL}/${product.images[0]}`;
@@ -39,7 +38,7 @@ const ProductCard = ({ product, isAdmin, onClickAction, isAuth }) => {
       log(
         `Добавлено в корзину ${quantity} шт. товара: ${product.title} id: ${product._id}`
       );
-      productStore.setCartItem(product._id, quantity, "increase", showToast);
+      productStore.setCartItem(product._id, quantity, "increase");
     });
   };
 
@@ -52,17 +51,11 @@ const ProductCard = ({ product, isAdmin, onClickAction, isAuth }) => {
       <div className="product-content">
         <h2 className="product-title">{product.title}</h2>
 
-        <div className="product-pricing">
-          <span className="price-individual">
-            {product.priceIndividual.toLocaleString("ru-RU")} ₽
-          </span>
-          {product.discountPersentage > 0 && (
-            <span className="discount">
-              −{product.discountPersentage}% от {product.discountFromQuantity}{" "}
-              шт.
-            </span>
-          )}
-        </div>
+        <ProductPrice
+          price={product?.priceIndividual}
+          discountPercentage={product?.discountPersentage}
+          discountFromQuantity={product?.discountFromQuantity}
+        />
 
         <div className="product-meta">
           <StockBadge

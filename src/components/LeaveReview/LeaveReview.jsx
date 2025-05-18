@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../Buttons/Button";
 import Modal from "../Modal/Modal";
 import Input from "../Input/Input";
-import { useToast } from "../../providers/ToastProvider";
 import { productStore } from "../../main";
 import PageHeader from "../PageHeader/PageHeader";
 import { log } from "../../utils/logger";
+import { showToast } from "../../providers/toastService";
 
 export default function LeaveReview({ productId }) {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -20,7 +20,6 @@ export default function LeaveReview({ productId }) {
     comment: "",
     rating: 0,
   })
-  const {showToast} = useToast();
 
   const handleSubmit = () => {
     if(!reviewData.pros || !reviewData.cons || !reviewData.comment || !reviewData.rating) {
@@ -28,7 +27,7 @@ export default function LeaveReview({ productId }) {
         showToast({ text1: "Заполните все поля", type: "error" });
         return;
     }
-    productStore.createOrderReview(reviewData, productId, showToast);
+    productStore.createOrderReview(reviewData, productId);
     setModalOpen(false);
   };
 

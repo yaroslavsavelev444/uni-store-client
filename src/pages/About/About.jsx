@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { productStore, store } from "../../main";
 import DescriptionBlock from "../../components/DescriptionBlock/DescriptionBlock";
 import CommentsShell from "../../components/CommentsShell/CommentsShell";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Button from "../../components/Buttons/Button";
 import Modal from "../../components/Modal/Modal";
-import Input from "../../components/Input/Input";
 import Loader from "../../components/Loader/Loader";
 import SelectMenu from "../../components/SelectMenu/SelectMenu";
 import { themeOptions } from "../../utils/options";
-import { useToast } from "../../providers/ToastProvider";
 import { error } from "../../utils/logger";
 
 export default function About() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const {showToast} = useToast();
   const [reviewData, setReviewData] = useState({
     theme: "",
     comment: "",
@@ -28,9 +25,10 @@ export default function About() {
       error("Не все поля заполнены");
       return;
     }
-    productStore.addOrgReview(reviewData, showToast);
+    productStore.addOrgReview(reviewData);
     setIsModalVisible(false);
   };
+
   return (
     <div className="page-container">
       <DescriptionBlock

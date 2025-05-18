@@ -1,14 +1,13 @@
 import React, { useState, useContext, useCallback } from "react";
-import { useToast } from "../../providers/ToastProvider";
 import { Context } from "../../main";
 import Input from "../Input/Input";
 import Button from "../Buttons/Button";
 import validatePassword from "../../utils/validatePassword";
 import "./Login.css";
+import { showToast } from "../../providers/toastService";
 
 const Login = React.memo(({ onLoginSuccess }) => {
   const { store } = useContext(Context);
-  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +29,7 @@ const Login = React.memo(({ onLoginSuccess }) => {
 
       store.setLoading(true);
       try {
-        const user = await store.login(trimmedEmail, trimmedPassword, showToast);
+        const user = await store.login(trimmedEmail, trimmedPassword);
         if (!user?.isActivated) {
           onLoginSuccess(); // показать окно подтверждения
         } else {
@@ -43,7 +42,7 @@ const Login = React.memo(({ onLoginSuccess }) => {
         store.setLoading(false);
       }
     },
-    [email, password, store, showToast, onLoginSuccess]
+    [email, password, store, onLoginSuccess]
   );
 
   return (

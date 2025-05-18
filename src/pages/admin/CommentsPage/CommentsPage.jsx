@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { adminStore, productStore, store } from "../../../main";
+import { adminStore, store } from "../../../main";
 import Empty from "../../../components/Empty/Empty";
 import ReviewItem from "../../../components/ReviewItem/ReviewItem";
 import { observer } from "mobx-react-lite";
-import { Loader } from "lucide-react";
 import BackBtn from "../../../components/BackBtn/BackBtn";
+import { log } from "../../../utils/logger";
+import Loader from "../../../components/Loader/Loader";
 
 const CommentsPage = function () {
   useEffect(() => {
@@ -12,7 +13,8 @@ const CommentsPage = function () {
   }, []);
 
   const handleUpdateCommentStatus = async (commentId, status) => {
-    await productStore.updateCommentStatus(commentId, status);
+    log("handleUpdateCommentStatus", commentId, status);
+    await adminStore.updateCommentStatus(commentId, status);
   };
 
   if (adminStore.isLoading) {

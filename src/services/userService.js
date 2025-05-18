@@ -35,11 +35,10 @@ export default class userService {
     return $api.post("auth/resendActivationLink", { email });
   }
 
-  static async changePassword(oldPassword, newPassword, userId) {
+  static async changePassword(oldPassword, newPassword) {
     return $api.post("auth/changePassword", {
       oldPassword,
       newPassword,
-      userId,
     });
   }
 

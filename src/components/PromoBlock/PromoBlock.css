@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 2% 0;
 }
 .promo-block {
     width: 60% !important;

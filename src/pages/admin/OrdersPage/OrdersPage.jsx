@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { adminStore, store } from "../../../main";
-import { Loader } from "lucide-react";
 import Empty from "../../../components/Empty/Empty";
 import OrderCard from "../../../components/OrderCard/OrderCard";
 import BackBtn from "../../../components/BackBtn/BackBtn";
+import Loader from "../../../components/Loader/Loader";
 
 const OrdersPage = () => {
 

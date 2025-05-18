@@ -127,7 +127,14 @@ const ProductForm = ({
           style={{ width: "100%" }}
         />
       )}
-
+      <Checkbox 
+      label={"Показывать на главной странице"}
+      name="showOnMainPage"
+      checked={product.showOnMainPage}
+      onChange={(e) => {
+        setProduct((prev) => ({ ...prev, showOnMainPage: e.target.checked }));
+      }}
+      />
       <Checkbox
         label="Продукт доступен"
         name="isAvailable"

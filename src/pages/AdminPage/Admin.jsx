@@ -16,7 +16,7 @@ export default function Admin() {
   return (
     <div className="admin-menu">
       <h2>Админ-панель</h2>
-      <div className='admin-menu-items'>
+      <div className='admin-menu-items block-background'>
       {menuItems.map(item => (
         <MenuItem
           key={item.section}

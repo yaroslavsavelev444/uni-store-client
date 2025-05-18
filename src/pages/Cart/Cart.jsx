@@ -6,9 +6,7 @@ import "./Cart.css";
 import Step1 from "../../components/OrderSteps/Step1";
 import Step2 from "../../components/OrderSteps/Step2";
 import Step3 from "../../components/OrderSteps/Step3";
-import { useToast } from "../../providers/ToastProvider";
 import Step4 from "../../components/OrderSteps/Step4";
-import Empty from "../../components/Empty/Empty";
 import { NavLink } from "react-router-dom";
 import { error } from "../../utils/logger";
 
@@ -16,7 +14,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [quantities, setQuantities] = useState({}); // <-- локальное хранилище количеств
   const [step, setStep] = useState(1); // Состояние текущего шага
-  const { showToast } = useToast();
   const [order, setOrder] = useState({
     recipientData: {
       name: null,
@@ -62,7 +59,7 @@ const Cart = () => {
   };
 
   const handleOrder = () => {
-    productStore.createOrder(order, showToast);
+    productStore.createOrder(order);
     setStep(1);
   };
 
@@ -156,7 +153,6 @@ const Cart = () => {
               updateOrder={updateOrder}
               onNextStep={nextStep}
               onBack={() => setStep(step - 1)}
-              showToast={showToast}
             />
           )}
 

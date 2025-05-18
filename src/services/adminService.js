@@ -1,8 +1,10 @@
 import $api from "../http/axios";
 
 export default class adminService {
-
-   //PRODUCT
+  static async toggleAdminRules(id) {
+    return $api.post(`/admin/toggleAdminRules`, { id });
+  }
+  //PRODUCT
   static async getUsers() {
     return $api.get("/admin/getUsers");
   }
@@ -10,23 +12,23 @@ export default class adminService {
   static async addProduct(formData) {
     return $api.post("/admin/addProduct", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
     });
   }
- static async editProduct(id, formData){
-  return $api.post(`/admin/editProduct/${id}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",  
-    },
-  });
- }
+  static async editProduct(id, formData) {
+    return $api.post(`/admin/editProduct/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 
   //CATEGORY
   static async addCategory(formData) {
     return $api.post("/admin/addCategory", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
     });
   }
@@ -39,7 +41,7 @@ export default class adminService {
     });
   }
 
-  static async deleteCategory(id){
+  static async deleteCategory(id) {
     return $api.delete(`/admin/deleteCategory/${id}`, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -48,26 +50,22 @@ export default class adminService {
   }
 
   //COMPANY
-  static async addCompany(formData){
+  static async addCompany(formData) {
     return $api.post(`/admin/addOrgData`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
     });
   }
-  static async editCompany(formData){
-    return $api.put(`/admin/editOrgData`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",  
-      },
-    });
+  static async editCompany(formData) {
+    return $api.put(`/admin/editOrgData`, formData);
   }
-  static async deleteCompany(id){
+  static async deleteCompany(id) {
     return $api.delete(`/admin/deleteOrgData/${id}`);
   }
 
-  //CONTACTS 
-  
+  //CONTACTS
+
   static async getContacts() {
     return $api.get("/admin/getContacts");
   }
@@ -89,10 +87,10 @@ export default class adminService {
     return $api.post("/admin/cancelOrder", { id, text });
   }
 
-  static async uploadFiles(formData, id){
-    return $api.post(`/admin/uploadOrgFiles/${id}`, formData , {
+  static async uploadFiles(formData, id) {
+    return $api.post(`/admin/uploadOrgFiles/${id}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
     });
   }
@@ -104,22 +102,20 @@ export default class adminService {
   static async addSocialLinks(formData, id) {
     return $api.post(`/admin/addOrgSocialLinks/${id}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
-    }
-    );
+    });
   }
 
-  static async uploadOrderFile(formData , id) {
+  static async uploadOrderFile(formData, id) {
     return $api.post(`/admin/uploadOrderFile/${id}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",  
+        "Content-Type": "multipart/form-data",
       },
-    }
-    );
+    });
   }
 
-  static async deleteOrderFile(id){
+  static async deleteOrderFile(id) {
     return $api.delete(`/admin/deleteOrderFile/${id}`);
   }
 
@@ -133,5 +129,9 @@ export default class adminService {
 
   static async fetchOrgReviews() {
     return $api.get("/admin/getOrgReviews");
+  }
+
+  static async updateCommentStatus(id, status) {
+    return $api.post(`/admin/updateOrgReviewStatus/${id}`, { status });
   }
 }

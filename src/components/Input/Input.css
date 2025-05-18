@@ -32,7 +32,9 @@
     margin-top: 5px;
   }
   .input-label {
-    text-align: left;
+  text-align: left;
   font-size: 14px;
   font-weight: 500;
+  padding: 2% 0;
+  width: 100%;
 }

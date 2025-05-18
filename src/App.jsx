@@ -10,7 +10,7 @@ import NavBar from "./components/navbar/NavBar";
 import FooterBar from "./components/FooterBar/FooterBar";
 import "./App.css";
 import { observer } from "mobx-react-lite";
-import ToastProvider from "./providers/ToastProvider";
+import { ToastProvider } from './providers/ToastProvider';
 import EmailConfirmationOverlay from "./components/EmailConfirmationOverlay/EmailConfirmationOverlay";
 import { Context, productStore } from "./main";
 import Home from "./pages/Home/Home";
@@ -21,7 +21,6 @@ import Contacts from "./pages/Contacts/Contacts";
 import About from "./pages/About/About";
 import Cart from "./pages/Cart/Cart";
 import Profile from "./pages/Profile/Profile";
-import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Admin from "./pages/AdminPage/Admin";
 import NotFound from "./pages/NotFound/NotFound";
 import ZeroMenu from "./components/NullMenu/ZeroMenu";
@@ -34,7 +33,6 @@ import UploadPage from "./pages/admin/UploadPage/UploadPage";
 import CategoriesPage from "./pages/admin/CategoriesPage/CategoriesPage";
 import GoodsPage from "./pages/admin/GoodsPage/GoodsPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute"; // Импортируем новый компонент
-import { Loader } from "lucide-react";
 import CompanyData from "./pages/admin/CompanyData/CompanyData";
 import ScrollToTopButton from "./components/ScrollToTopButton/ScrollToTopButton";
 import ShipAndPay from "./pages/ShipAndPay/ShipAndPay";
@@ -45,6 +43,8 @@ import { ThemeProvider } from "./components/context/ThemeContext";
 import ResetPasswordPage from "./pages/ResetPasswordPage/ResetPasswordPage";
 import RegisterPage from "./pages/Register/Register";
 import LoginPage from "./pages/Login/Login";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
+import Loader from "./components/Loader/Loader";
 
 const AppContent = observer(() => {
   const location = useLocation(); // добавь это
@@ -142,14 +142,19 @@ const Content = observer(({ isSpecialPage }) => {
           <Route
             path="/reset-password"
             element={
-              store.isAuth ? <Navigate to="/profile" /> : <ResetPasswordPage />
+              !store.isAuth ? <Navigate to="/login" /> : <ResetPasswordPage />
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              store.isAuth ? <Navigate to="/profile" /> : <ForgotPasswordPage />
             }
           />
           <Route
             path="/profile"
             element={store.isAuth ? <Profile /> : <Navigate to="/register" />}
           />
-          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Защищённые админские маршруты */}
           <Route

@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import ProductService from "../services/productService";
 import { error, log } from "../utils/logger";
+import { showToast } from "../providers/toastService";
 
 export default class ProductStore {
   isLoading = false;
@@ -105,7 +106,7 @@ export default class ProductStore {
     }
   }
 
-  async setCartItem(id, quantity, action, showToast) {
+  async setCartItem(id, quantity, action) {
     if (!id) return error("Не передан id", id);
     try {
       this.setIsLoading(true);
@@ -221,7 +222,7 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
-  async addOrgReview(data, showToast) {
+  async addOrgReview(data) {
     if (!data) return error("Не переданы данные");
     try {
       this.setIsLoading(true);
@@ -269,7 +270,7 @@ export default class ProductStore {
     }
   }
 
-  async sendContactForm(data, showToast) {
+  async sendContactForm(data) {
     if (!data) return error("Не переданы данные");
     try {
       this.setIsLoading(true);
@@ -317,7 +318,7 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
-  async createOrder(data, showToast) {
+  async createOrder(data) {
     if (!data) return error("Не переданы данные");
     try {
       this.setIsLoading(true);
@@ -335,7 +336,7 @@ export default class ProductStore {
       this.setIsLoading(false);
     }
   }
-  async createOrderReview(data, productId, showToast) {
+  async createOrderReview(data, productId) {
     if (!data || !productId)
       return error("Не переданы данные", data, productId);
     try {

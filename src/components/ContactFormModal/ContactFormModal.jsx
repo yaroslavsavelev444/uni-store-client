@@ -5,12 +5,11 @@ import Input from "../Input/Input";
 import Button from "../Buttons/Button";
 import Loader from "../Loader/Loader";
 import { productStore, store } from "../../main";
-import { useToast } from "../../providers/ToastProvider";
 import { contactFormSchema } from "../../utils/validator";
 import ContactSection from "../ContactSection/ContactSection";
+import { showToast } from "../../providers/toastService";
 
 const ContactFormModal = ({ isLoggedIn = false }) => {
-  const { showToast } = useToast();
   const [modalVisible, setModalVisible] = useState(false);
   const recaptchaRef = useRef(null);
 
@@ -56,7 +55,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
 
     try {
       await contactFormSchema.validate(dataToSend, { abortEarly: false });
-      await productStore.sendContactForm(dataToSend, showToast);
+      await productStore.sendContactForm(dataToSend);
 
       setFormData({
         user: "",

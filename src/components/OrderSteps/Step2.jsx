@@ -14,14 +14,14 @@ export default function Step2({
   onNextStep,
   onBack,
 }) {
-  const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [selectedUserCompany, setSelectedUserCompany] = useState(null);
  const handleNextStep = () => {
+  
   const newErrors = {};
 
+
   const phone = order.recipientData.phone?.trim();
-  log(phone.length);
   
   if (!phone) {
     newErrors.phone = "Укажите номер телефона";
@@ -124,6 +124,7 @@ export default function Step2({
           onChange={(e) => updateOrder("recipientData.name", e.target.value)}
           style={{ width: "100%" }}
           errorMessage={errors.name}
+          label={order.recipientData.name ? "ФИО получателя" : ""}
         />
 
         <Input
@@ -134,6 +135,7 @@ export default function Step2({
           style={{ width: "100%" }}
           errorMessage={errors.phone}
           mask="+7 (999) 999-99-99"
+          label={order.recipientData.phone ? "Телефон" : ""}
         />
 
         <label style={{ marginTop: "1rem" }}>
@@ -167,6 +169,7 @@ export default function Step2({
               }
               style={{ width: "100%" }}
               errorMessage={errors.companyName}
+              label={order.companyData.companyName ? "Название компании" : ""}
             />
             <Input
               placeholder="Юридический адрес"
@@ -176,6 +179,9 @@ export default function Step2({
               }
               style={{ width: "100%" }}
               errorMessage={errors.legalAddress}
+              label={
+                order.companyData.legalAddress ? "Юридический адрес" : ""
+              }
             />
             <Input
               placeholder="ИНН"
@@ -184,6 +190,7 @@ export default function Step2({
               style={{ width: "100%" }}
               mask={"9999999999"}
               errorMessage={errors.inn}
+              label={order.companyData.inn ? "ИНН" : ""}
             />
             <Input
               placeholder="КПП"
@@ -192,6 +199,7 @@ export default function Step2({
               style={{ width: "100%" }}
               mask={"999999999"}
               errorMessage={errors.kpp}
+              label={order.companyData.kpp ? "КПП" : ""}
             />
             <Input
               placeholder="ОГРН"
@@ -200,6 +208,7 @@ export default function Step2({
               style={{ width: "100%" }}
               mask={"999999999999999"}
               errorMessage={errors.ogrn}
+              label={order.companyData.ogrn ? "ОГРН" : ""}
             />
             <Input
             placeholder={"Расчетный счет"}
@@ -207,6 +216,7 @@ export default function Step2({
             onChange={(e) => handleCompanyChange("checkingAccount", e.target.value)}
             style={{ width: "100%" }}
             errorMessage={errors.checkingAccount}
+            label={order.companyData.checkingAccount ? "Расчетный счет" : ""}
             />
             <Input
               placeholder="Банк"
@@ -214,6 +224,7 @@ export default function Step2({
               onChange={(e) => handleCompanyChange("bankName", e.target.value)}
               style={{ width: "100%" }}
               errorMessage={errors.bankName}
+              label={order.companyData.bankName ? "Банк" : ""}
             />
             <Input
               placeholder="БИК"
@@ -222,6 +233,7 @@ export default function Step2({
               style={{ width: "100%" }}
               mask={"999999999"}
               errorMessage={errors.bik}
+              label={order.companyData.bik ? "БИК" : ""}
             />
             <Input
               placeholder="Корр. счёт"
@@ -231,6 +243,11 @@ export default function Step2({
               }
               style={{ width: "100%" }}
               errorMessage={errors.correspondentAccount}
+              label={
+                order.companyData.correspondentAccount
+                  ? "Корр. счёт"
+                  : ""
+              }
             />
             {productStore.userCompanies.length > 0 && (
               <>

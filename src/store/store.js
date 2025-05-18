@@ -3,6 +3,7 @@ import AuthService from "../services/userService";
 import axios from "axios";
 import { API_URL } from "../http/axios";
 import { error, log } from "../utils/logger";
+import { showToast } from "../providers/toastService";
 export default class Store {
   user = {};
   isAuth = false;
@@ -76,7 +77,7 @@ export default class Store {
     }
   }
 
-  async login(email, password, showToast) {
+  async login(email, password) {
     try {
       const response = await AuthService.login(email, password);
       log("response", response.data);
@@ -162,33 +163,27 @@ export default class Store {
     }
   }
 
-  async changePassword(oldPassword, newPassword, userId, showToast) {
+  async changePassword(oldPassword, newPassword) {
     try {
       log(
         "changePassword",
         oldPassword,
         "newPassword",
         newPassword,
-        "userId",
-        userId
       );
       const res = await AuthService.changePassword(
         oldPassword,
         newPassword,
-        userId
       );
 
       if (res.status === 200) {
-        this.logout();
         showToast({
           text1: "Пароль успешно изменен",
           type: "success",
         });
-        log("Password changed successfully");
       }
     } catch (e) {
-      // Обработка ошибок от сервера
-      const errorMessage = e.response?.data?.message || "Неизвестная ошибка";
+      const errorMessage = e.message || "Неизвестная ошибка";
       showToast({
         text1: errorMessage,
         type: "error",
@@ -197,7 +192,7 @@ export default class Store {
       throw e;
     }
   }
-  async forgotPassword(email, showToast) {
+  async forgotPassword(email) {
     try {
       log("forgotPassword", email);
       const res = await AuthService.forgotPassword(email);

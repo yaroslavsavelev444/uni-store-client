@@ -3,6 +3,7 @@ import "./ReviewItem.css";
 import UserPreview from "../UserPreview/UserPreview";
 import { formatDate } from "../../utils/formatMessageTime";
 import Button from "../Buttons/Button";
+import { commentThemeTranslate } from "../../utils/options";
 
 export default function ReviewItem({
   review,
@@ -26,7 +27,6 @@ export default function ReviewItem({
           <span className={`review-status status-${status}`}>
             {showStatuses && (
               <>
-                {" "}
                 {status === "pending" && "⏳ Новый"}
                 {status === "accept" && "✅ Принят"}
                 {status === "reject" && "❌ Отклонён"}
@@ -34,7 +34,7 @@ export default function ReviewItem({
             )}
           </span>
         </div>
-        {theme && <div className="review-theme">Тема: {theme}</div>}
+        {theme && <div className="review-theme">Тема: {commentThemeTranslate[theme]}</div>}
         <div className="review-text">{comment}</div>
       </div>
       {isEditable && status === "pending" && (
@@ -43,12 +43,11 @@ export default function ReviewItem({
           <Button onClick={() => handleAction("accept")}>Принять</Button>
         </div>
       )}
-      {(status === "accept" && isEditable) ||
-        (isEditable && status === "reject" && (
-          <div className="review-actions">
-            <Button onClick={() => handleAction("delete")}>Удалить</Button>
-          </div>
-        ))}
+      {isEditable && status === "accept" && (
+        <div className="review-actions">
+          <Button onClick={() => handleAction("delete")}>Удалить</Button>
+        </div>
+      )}
     </div>
   );
 }

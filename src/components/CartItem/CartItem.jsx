@@ -6,15 +6,9 @@ import QuantityRegulator from "../QuantityRegulator/QuantityRegulator";
 import useDebouncedValue from "../../hooks/useDebouncedValue";
 import { productStore } from "../../main";
 import { formatPrice } from "../../utils/formatMessageTime";
+import { showToast } from "../../providers/toastService";
 
-
-const CartItem = ({
-  item,
-  onClickAction,
-  showToast,
-  onQuantityChange,
-  mode = "edit", 
-}) => {
+const CartItem = ({ item, onClickAction, onQuantityChange, mode = "edit" }) => {
   const { productId, quantity, wasQuantityReduced } = item;
   const [localQuantity, setLocalQuantity] = useState(quantity);
   const debouncedQuantity = useDebouncedValue(localQuantity, 500);
@@ -31,7 +25,7 @@ const CartItem = ({
 
   useEffect(() => {
     if (mode === "edit" && debouncedQuantity !== quantity) {
-      productStore.setCartItem(_id, debouncedQuantity, showToast);
+      productStore.setCartItem(_id, debouncedQuantity);
     }
   }, [debouncedQuantity]);
 
@@ -42,16 +36,15 @@ const CartItem = ({
   }, [localQuantity]);
 
   const hasDiscount = discountPersentage > 0 && discountFromQuantity > 0;
-const applyDiscount = hasDiscount && localQuantity >= discountFromQuantity;
+  const applyDiscount = hasDiscount && localQuantity >= discountFromQuantity;
 
-const discountedPrice = applyDiscount
-  ? priceIndividual * (1 - discountPersentage / 100)
-  : priceIndividual;
+  const discountedPrice = applyDiscount
+    ? priceIndividual * (1 - discountPersentage / 100)
+    : priceIndividual;
 
-const totalPrice = discountedPrice * localQuantity;
-const oldTotalPrice = hasDiscount && applyDiscount
-  ? priceIndividual * localQuantity
-  : null;
+  const totalPrice = discountedPrice * localQuantity;
+  const oldTotalPrice =
+    hasDiscount && applyDiscount ? priceIndividual * localQuantity : null;
   const imageUrl = images?.[0] ? `${API_URL}/${images[0]}` : "/placeholder.png";
 
   const Wrapper = mode === "edit" ? "div" : "div";
@@ -61,8 +54,7 @@ const oldTotalPrice = hasDiscount && applyDiscount
       className="block-background cart-item"
       {...(mode === "edit"
         ? {
-            onClick: () =>
-              onClickAction?.(productId.categoryId, _id),
+            onClick: () => onClickAction?.(productId.categoryId, _id),
           }
         : {})}
     >
@@ -72,49 +64,59 @@ const oldTotalPrice = hasDiscount && applyDiscount
           <h3 className="cart-item-title">{title || "Без названия"}</h3>
 
           <div className="cart-item-flex-wrap">
-            {mode == 'edit' ? (
+            {mode == "edit" ? (
               <div className="cart-item-flex-column">
-              <div className="cart-item-row">
-                <ShoppingCart size={16} />
-                {applyDiscount ? (
-                  <>
-                    <span className="old-price">{formatPrice(priceIndividual)}</span>
-                    <span className="discounted-price">
-                      {formatPrice(discountedPrice)}/шт
-                    </span>
-                  </>
-                ) : (
-                  <span>{formatPrice(priceIndividual)}/шт</span>
+                <div className="cart-item-row">
+                  <ShoppingCart size={16} />
+                  {applyDiscount ? (
+                    <>
+                      <span className="old-price">
+                        {formatPrice(priceIndividual)}
+                      </span>
+                      <span className="discounted-price">
+                        {formatPrice(discountedPrice)}/шт
+                      </span>
+                    </>
+                  ) : (
+                    <span>{formatPrice(priceIndividual)}/шт</span>
+                  )}
+                </div>
+                <div className="cart-item-row">
+                  <Package size={16} /> {totalQuantity} шт.
+                </div>
+                {wasQuantityReduced && (
+                  <div
+                    style={{
+                      flexDirection: "row",
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AlertCircle size={20} color="orange" />
+                    <p style={{ margin: "0" }}>Кол-во уменьшилось</p>
+                  </div>
                 )}
               </div>
-              <div className="cart-item-row">
-                <Package size={16} /> {totalQuantity} шт.
-              </div>
-              {wasQuantityReduced && (
-                <div
-                  style={{
-                    flexDirection: "row",
-                    display: "flex",
-                    gap: "10px",
-                    alignItems: "center",
-                  }}
-                >
-                  <AlertCircle size={20} color="orange" />
-                  <p style={{ margin: "0" }}>Кол-во уменьшилось</p>
-                </div>
-              )}
-            </div>
             ) : (
-              <div style={{ display: "flex", alignItems: "center" }}
-              onClick={(e) => e.stopPropagation()}
-            >{localQuantity}шт. </div>
+              <div
+                style={{ display: "flex", alignItems: "center" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {localQuantity}шт.{" "}
+              </div>
             )}
-          
           </div>
 
           <p className="cart-item-total">
             {applyDiscount ? (
-              <div style={{display: 'flex', flexDirection: 'column-reverse', alignItems: 'center'}}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column-reverse",
+                  alignItems: "center",
+                }}
+              >
                 <span className="old-price">{formatPrice(oldTotalPrice)}</span>
                 <strong>{formatPrice(totalPrice)}</strong>
               </div>
@@ -134,9 +136,10 @@ const oldTotalPrice = hasDiscount && applyDiscount
                   if (localQuantity < totalQuantity)
                     setLocalQuantity((prev) => prev + 1);
                   else
-                    showToast(
-                      "Нельзя добавить больше товара, чем есть в наличии"
-                    );
+                    showToast({
+                      text1: "Товар закончился",
+                      type: "error",
+                    });
                 }}
                 onDecrease={() => {
                   if (localQuantity > 1) setLocalQuantity((prev) => prev - 1);
@@ -149,18 +152,18 @@ const oldTotalPrice = hasDiscount && applyDiscount
           )}
         </div>
         {mode === "edit" && (
-  <button
-    className="remove-item-btn"
-    onClick={(e) => {
-      e.stopPropagation();
-      // Сначала обновляем локальное состояние
+          <button
+            className="remove-item-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Сначала обновляем локальное состояние
 
-      productStore.deleteItemFromCart(_id);
-    }}
-  >
-    <Trash size={20} />
-  </button>
-)}
+              productStore.deleteItemFromCart(_id);
+            }}
+          >
+            <Trash size={20} />
+          </button>
+        )}
       </div>
     </Wrapper>
   );

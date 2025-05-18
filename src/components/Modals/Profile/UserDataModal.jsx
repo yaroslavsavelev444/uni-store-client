@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { productStore } from "../../../main";
 import UserCompanyItem from "../../UserCompanyItem/UserCompanyItem";
 import Empty from "../../Empty/Empty";
 import { observer } from "mobx-react-lite";
 import Button from "../../Buttons/Button";
 import { log } from "../../../utils/logger";
+import ConfirmModal from "../../ConfirmModal/ConfirmModal";
 
 const UserDataModal = function () {
+  const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
     productStore.fetchUserCompanies();
   }, []);
@@ -24,8 +26,16 @@ const UserDataModal = function () {
       ) : (
         <>
           {productStore.userCompanies.map((company) => (
-            <UserCompanyItem key={company._id} company={company}  onDelete={handleDeleteCompany}/>
+            <UserCompanyItem key={company._id} company={company} onDelete={() => setModalOpen(true)}/>
           ))}
+          <ConfirmModal 
+            isOpen={modalOpen}
+            title="Удалить компанию?"
+            text="Вы действительно хотите удалить компанию?"
+            confirmLbl="Удалить"
+            cancelLbl="Отмена"
+            onConfirm={handleDeleteCompany}
+          />
         </>
       )}
     </div>

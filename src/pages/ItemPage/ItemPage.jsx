@@ -13,18 +13,17 @@ import QuantityRegulator from "../../components/QuantityRegulator/QuantityRegula
 import CustomFields from "../../components/CustomFields/CustomFields";
 import ItemDescription from "../../components/ItemDescription/ItemDescription";
 import StockBadge from "../../components/StockBadge/StockBadge";
-import ContactSection from "../../components/ContactSection/ContactSection";
-import { useToast } from "../../providers/ToastProvider";
 import BackBtn from "../../components/BackBtn/BackBtn";
 import LeaveReview from "../../components/LeaveReview/LeaveReview";
 import ProductReviews from "../../components/ProductReviews/ProductReviews";
 import { useAuthAction } from "../../hooks/useAuthAction";
 import ContactFormModal from "../../components/ContactFormModal/ContactFormModal";
+import ProductPrice from "../../components/ProductPrice/ProductPrice";
+import { log } from "../../utils/logger";
 
 const ItemPage = () => {
   const { categoryId, id } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const { showToast } = useToast();
   const authGuard = useAuthAction();
   const increaseQuantity = () => {
     if (quantity < product.totalQuantity) {
@@ -45,12 +44,13 @@ const ItemPage = () => {
   const product = productStore.currentProduct;
 
   const addToCart = (event) => {
-    event.stopPropagation(); // Останавливаем распространение события на родительский элемент
+    event.stopPropagation();
     authGuard(() => {
-
-    productStore.setCartItem(product._id, quantity, "increase", showToast);
-  });
+      productStore.setCartItem(product._id, quantity, "increase");
+    });
   };
+
+  log("ItemPage", product.priceIndividual);
 
   return (
     <div className="item-page-wrapper">
@@ -67,12 +67,29 @@ const ItemPage = () => {
               {product.customAttributes?.length > 0 && (
                 <CustomFields customAttributes={product.customAttributes} />
               )}
+              {product.instructionPath && (
+                <div>
+                  <a
+                    href={product.instructionPath}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button>Скачать инструкцию</Button>
+                  </a>
+                </div>
+              )}
             </div>
             <div className="item-block block-background">
               <div className="actions-wrapper">
                 <StockBadge
                   isAvailable={product.isAvailable}
                   quantity={product.totalQuantity}
+                />
+                <ProductPrice
+                  price={product.priceIndividual}
+                  discountPercentage={product.discountPercentage}
+                  discountFromQuantity={product.discountFromQuantity}
                 />
                 {product.isAvailable && (
                   <div className="btn-wrapper">
@@ -108,7 +125,7 @@ const ItemPage = () => {
             </>
           )}
           <ProductReviews productId={product._id} reviews={product.reviews} />
-        <ContactFormModal  isLoggedIn={store.isAuth}/>
+          <ContactFormModal isLoggedIn={store.isAuth} />
         </>
       ) : (
         <Empty text="Товар не найден" />

@@ -4,6 +4,7 @@ import SelectMenu from "../SelectMenu/SelectMenu";
 import { deliveryOptions, deliveryVariants } from "../../utils/options";
 import Button from "../Buttons/Button";
 import Input from "../Input/Input";
+import { showToast } from "../../providers/toastService";
 
 export default function Step3({
   order,
@@ -14,6 +15,28 @@ export default function Step3({
 }) {
   const deliveryMethod = order.deliveryMethod;
 
+
+  const handleNextStep = () => {
+    if(!order.deliveryMethod){
+      return showToast({
+        text1: "Выберите способ доставки",
+        type: "error",
+      });
+    }
+    if(order.deliveryMethod === "delivery" && !order.deliveryData.tk){
+      return showToast({
+        text1: "Выберите транспортную компанию",
+        type: "error",
+      })
+    }
+    if(order.deliveryMethod === "delivery" && !order.deliveryData.address){
+      return showToast({
+        text1: "Введите адрес доставки",
+        type: "error",
+      })
+    }
+    onNextStep();
+  }
   const handleSetDeliveryMethod = (value) => {
     updateOrder("deliveryMethod", value);
     if (value === "pickup") {
@@ -68,13 +91,14 @@ export default function Step3({
                 handleDeliveryDataChange("comment", e.target.value)
               }
               style={{ width: "100%" }}
+              label={order.deliveryData.comment ? "Комментарий" : ""}
             />
           </>
         )}
       </div>
       <div className="btn-horizontal-wrapper">
         <Button onClick={onBack}>Назад</Button>
-        <Button onClick={onNextStep}>Далее</Button>
+        <Button onClick={handleNextStep}>Далее</Button>
       </div>
     </div>
   );

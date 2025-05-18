@@ -46,6 +46,10 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  display: inline-flex;      /* остаёмся в одной строке */
+  align-items: baseline;     /* красивые выравнивание цифр */
+  gap: 6px;                  /* небольшой отступ между ценой и скидкой */
+  white-space: nowrap;    
 }
 
 .price-individual {

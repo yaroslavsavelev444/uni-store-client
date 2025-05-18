@@ -8,8 +8,19 @@ import CartItem from "../CartItem/CartItem";
 import { formatPrice } from "../../utils/formatMessageTime";
 import ReCAPTCHA from "react-google-recaptcha";
 import { log } from "../../utils/logger";
+import { validateOrder } from "../../utils/validateOrder";
+import { showToast } from "../../providers/toastService";
 
-const EditableField = ({ label, value, onChange, canEdit = true,  }) => {
+const EditableField = ({
+  label,
+  value,
+  onChange,
+  canEdit = true,
+  error,
+  mask,
+  selectMenu,
+  options = [],
+}) => {
   const [isEditing, setEditing] = useState(false);
   const [tempValue, setTempValue] = useState(value || "");
 
@@ -18,46 +29,91 @@ const EditableField = ({ label, value, onChange, canEdit = true,  }) => {
     setEditing(false);
   };
 
+  const handleChange = (e) => {
+    setTempValue(e.target.value);
+  };
+
   return (
-    <div className="editable-row">
-      <label>{label}:</label>
-      {isEditing ? (
-        <>
-          <Input
-            value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
-            style={{ flex: 1 }}
-          />
-          <Check className="icon" onClick={handleSave} />
-        </>
-      ) : (
-        <>
-          <span style={{ flex: 1 }}>{value || "—"}</span>
-          {canEdit && (
-            <Pencil className="icon" onClick={() => setEditing(true)} />
-          )}
-        </>
-      )}
+    <div className="editable-wrapper">
+      <div className="editable-row">
+        <label>{label}:</label>
+        {isEditing ? (
+          <>
+            {selectMenu ? (
+              <select
+                value={tempValue}
+                onChange={handleChange}
+                style={{ flex: 1 }}
+              >
+                {options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <Input
+                value={tempValue}
+                onChange={(e) => setTempValue(e.target.value)}
+                style={{ flex: 1 }}
+                mask={mask}
+              />
+            )}
+            <Check className="icon" onClick={handleSave} />
+          </>
+        ) : (
+          <>
+            <span style={{ flex: 1 }}>
+              {selectMenu
+                ? options.find((opt) => opt.value === value)?.label || "—"
+                : value || "—"}
+            </span>
+            {canEdit && (
+              <Pencil className="icon" onClick={() => setEditing(true)} />
+            )}
+          </>
+        )}
+      </div>
+      {error && <span className="error-message">{error}</span>}
     </div>
   );
 };
 
-export default function Step4({ cart, order, updateOrder, onBack, prices , handleOrder }) {
-    const [captchaVerified, setCaptchaVerified] = useState(false);
+export default function Step4({
+  cart,
+  order,
+  updateOrder,
+  onBack,
+  prices,
+  handleOrder,
+}) {
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [errors, setErrors] = useState({});
 
-    const handleCaptchaChange = (value) => {
-      if (value) {
-        setCaptchaVerified(true);
-      } else {
-        setCaptchaVerified(false);
-      }
-    };
+  const handleCaptchaChange = (value) => {
+    if (value) {
+      setCaptchaVerified(true);
+    } else {
+      setCaptchaVerified(false);
+    }
+  };
 
-    const handleCheckToOrder = () => {
-        log('handleCheckToOrder', handleCheckToOrder);
-        handleOrder();
-    };
+  const handleCheckToOrder = () => {
+    const newErrors = validateOrder(order);
+    setErrors(newErrors);
 
+    if (Object.keys(newErrors).length > 0) {
+      showToast({
+        type: "error",
+        message: "Проверьте ваши данные",
+      });
+      console.log("Ошибки:", newErrors);
+      return;
+    }
+
+    log("handleCheckToOrder", handleCheckToOrder);
+    handleOrder();
+  };
 
   return (
     <div
@@ -77,11 +133,14 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
           label="ФИО"
           value={order.recipientData.name}
           onChange={(value) => updateOrder("recipientData.name", value)}
+          error={errors.name}
         />
         <EditableField
           label="Телефон"
           value={order.recipientData.phone}
           onChange={(value) => updateOrder("recipientData.phone", value)}
+          error={errors.phone}
+          mask="+7 (999) 999-99-99"
         />
 
         <h3>Доставка</h3>
@@ -97,21 +156,23 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
           <>
             <EditableField
               label="Транспортная компания"
-              value={
-                deliveryOptions.find((v) => v.value === order.deliveryData.tk)
-                  ?.label
-              }
+              value={order.deliveryData.tk}
               onChange={(value) => updateOrder("deliveryData.tk", value)}
+              error={errors.tk}
+              selectMenu={true}
+              options={deliveryOptions}
             />
             <EditableField
               label="Адрес"
               value={order.deliveryData.address}
               onChange={(value) => updateOrder("deliveryData.address", value)}
+              error={errors.address}
             />
             <EditableField
               label="Комментарий"
               value={order.deliveryData.comment}
               onChange={(value) => updateOrder("deliveryData.comment", value)}
+              error={errors.comment}
             />
           </>
         )}
@@ -125,21 +186,28 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
               onChange={(value) =>
                 updateOrder("companyData.companyName", value)
               }
+              error={errors.companyName}
             />
             <EditableField
               label="ИНН"
               value={order.companyData.inn}
               onChange={(value) => updateOrder("companyData.inn", value)}
+              error={errors.inn}
+              mask="9999999999"
             />
             <EditableField
               label="КПП"
               value={order.companyData.kpp}
               onChange={(value) => updateOrder("companyData.kpp", value)}
+              error={errors.kpp}
+              mask="999999999"
             />
             <EditableField
               label="ОГРН"
               value={order.companyData.ogrn}
               onChange={(value) => updateOrder("companyData.ogrn", value)}
+              error={errors.ogrn}
+              mask="999999999999999"
             />
             <EditableField
               label="Юридический адрес"
@@ -147,16 +215,20 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
               onChange={(value) =>
                 updateOrder("companyData.legalAddress", value)
               }
+              error={errors.legalAddress}
             />
             <EditableField
               label="Банк"
               value={order.companyData.bankName}
               onChange={(value) => updateOrder("companyData.bankName", value)}
+              error={errors.bankName}
             />
             <EditableField
               label="БИК"
               value={order.companyData.bik}
               onChange={(value) => updateOrder("companyData.bik", value)}
+              error={errors.bik}
+              mask="999999999"
             />
             <EditableField
               label="Р/С"
@@ -164,6 +236,7 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
               onChange={(value) =>
                 updateOrder("companyData.correspondentAccount", value)
               }
+              error={errors.correspondentAccount}
             />
           </>
         )}
@@ -195,7 +268,7 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
           ) : (
             <div>
               <span style={{ fontWeight: "bold", fontSize: 18 }}>
- {formatPrice(prices[0])}
+                {formatPrice(prices[0])}
               </span>
             </div>
           )}
@@ -209,7 +282,12 @@ export default function Step4({ cart, order, updateOrder, onBack, prices , handl
 
         <div className="btn-horizontal-wrapper">
           <Button onClick={onBack}>Назад</Button>
-          <Button onClick={handleCheckToOrder} disabled={!captchaVerified && import.meta.env.VITE_PROJECT !== "dev"}>
+          <Button
+            onClick={handleCheckToOrder}
+            disabled={
+              !captchaVerified && import.meta.env.VITE_PROJECT !== "dev"
+            }
+          >
             Заказать
           </Button>
         </div>

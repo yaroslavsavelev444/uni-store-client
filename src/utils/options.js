@@ -132,3 +132,17 @@ export const reviewStatus = [
     value: 'pending',
   },
 ];
+
+export const rolesTranslate = {
+  admin: 'Администратор',
+  superadmin: 'Суперадмин',
+  user: 'Пользователь',
+};
+
+export const commentThemeTranslate = {
+  company: 'Работа организации',
+  delivery: 'Доставка',
+  other: 'Другое',
+  price: 'Цена',
+  quality: 'Качество товара',
+};

@@ -41,10 +41,6 @@ export default class productService {
     return $api.post("/reviews/addOrgReview", data);
   }
 
-  static async updateCommentStatus(id, status) {
-    return $api.post(`/admin/updateOrgReviewStatus/${id}`, { status });
-  }
-
   static async checkAvailableItems(items) {
     return $api.post("/cart/checkAvailableItems", { items });
   }

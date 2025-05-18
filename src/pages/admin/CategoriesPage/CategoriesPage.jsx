@@ -8,9 +8,9 @@ import Button from "../../../components/Buttons/Button";
 import Modal from "../../../components/Modal/Modal";
 import { observer } from "mobx-react-lite";
 import "./CategoriesPage.css";
-import { Loader } from "lucide-react";
 import BackBtn from "../../../components/BackBtn/BackBtn";
-import { useToast } from "../../../providers/ToastProvider";
+import { showToast } from "../../../providers/toastService";
+import Loader from "../../../components/Loader/Loader";
 
 // Начальное состояние категории
 const defaultCategory = {
@@ -24,7 +24,6 @@ const defaultCategory = {
 const CategoriesPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const { showToast } = useToast();
   const [category, setCategory] = useState(defaultCategory);
 
   useEffect(() => {

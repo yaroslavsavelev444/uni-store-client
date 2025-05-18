@@ -16,6 +16,7 @@ import Modal from "../Modal/Modal";
 import Input from "../Input/Input";
 import { Download, X } from "lucide-react";
 import { log } from "../../utils/logger";
+import ConfirmModal from "../ConfirmModal/ConfirmModal";
 
 export default function OrderCard({ order, role }) {
   log("order", order.file);
@@ -150,10 +151,9 @@ export default function OrderCard({ order, role }) {
               <h2 className="product-order-title">{item.product?.title || "Удаленный товар"}</h2>
               <p className="product-order-quantity">Кол-во: {item.quantity || "?"}</p>
               <p>Цена: {formatPrice(item.price) || "?"}</p>
-              {item.priceWithDiscount && (
+              {item.priceWithDiscount !== item.price && (
                 <p>Скидка: {formatPrice(item.priceWithDiscount) || "?"}</p>
               )}
-              <p>Итого: {formatPrice(item.totalPriceWithDiscount || item.totalPrice) || "?"}</p>
             </div>
           </div>
         ))}
@@ -181,7 +181,7 @@ export default function OrderCard({ order, role }) {
           )}
         </div>
       )}
-      {(role === "admin" || role === "superadmin") && (
+      {(role === "admin" || role === "superadmin") && order.status !== "cancelled" && (
         <div className="order-actions">
           <SelectMenu
             className="status-select"

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { observer } from "mobx-react-lite";
-import { useToast } from "../../providers/ToastProvider";
 import { Context } from "../../main";
 import Input from "../Input/Input";
 import Button from "../Buttons/Button";
@@ -9,10 +8,10 @@ import useDebouncedValue from "../../hooks/useDebouncedValue";
 import validatePassword from "../../utils/validatePassword";
 import "./Register.css";
 import { error, log } from "../../utils/logger";
+import { showToast } from "../../providers/toastService";
 
 const Register = ({ onRegisterSuccess }) => {
   const { store } = useContext(Context);
-  const { showToast } = useToast();
 
   const [email, setEmail] = useState("");
   const [emailExists, setEmailExists] = useState(null);

@@ -3,9 +3,9 @@ import { adminStore } from "../../../main";
 import { observer } from "mobx-react-lite";
 import Empty from "../../../components/Empty/Empty";
 import ContactItem from "../../../components/ContactItem/ContactItem";
-import { Loader } from "lucide-react";
 import BackBtn from "../../../components/BackBtn/BackBtn";
 import { error } from "../../../utils/logger";
+import Loader from "../../../components/Loader/Loader";
 
 const  ConsultPage = function () {
   useEffect(() => {

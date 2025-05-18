@@ -4,12 +4,11 @@ import { productStore } from "../../main";
 import Input from "../Input/Input";
 import Button from "../Buttons/Button";
 import Loader from "../Loader/Loader";
-import { useToast } from "../../providers/ToastProvider";
 import { contactFormSchema } from "../../utils/validator";
 import SocialItems from "../SocialItem/SocialItems";
+import { showToast } from "../../providers/toastService";
 
-const ContactForm = ({ isLoggedIn = false, phone, email }) => {
-  const { showToast } = useToast();
+const ContactForm = ({ isLoggedIn = false, phone }) => {
 
   const [formData, setFormData] = useState({
     user: "",
@@ -43,7 +42,7 @@ const ContactForm = ({ isLoggedIn = false, phone, email }) => {
       await contactFormSchema.validate(dataToSend, { abortEarly: false });
 
       // Отправка
-      productStore.sendContactForm(dataToSend, showToast); // Предположим, теперь sendContactForm принимает объект
+      productStore.sendContactForm(dataToSend); // Предположим, теперь sendContactForm принимает объект
       
       // Очистка формы
       setFormData({
@@ -55,10 +54,10 @@ const ContactForm = ({ isLoggedIn = false, phone, email }) => {
     } catch (error) {
       if (error.name === "ValidationError") {
         error.inner.forEach((err) => {
-          showToast({
-            text1: err.message,
-            type: "error",
-          });
+         showToast({
+          text1: err.message,
+          type: "error",
+         })
         });
       } else {
         showToast({

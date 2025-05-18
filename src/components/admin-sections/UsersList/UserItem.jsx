@@ -1,38 +1,29 @@
+// UserItem.js
 import React from "react";
-import { adminStore } from "../../../main";
-import { observer } from "mobx-react-lite";
 import Button from "../../Buttons/Button";
 import "./UsersList.css";
 import { log } from "../../../utils/logger";
-const UserItem = ({ user, currentUser }) => {
-  // Функция для изменения статуса админа
-  const toggleAdminStatus = () => {
-    if (user.isAdmin) {
-      adminStore.removeAdmin(user.id); // Убираем админку
-    } else {
-      adminStore.addAdmin(user.id); // Даем админку
-    }
-  };
+import { rolesTranslate } from "../../../utils/options";
+
+const UserItem = ({ user, currentUser, onDeleteClick, onToggleAdminClick }) => {
   log("user", user);
   log("currentUser", currentUser);
-  
-  
 
   return (
     <div className="user-item-wrapper">
-      <div className="user-item">
+      <div className="user-item block-background">
         <h3>{user.name}</h3>
         <h3>{user.surname}</h3>
         <h3>{user.phone}</h3>
-        <p>Email: {user.email}</p>
-        <p>Role: {user.role}</p>
+        <p>{user.email}</p>
+        <p>{rolesTranslate[user.role]}</p>
         {user._id !== currentUser.id && (
           <>
-            <Button onClick={toggleAdminStatus}>
-              {user.role === "admin" ? "Remove Admin" : "Make Admin"}
+            <Button onClick={() => onToggleAdminClick(user)}>
+              {user.role === "admin" ? "Отнять админку" : "Дать админа"}
             </Button>
-            <Button onClick={() => adminStore.deleteUser(user.id)}>
-              Delete
+            <Button onClick={() => onDeleteClick(user)}>
+              Удалить
             </Button>
           </>
         )}
@@ -41,4 +32,4 @@ const UserItem = ({ user, currentUser }) => {
   );
 };
 
-export default observer(UserItem);
+export default UserItem;

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Button from '../../Buttons/Button';
 import { log } from '../../../utils/logger';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 export default function SettingsModal() {
   const [confirmExit, setConfirmExit] = useState(false);
-
+const navigation = useNavigate();
   const handleLogoutClick = () => {
     if (!confirmExit) {
       // Первый клик: запрос подтверждения
@@ -21,9 +22,13 @@ export default function SettingsModal() {
     }
   };
 
+  const handleNavigate = () => {
+   navigation("/reset-password");
+  };
+
   return (
     <div className='btn-vert-wrapper'>
-      <Button onClick={() => log("change password")}>Сменить пароль</Button>
+      <Button onClick={handleNavigate}>Сменить пароль</Button>
 
       <Button
         onClick={handleLogoutClick}
