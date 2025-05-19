@@ -30,6 +30,9 @@ const MainMaterialList = () => {
   };
 
   const handleEditClick = (material) => {
+    if (!store.isAuth || store.user?.role == "user") {
+      return;
+    }
     setEditingMaterial(material);
     setIsFormOpen(true);
   };
@@ -50,7 +53,7 @@ const MainMaterialList = () => {
   }
   return (
     <div className="main-material-wrapper">
-      {isAdmin && !isFormOpen && productStore.mainMaterials.length === 0 && (
+      {isAdmin && store.isAuth && !isFormOpen && productStore.mainMaterials.length === 0 && (
         <div className="plus-wrapper">
           <Button onClick={handleAddClick} className="add-material-btn">
             + Добавить материал
