@@ -7,7 +7,8 @@ import Empty from "../../components/Empty/Empty";
 import Button from "../../components/Buttons/Button";
 import PromoBlock from "../../components/PromoBlock/PromoBlock";
 import ContactFormModal from "../../components/ContactFormModal/ContactFormModal";
-import Loader from "../../components/Loader/Loader"; 
+import Loader from "../../components/Loader/Loader";
+import PromoSection from "../../components/PromoBlock/PromoSection";
 
 const Cataloq = () => {
   const navigation = useNavigate();
@@ -33,7 +34,7 @@ const Cataloq = () => {
       }}
     >
       {isLoading ? (
-        <Loader /> 
+        <Loader />
       ) : categories.length === 0 ? (
         <Empty text="Категории отсутствуют" />
       ) : (
@@ -58,14 +59,7 @@ const Cataloq = () => {
           </Button>
         </div>
       )}
-
-      <PromoBlock
-        title="При заказе от 3 товаров"
-        subtitle="Скидка 10%"
-        image="/promo/complect.png"
-        productId="1"
-        reversed
-      />
+      <PromoSection page="cataloq" />
       <ContactFormModal isLoggedIn={store.isAuth} />
     </div>
   );

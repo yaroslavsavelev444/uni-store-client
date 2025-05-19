@@ -312,10 +312,7 @@ export default class AdminStore {
         productStore.fetchCompany();
       }
     } catch (e) {
-      error(
-        "Ошибка при редактировании категории:",
-        e.response?.data?.message
-      );
+      error("Ошибка при редактировании категории:", e.response?.data?.message);
       showToast({
         text1: e.response?.data?.message,
         type: "error",
@@ -521,6 +518,23 @@ export default class AdminStore {
     }
   }
 
+  async removeSocialLink(linkId) {
+    try {
+      this.setIsLoading(true);
+      const res = await AdminService.removeSocialLink(linkId);
+      if (res.status === 200) {
+        showToast({ text1: "Ссылка удалена", type: "success" });
+      }
+    } catch (err) {
+      showToast({
+        text1: err.response?.data?.message || "Ошибка при удалении ссылки",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
   async uploadOrderFile(formData, id) {
     log("uploadOrderFile", formData, id);
     try {
@@ -642,6 +656,125 @@ export default class AdminStore {
       error(e.response?.data?.message);
       showToast({
         text1: e.response?.data?.message,
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async uploadPromoBlock(formData) {
+    log("uploadPromoBlock", formData);
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.uploadPromoBlock(formData); // Отправляем FormData через сервис
+      if (response.status === 200) {
+        showToast({
+          text1: "Блок успешно добавлен",
+          type: "success",
+        });
+      }
+      log("Блок успешно добавлен:", response.data);
+    } catch (error) {
+      error("Ошибка при добавлении блока:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message,
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async updatePromoBlock(id, formData) {
+    log("updatePromoBlock", formData);
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.updatePromoBlock(id, formData);
+      if (response.status === 200) {
+        showToast({ text1: "Блок успешно обновлён", type: "success" });
+        await this.getPromoBlocks(); // обновим список
+      }
+    } catch (error) {
+      error("Ошибка при обновлении блока:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message || "Ошибка",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async deletePromoBlock(id) {
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.deletePromoBlock(id);
+      if (response.status === 200) {
+        showToast({ text1: "Блок успешно удалён", type: "success" });
+        await this.getPromoBlocks(); // обновим список
+      }
+    } catch (error) {
+      error("Ошибка при удалении блока:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message || "Ошибка",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async uploadMainMaterial (formData) {
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.uploadMainMaterial(formData);
+      if (response.status === 200) {
+        showToast({ text1: "Материал успешно добавлен", type: "success" });
+      }
+      log("Материал успешно добавлен:", response.data);
+    } catch (error) {
+      error("Ошибка при добавлении материала:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message,
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async updateMainMaterial (id, formData) {
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.updateMainMaterial(id, formData);
+      if (response.status === 200) {
+        showToast({ text1: "Материал успешно обновлён", type: "success" });
+        await this.getMainMaterials(); // обновим список
+      }
+    } catch (error) {
+      error("Ошибка при обновлении материала:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message || "Ошибка",
+        type: "error",
+      });
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async deleteMainMaterial (id) {
+    try {
+      this.setIsLoading(true);
+      const response = await AdminService.deleteMainMaterial(id);
+      if (response.status === 200) {
+        showToast({ text1: "Материал успешно удалён", type: "success" });
+        await this.getMainMaterials(); // обновим список
+      }
+    } catch (error) {
+      error("Ошибка при удалении материала:", error.response?.data?.message);
+      showToast({
+        text1: error.response?.data?.message || "Ошибка",
         type: "error",
       });
     } finally {

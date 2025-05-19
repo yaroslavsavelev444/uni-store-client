@@ -11,6 +11,7 @@ import "./CategoriesPage.css";
 import BackBtn from "../../../components/BackBtn/BackBtn";
 import { showToast } from "../../../providers/toastService";
 import Loader from "../../../components/Loader/Loader";
+import { X } from "lucide-react";
 
 // Начальное состояние категории
 const defaultCategory = {
@@ -189,7 +190,7 @@ const CategoriesPage = () => {
             </Button>
             {modalType === "edit" && (
               <Button onClick={handleDeleteCategory} className="btn-danger">
-                Удалить
+                <X size={20} color="red"/>
               </Button>
             )}
           </div>

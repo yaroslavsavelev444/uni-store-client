@@ -6,8 +6,9 @@ import FileItem from "../../../../components/FileItem/FileItem";
 import { X } from "lucide-react";
 import Loader from "../../../../components/Loader/Loader";
 import { showToast } from "../../../../providers/toastService";
+import { observer } from "mobx-react-lite";
 
-export default function FilesModal({ onClose }) {
+const  FilesModal = ({ onClose }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const handleRemoveFile = (index) => {
@@ -120,3 +121,5 @@ export default function FilesModal({ onClose }) {
     </div>
   );
 }
+
+export default observer(FilesModal);

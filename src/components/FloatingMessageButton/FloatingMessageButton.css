@@ -1,0 +1,111 @@
+/* Позиционирование иконки в правом нижнем углу */
+.floating-message-button {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 1000; /* Иконка всегда сверху */
+    transition: background-color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .floating-message-button:hover {
+    background-color: #555;
+  }
+  
+  /* Мини-форма рядом с иконкой */
+  .floating-form {
+    position: fixed;
+    bottom: 70px; /* Расстояние от иконки */
+    right: 40px;
+    background-color: #222;
+    color: white;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .floating-form {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  /* Закрытие формы с крестиком */
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .close-button:hover {
+    color: #fff;
+  }
+  
+  /* Стили для полей формы */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: white;
+    font-size: 14px;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Кнопка отправки */
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* При клике вне формы скрываем её */
+  body {
+    overflow-x: hidden;
+  }

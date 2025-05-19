@@ -6,7 +6,7 @@ import PageHeader from '../../components/PageHeader/PageHeader'
 
 export default function Contacts() {
   return (
-    <div>
+    <div style={{display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", width:"100%"}}>
       <ContactForm  phone={productStore?.company?.phone} email={productStore?.company?.email} />
       <PageHeader title="Мы на карте" />
       <YandexMap />

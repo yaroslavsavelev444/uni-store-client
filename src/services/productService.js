@@ -2,6 +2,14 @@ import $api from "../http/axios";
 import { log } from "../utils/logger";
 
 export default class productService {
+
+  static async getPromoBlocks(page) {
+    return $api.get("/promoBlocks/getPromoBlocks", { params: { page } });
+  }
+
+  static async getMainMaterials() {
+    return $api.get("/promoBlocks/getMainMaterials");
+  }
   static async getCart() {
     return $api.get("/cart/getCart");
   }

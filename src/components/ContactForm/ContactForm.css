@@ -1,11 +1,13 @@
 .contact-wrapper {
-  padding: 40px;
-  max-width: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   margin: auto;
 }
 
 .contact-card {
   border-radius: 10px;
+  margin: 2% 0 ;
   padding: 40px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -73,4 +75,11 @@
 .footer-contact i,
 .footer-social a {
   font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .contact-card{
+    width: 90%;
+  }
+  
 }

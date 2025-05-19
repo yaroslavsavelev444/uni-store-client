@@ -29,65 +29,60 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!formData.phone || !formData.msg) {
-    showToast({ text1: "Заполните все поля", type: "error" });
-    return;
-  }
-
-  let dataToSend = { ...formData };
-
-  if (isLoggedIn) {
-    dataToSend.user = store?.user?.name;
-    dataToSend.email = store?.user?.email;
-  }
-
-  const isProd = import.meta.env.VITE_PROJECT === "prod";
-  let captchaToken = "";
-
-  if (recaptchaRef.current) {
-    try {
-      captchaToken = await recaptchaRef.current.executeAsync();
-      recaptchaRef.current.reset();
-    } catch (e) {
-      showToast({ text1: "Подтвердите, что вы не робот", type: "error" });
+    if (!formData.phone || !formData.msg) {
+      showToast({ text1: "Заполните все поля", type: "error" });
       return;
     }
-  }
 
-  if (!captchaToken && isProd) {
-    showToast({ text1: "Подтвердите капчу", type: "error" });
-    return;
-  }
+    let dataToSend = { ...formData };
 
-  dataToSend.captcha = captchaToken; // добавляем токен
-
-  try {
-    await contactFormSchema.validate(dataToSend, { abortEarly: false });
-    await productStore.sendContactForm(dataToSend);
-
-    setFormData({
-      user: "",
-      email: "",
-      phone: "",
-      msg: "",
-    });
-
-    setModalVisible(false);
-  } catch (error) {
-    if (error.name === "ValidationError") {
-      error.inner.forEach((err) => {
-        showToast({ text1: err.message, type: "error" });
-      });
-    } else {
-      showToast({ text1: "Ошибка отправки формы", type: "error" });
+    if (isLoggedIn) {
+      dataToSend.user = store?.user?.name;
+      dataToSend.email = store?.user?.email;
     }
-  }
-};
+
+    const isProd = import.meta.env.VITE_PROJECT === "prod";
+    let captchaToken = "";
+
+    if (recaptchaRef.current) {
+      try {
+        captchaToken = await recaptchaRef.current.executeAsync();
+        recaptchaRef.current.reset();
+      } catch (error) {
+        showToast({ text1: `Подтвердите, что вы не робот`, type: "error" });
+        console.error(error);
+        return;
+      }
+    }
+
+    if (!captchaToken && isProd) {
+      showToast({ text1: "Подтвердите капчу", type: "error" });
+      return;
+    }
+
+    dataToSend.captcha = captchaToken; // добавляем токен
+
+    try {
+      await contactFormSchema.validate(dataToSend, { abortEarly: false });
+      await productStore.sendContactForm(dataToSend);
+
+      setFormData({});
+      setModalVisible(false);
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        error.inner.forEach((err) => {
+          showToast({ text1: err.message, type: "error" });
+        });
+      } else {
+        showToast({ text1: "Ошибка отправки формы", type: "error" });
+      }
+    }
+  };
 
   return (
-    <>
+    <div style={{display:"flex", justifyContent:"center"}}>
       <ContactSection
         setModalVisible={setModalVisible}
         phone={productStore?.company?.phone}
@@ -170,7 +165,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
           </form>
         </Modal>
       )}
-    </>
+    </div>
   );
 };
 

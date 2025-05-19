@@ -4,6 +4,7 @@ import Button from "../../Buttons/Button";
 import "./UsersList.css";
 import { log } from "../../../utils/logger";
 import { rolesTranslate } from "../../../utils/options";
+import { X } from "lucide-react";
 
 const UserItem = ({ user, currentUser, onDeleteClick, onToggleAdminClick }) => {
   log("user", user);
@@ -23,7 +24,7 @@ const UserItem = ({ user, currentUser, onDeleteClick, onToggleAdminClick }) => {
               {user.role === "admin" ? "Отнять админку" : "Дать админа"}
             </Button>
             <Button onClick={() => onDeleteClick(user)}>
-              Удалить
+              <X color="red" size={20} />
             </Button>
           </>
         )}

@@ -8,6 +8,7 @@ import Button from "../../../components/Buttons/Button";
 import "./UploadPage.css";
 import { productStore } from "../../../main";
 import { set } from "mobx";
+import { X } from "lucide-react";
 
 const ProductForm = ({
   product,
@@ -246,7 +247,7 @@ const ProductForm = ({
               placeholder="Значение"
               style={{ width: "100%" }}
             />
-            <Button onClick={() => removeAttribute(i)}>Удалить</Button>
+            <Button onClick={() => removeAttribute(i)}><X size={16} color="red" /></Button>
           </div>
         ))}
         <Button onClick={addAttribute}>Добавить характеристику</Button>

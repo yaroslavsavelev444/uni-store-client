@@ -45,6 +45,8 @@ import RegisterPage from "./pages/Register/Register";
 import LoginPage from "./pages/Login/Login";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import Loader from "./components/Loader/Loader";
+import FloatingMessageButton from "./components/FloatingMessageButton/FloatingMessageButton";
+import ScrollToTop from "./components/ScrollToTopButton/ScrollToTop";
 
 const AppContent = observer(() => {
   const location = useLocation(); // добавь это
@@ -82,7 +84,7 @@ const AppContent = observer(() => {
   ].some((path) => location.pathname.startsWith(path));
 
   const isSpecialPage = [
-    "/",
+    '/', 
     "/reset-password",
     "/login",
     "/register",
@@ -96,10 +98,12 @@ const AppContent = observer(() => {
         phone={productStore?.company?.phone}
       />
       <ThemeProvider>
+        <ScrollToTop />
         <ToastProvider>
           {isMobile ? <MobileNavBar /> : <NavBar />}
           <AuthRequiredModal />
           <Content isSpecialPage={isSpecialPage} />
+          <FloatingMessageButton />
           {!hideFooter && <FooterBar />}
           <EmailConfirmationOverlay />
           <ScrollToTopButton />

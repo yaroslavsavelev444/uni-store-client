@@ -15,7 +15,7 @@ const UserDataModal = function () {
   }, []);
 
   const handleDeleteCompany = (id) => {
-    if(!id) return log("Не передан id");
+    if (!id) return log("Не передан id");
     productStore.deleteUserCompany(id);
   };
 
@@ -24,31 +24,33 @@ const UserDataModal = function () {
       <h2>Мои данные</h2>
       {productStore.isLoading ? (
         <Loader size={50} />
-      ): (
-<>
-{productStore.userCompanies.length == 0 ? (
-        <Empty text="Компании отсутствуют" />
       ) : (
         <>
-          {productStore.userCompanies.map((company) => (
-            <UserCompanyItem key={company._id} company={company} onDelete={() => setModalOpen(true)}/>
-          ))}
-          <ConfirmModal 
-            isOpen={modalOpen}
-            title="Удалить компанию?"
-            text="Вы действительно хотите удалить компанию?"
-            confirmLbl="Удалить"
-            cancelLbl="Отмена"
-            onConfirm={handleDeleteCompany}
-          />
+          {productStore.userCompanies.length == 0 ? (
+            <Empty text="Компании отсутствуют" />
+          ) : (
+            <>
+              {productStore.userCompanies.map((company) => (
+                <UserCompanyItem
+                  key={company._id}
+                  company={company}
+                  onDelete={() => setModalOpen(true)}
+                />
+              ))}
+              <ConfirmModal
+                isOpen={modalOpen}
+                title="Удалить компанию?"
+                text="Вы действительно хотите удалить компанию?"
+                confirmLbl="Удалить"
+                cancelLbl="Отмена"
+                onConfirm={handleDeleteCompany}
+              />
+            </>
+          )}
         </>
       )}
-      </>
-      )}
-
     </div>
   );
-}
-
+};
 
 export default observer(UserDataModal);

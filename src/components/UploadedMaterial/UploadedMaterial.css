@@ -1,4 +1,6 @@
 .uploaded-material-wrapper {
+  height: 100%;
+  width: 100%;
   position: relative;
   text-align: center;
 }
@@ -16,6 +18,7 @@
   pointer-events: none; /* чтобы клик проходил сквозь текст, если нужно */
 }
 .media-content {
+  height: 100%;
   width: 100%;
   position: relative;
   display: inline-block;
@@ -23,7 +26,9 @@
 
 
 .uploaded-video, .uploaded-image {
+  height: 100%;
   max-width: 100%;
+  object-fit: cover;
   border-radius: 8px;
 }
 
@@ -40,4 +45,46 @@
   display: block;
   margin: 0.5rem auto;
   padding: 0.5rem;
+}
+.main-material-wrapper {
+height: 85vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-material-btn {
+  margin-bottom: 20px;
+}
+
+.materials-list {
+  width: 100%;
+}
+
+.material-item {
+  width: 280px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px #ccc;
+  transition: box-shadow 0.3s ease;
+}
+
+.material-item:hover {
+  box-shadow: 0 0 12px #999;
+}
+
+.material-image,
+.material-video {
+  width: 100%;
+  border-radius: 6px;
+  max-height: 180px;
+  object-fit: cover;
+}
+
+.material-caption {
+  margin-top: 8px;
+  font-weight: 500;
+  color: #333;
 }

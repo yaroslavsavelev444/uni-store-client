@@ -14,13 +14,26 @@ export default class ProductStore {
   company = {};
   currentProduct = {};
   cart = [];
-  mainMaterials = [];
   userCompanies = [];
+  promoBlocks = [];
+  mainMaterials = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  setPromoBlocks(promoBlocks) {
+    runInAction(() => {
+      this.promoBlocks = promoBlocks;
+      log("Promo blocks set to:", this.promoBlocks);
+    });
+  }
+  setMainMaterials(mainMaterials) {
+    runInAction(() => {
+      this.mainMaterials = mainMaterials;
+      log("Main materials set to:", this.mainMaterials);
+    });
+  }
   setCategories(categories) {
     runInAction(() => {
       this.categories = categories;
@@ -81,18 +94,49 @@ export default class ProductStore {
     });
   }
 
-  setMainMaterials(mainMaterials) {
-    runInAction(() => {
-      this.mainMaterials = mainMaterials;
-      log("Main materials set to:", this.mainMaterials);
-    });
-  }
-
   setOrgReviews(reviews) {
     runInAction(() => {
       this.reviews = reviews;
       log("reviews set to:", this.reviews);
     });
+  }
+
+  async getPromoBlocks(page) {
+    this.setIsLoading(true);
+    try {
+      const response = await ProductService.getPromoBlocks(page);
+      log("[getPromoBlocks]getPromoBlocksresponse", response.data);
+      if (response.status === 200) {
+        this.setPromoBlocks(response.data);
+      }
+    } catch (e) {
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
+  }
+
+  async getMainMaterials() {
+    this.setIsLoading(true);
+    try {
+      const response = await ProductService.getMainMaterials();
+      log("[getMainMaterials]getMainMaterialsresponse", response.data);
+      if (response.status === 200) {
+        this.setMainMaterials(response.data);
+      }
+    } catch (e) {
+      showToast({
+        text1: e.response?.data?.message,
+        type: "error",
+      });
+      error(e.response?.data?.message);
+    } finally {
+      this.setIsLoading(false);
+    }
   }
 
   //КОРЗИНА
@@ -377,6 +421,10 @@ export default class ProductStore {
       this.setIsLoading(true);
       const response = await ProductService.cancelOrder(id);
       if (response.status === 200) {
+        showToast({
+          text1: "Заказ успешно отменен",
+          type: "success",
+        })
         this.fetchOrders();
       }
       log("cancelOrderresponse", response.data);

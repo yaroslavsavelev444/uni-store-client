@@ -4,6 +4,18 @@ export default class adminService {
   static async toggleAdminRules(id) {
     return $api.post(`/admin/toggleAdminRules`, { id });
   }
+
+  static async updatePromoBlock(id, formData) {
+    return $api.post(`/admin/updatePromoBlock/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  static async deletePromoBlock(id) {
+    return $api.delete(`/admin/deletePromoBlock/${id}`);
+  }
   //PRODUCT
   static async getUsers() {
     return $api.get("/admin/getUsers");
@@ -58,11 +70,11 @@ export default class adminService {
     });
   }
   static async editCompany(formData) {
-   return $api.post(`/admin/editOrgData`, formData, {
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+    return $api.post(`/admin/editOrgData`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
   static async deleteCompany(id) {
     return $api.delete(`/admin/deleteOrgData/${id}`);
@@ -111,6 +123,12 @@ export default class adminService {
     });
   }
 
+  static async removeSocialLink(linkId) {
+    return $api.delete("/admin/deleteOrgSocialLink", {
+      data: { linkId },
+    });
+  }
+
   static async uploadOrderFile(formData, id) {
     return $api.post(`/admin/uploadOrderFile/${id}`, formData, {
       headers: {
@@ -137,5 +155,33 @@ export default class adminService {
 
   static async updateCommentStatus(id, status) {
     return $api.post(`/admin/updateOrgReviewStatus/${id}`, { status });
+  }
+
+  static async uploadPromoBlock(formData) {
+    return $api.post(`/admin/uploadPromoBlock`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  static async uploadMainMaterial(formData) {
+    return $api.post(`/admin/uploadMainMaterial`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  static async deleteMainMaterial(id) {
+    return $api.delete(`/admin/deleteMainMaterial/${id}`);
+  }
+
+  static async updateMainMaterial(id, formData) {
+    return $api.post(`/admin/updateMainMaterial/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 }

@@ -1,126 +1,118 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Typewriter } from 'react-simple-typewriter';
-import { observer } from 'mobx-react-lite';
-import { store, adminStore } from '../../main'; // путь под себя
-import axios from 'axios';
-import './UploadedMaterial.css';
-import Modal from '../Modal/Modal';
-import Button from '../Buttons/Button';
+import { useEffect, useState } from "react";
+import { adminStore } from "../../main";
+import Input from "../Input/Input";
+import Button from "../Buttons/Button";
+import { API_URL } from "../../http/axios";
+import { showToast } from "../../providers/toastService";
+import ConfirmModal from "../ConfirmModal/ConfirmModal";
+import { X } from "lucide-react";
 
-const UploadedMaterial = () => {
-  const [materials, setMaterials] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [files, setFiles] = useState([]);
-  const [caption, setCaption] = useState('');
-
-  const fetchMaterials = async () => {
-    try {
-      const res = await axios.get('/api/materials');
-      setMaterials(res.data || []);
-    } catch (error) {
-      console.error('Ошибка при получении материалов:', error);
-    }
-  };
+const MainMaterialForm = ({ onSuccess, initialData = null }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [caption, setCaption] = useState("");
+  const [mediaFile, setMediaFile] = useState(null);
 
   useEffect(() => {
-    fetchMaterials();
-  }, []);
-
-  const handleFileChange = (e) => {
-    setFiles([...e.target.files]);
-  };
+    if (initialData) {
+      setCaption(initialData.caption || "");
+    }
+  }, [initialData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!mediaFile && !initialData) {
+      return showToast({ text1: "Добавьте фото или видео", type: "error" });
+    }
+
     const formData = new FormData();
-    files.forEach((file) => formData.append('files', file));
-    formData.append('caption', caption);
+    formData.append("caption", caption);
+    if (mediaFile) formData.append("file", mediaFile);
 
     try {
-      await adminStore.uploadMaterial(formData);
-      setIsModalOpen(false);
-      setFiles([]);
-      setCaption('');
-      await fetchMaterials(); // обновить список после отправки
+      if (initialData?._id) {
+        await adminStore.updateMainMaterial(initialData._id, formData);
+      } else {
+        await adminStore.uploadMainMaterial(formData);
+      }
+      showToast({ text1: "Сохранено", type: "success" });
+      setCaption("");
+      setMediaFile(null);
+      onSuccess();
     } catch (error) {
-      console.error('Ошибка отправки материалов:', error);
+      showToast({ text1: "Ошибка загрузки", type: "error" });
+      console.error(error);
     }
   };
 
-  const renderMedia = () =>
-    materials.map((item, index) => {
-      const { url, caption } = item;
-      const ext = url.split('.').pop().toLowerCase();
-
-      if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-        return <img key={index} src={url} alt={`material-${index}`} className="uploaded-image" />;
-      } else if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) {
-        return (
-          <video
-            key={index}
-            src={url}
-            className="uploaded-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-          />
-        );
-      }
-
-      return null;
-    });
-
-  const isAdmin = store.userRole === 'admin';
+  const handleDelete = async () => {
+    try {
+      await adminStore.deleteMainMaterial(initialData._id);
+      showToast({ text1: "Удалено", type: "success" });
+      onSuccess();
+    } catch (error) {
+      showToast({ text1: `Ошибка удаления ${error.response?.data?.message}`, type: "error" });
+    }
+  };
 
   return (
-    <div className="uploaded-material-wrapper">
-      {materials.length === 0 && isAdmin && (
-        <button className="add-material-btn" onClick={() => setIsModalOpen(true)}>+</button>
+    <form onSubmit={handleSubmit} className="contact-form">
+      <Input
+        type="text"
+        placeholder="Подпись"
+        onChange={(e) => setCaption(e.target.value)}
+        value={caption}
+        label={caption ? "Подпись" : ""}
+        style={{ width: "100%" }}
+      />
+
+      <input
+        type="file"
+        accept="image/*,video/*"
+        onChange={(e) => setMediaFile(e.target.files[0])}
+      />
+
+      {initialData?.mediaUrl && !mediaFile && (
+        <>
+          {initialData.mediaType === "video" ? (
+            <video
+              src={API_URL + initialData.mediaUrl}
+              controls
+              style={{ maxWidth: 300, marginTop: 8 }}
+            />
+          ) : (
+            <img
+              src={API_URL + initialData.mediaUrl}
+              alt="Материал"
+              style={{ maxWidth: 300, marginTop: 8 }}
+            />
+          )}
+        </>
       )}
 
-      <div className="media-content">{renderMedia()}</div>
+      <Button type="submit" disabled={adminStore.isLoading}>
+        Сохранить
+      </Button>
 
-      {materials.length > 0 && materials[0]?.caption && (
-        <div className="overlay-text">
-          <Typewriter
-            words={[materials[0].caption]}
-            cursor
-            cursorStyle="|"
-            typeSpeed={70}
-            delaySpeed={1000}
+      {initialData?._id && (
+        <>
+          <Button
+            type="button"
+            onClick={() => setModalOpen(true)}
+            disabled={adminStore.isLoading}
+          >
+            <X size={20}  color="red"/>
+          </Button>
+          <ConfirmModal
+            text="Вы действительно хотите удалить материал?"
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+            onConfirm={handleDelete}
           />
-        </div>
+        </>
       )}
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-
-      >
-        <form onSubmit={handleSubmit}>
-          <label>Загрузите фото/видео:</label>
-          <input type="file" accept="image/*,video/*" multiple onChange={handleFileChange} />
-
-          <label>Подпись:</label>
-          <textarea
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            rows={3}
-            placeholder="Введите подпись..."
-          />
-
-          <Button  type="submit" className="submit-btn"> Отправить </Button>
-        </form>
-      </Modal>
-    </div>
+    </form>
   );
 };
 
-UploadedMaterial.propTypes = {
-  role: PropTypes.string,
-};
-
-export default observer(UploadedMaterial);
+export default MainMaterialForm;

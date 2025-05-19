@@ -79,6 +79,7 @@ const ItemPage = () => {
                         download
                         target="_blank"
                         rel="noopener noreferrer"
+                        style={{ display: 'flex', justifyContent: 'center', padding: '2%' }}
                       >
                         <Button>Скачать инструкцию</Button>
                       </a>

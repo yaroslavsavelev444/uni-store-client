@@ -3,8 +3,9 @@ import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Context } from "../../main";
+import { Context, productStore } from "../../main";
 import "./MobileNavBar.css";
+import { API_URL } from "../../http/axios";
 
 const MobileNavBar = () => {
   const { store } = useContext(Context);
@@ -15,8 +16,8 @@ const MobileNavBar = () => {
     <header className="block-background mobile-header">
       <div className="block-background mobile-top-bar">
         <div className="mobile-logo">
-          {store?.user?.logoUrl ? (
-            <img src={store.user.logoUrl} alt="Логотип" />
+          {productStore?.company?.logo ? (
+            <img src={`${API_URL}/${productStore.company.logo}`} alt="Логотип" style={{ height: "50px" }} />
           ) : (
             "LOGO"
           )}

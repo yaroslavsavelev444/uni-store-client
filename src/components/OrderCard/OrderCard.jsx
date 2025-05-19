@@ -210,7 +210,7 @@ export default function OrderCard({ order, role }) {
         </div>
           
         )}
-      {role === "admin" &&
+      {role === "admin" || role === "superadmin" &&
         order.status !== "cancelled" &&
         order.status !== "ready" &&
         !order?.file?.name && (
@@ -306,7 +306,7 @@ export default function OrderCard({ order, role }) {
                   onClick={() => handleRemoveFile(index)}
                   style={{ marginLeft: 10 }}
                 >
-                  Удалить
+                  <X color="red" size={20} />
                 </Button>
               </div>
             ))}

@@ -19,6 +19,9 @@
   .order-card-title {
     font-size: 1.25rem;
     font-weight: 600;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   }
   
   .status-badge {
@@ -133,7 +136,7 @@
 
   @media screen and (max-width: 768px) {
     .order-card {
-      width: 100%;
+      width: 90%;
       padding: 1rem;
     }
     .order-product{
@@ -144,6 +147,17 @@
     }
     .product-order-title, .product-order-quantity p, .product-info p{
       font-size: 0.75rem;
+    }
+    .order-card-header{
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      align-items: flex-start;
+      justify-content: flex-start
+    }
+
+    .order-actions{
+      justify-content: center;
     }
     
   }

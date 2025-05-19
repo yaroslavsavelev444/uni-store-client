@@ -54,3 +54,30 @@ padding-top: 120px;
   gap: 20px;
   width: 100%;
 }
+
+.plus-wrapper{
+  padding: 2% 0;
+  min-height: 40vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+   h2{
+     font-size: 20px !important;
+   }
+   h1{
+     font-size: 25px !important;
+   }
+   h3{
+     font-size: 15px !important;
+   }
+
+   p{
+     font-size: 15px !important;
+   }
+  
+}

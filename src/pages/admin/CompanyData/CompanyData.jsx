@@ -8,7 +8,7 @@ import CompanyModalContent from "./Modals/CompanyModal";
 import FilesModalContent from "./Modals/FilesModal";
 import SocialModalContent from "./Modals/SocialModal";
 import Modal from "../../../components/Modal/Modal";
-import './CompanyData.css';
+import "./CompanyData.css";
 
 const CompanyData = () => {
   const [modalType, setModalType] = useState(null);

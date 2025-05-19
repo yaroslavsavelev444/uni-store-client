@@ -1,0 +1,15 @@
+.social-line{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100% ;
+}
+
+@media screen and (max-width: 768px) {
+    .social-line{
+        flex-direction: column;
+    }
+    
+}

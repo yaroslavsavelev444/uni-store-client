@@ -26,7 +26,7 @@ const AccountMenu = () => {
         </Button>
       ))}
 
-      {menuItems.map(({ key, component: Component }) =>
+      {menuItems.map(({ key , component: Component }) =>
         isOpen(key) ? (
           <UniversalModal key={key} onClose={closeModal}>
             <Component onClose={closeModal} />

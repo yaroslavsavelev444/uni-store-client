@@ -37,7 +37,7 @@ const Button = ({ children, onClick, disabled = false, ...props }) => {
       disabled={disabled}
       ref={buttonRef}
     >
-      {children}
+      <p style={{margin: 0}}>{children}</p>
     </button>
   );
 };

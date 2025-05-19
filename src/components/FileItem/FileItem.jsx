@@ -1,6 +1,7 @@
 import React from 'react'
 import { API_URL } from '../../http/axios'
 import Button from '../Buttons/Button'
+import { X } from 'lucide-react'
 
 export default function FileItem({ file, index, handleDeleteFile, isAdmin }) {
   return (
@@ -16,7 +17,7 @@ export default function FileItem({ file, index, handleDeleteFile, isAdmin }) {
         </a>
         {isAdmin && (
           <Button style={{ marginLeft: 10 }} onClick={() => handleDeleteFile(file.path)}>
-            Удалить
+            <X color="red" size={20} />
           </Button>
         )}
       </div>

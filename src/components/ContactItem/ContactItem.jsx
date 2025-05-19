@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../Buttons/Button";
 import { formatDate } from "../../utils/formatMessageTime";
 import "./ContactItem.css";
+import { X } from "lucide-react";
 export default function ContactItem({ contact, onAction }) {
   const { name, email, phone, message, createdAt, _id } = contact;
 
@@ -41,7 +42,7 @@ export default function ContactItem({ contact, onAction }) {
         }}
       >
         <Button onClick={() => onAction(_id, "delete")}>
-          Удалить
+          <X color="red" size={20} />
         </Button>
       </div>
     </div>
