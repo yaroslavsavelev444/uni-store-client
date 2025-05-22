@@ -51,7 +51,9 @@ const ItemPage = () => {
     });
   };
 
-  log("ItemPage", product.priceIndividual);
+
+    log("ProductCardsfksadf;ksndglnskjg;lisdgiuhdsd", product?.priceIndividual, product?.discountPersentage, product?.discountFromQuantity);
+  
 
   return (
     <div className="item-page-wrapper">
@@ -93,9 +95,9 @@ const ItemPage = () => {
                       quantity={product.totalQuantity}
                     />
                     <ProductPrice
-                      price={product.priceIndividual}
-                      discountPercentage={product.discountPercentage}
-                      discountFromQuantity={product.discountFromQuantity}
+                      price={product?.priceIndividual}
+                      discountPercentage={product?.discountPersentage}
+                      discountFromQuantity={product?.discountFromQuantity}
                     />
                     {product.isAvailable && (
                       <div className="btn-wrapper">

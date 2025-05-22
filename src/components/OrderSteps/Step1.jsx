@@ -19,7 +19,7 @@ const Step1 = ({
   return (
     <div>
       {cart.length === 0 ? (
-        <Empty text="Корзина пуста" />
+        <Empty text="Пусто" size={50} />
       ) : (
         <div className="cart-list">
           <div className="cart-summary">

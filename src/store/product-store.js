@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import ProductService from "../services/productService";
 import { error, log } from "../utils/logger";
 import { showToast } from "../providers/toastService";
+import { store } from "../main";
 
 export default class ProductStore {
   isLoading = false;
@@ -162,7 +163,6 @@ export default class ProductStore {
   async setCartItem(id, quantity, action) {
     if (!id) return error("Не передан id", id);
     try {
-      this.setIsLoading(true);
       const response = await ProductService.setCartItem(id, quantity, action);
       if (quantity === 0) {
         this.fetchCart();
@@ -173,6 +173,10 @@ export default class ProductStore {
       }
       if (response.status === 200) {
         log("addToCartresponse", response.data);
+        showToast({
+          text1: "Товар добавлен",
+          type: "success",
+        })
       }
     } catch (e) {
       error(e.response?.data?.message);
@@ -180,9 +184,7 @@ export default class ProductStore {
         text1: e.response?.data?.message,
         type: "error",
       });
-    } finally {
-      this.setIsLoading(false);
-    }
+    } 
   }
   async clearCart() {
     try {
@@ -248,10 +250,12 @@ export default class ProductStore {
     try {
       this.setIsLoading(true);
       this.setProducts([]);
+      const isAdmin = store.user.role === "admin" || store.user.role === "superadmin"; 
       const response = await ProductService.getProducts(
         categoryId,
         selectedValue,
-        showOnMainPage
+        showOnMainPage,
+        isAdmin
       );
       if (response.status === 200) {
         log("fetchProductsresponse", response.data);

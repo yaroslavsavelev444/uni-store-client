@@ -8,9 +8,10 @@ import Modal from "../../components/Modal/Modal";
 import Loader from "../../components/Loader/Loader";
 import SelectMenu from "../../components/SelectMenu/SelectMenu";
 import { themeOptions } from "../../utils/options";
-import { error } from "../../utils/logger";
+import { error, log } from "../../utils/logger";
+import { observer } from "mobx-react-lite";
 
-export default function About() {
+const About = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reviewData, setReviewData] = useState({
     theme: "",
@@ -29,21 +30,30 @@ export default function About() {
     setIsModalVisible(false);
   };
 
+  useEffect(() => {
+      productStore.fetchOrgReviews();
+    }, []);
+
+    log("orgReviews", productStore.orgReviews);
+
+    const hasUserReview = productStore.orgReviews?.some(
+  review => review.userId === store.user.id
+);
+log("hasUserReview", hasUserReview);
+
   return (
     <div className="page-container">
       <DescriptionBlock
         title={"О нас"}
         description={
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Reprehenderit ipsam provident ea fuga ipsum sunt quisquam est vel
-            possimus aut. ipsum dolor sit, amet consectetur adipisicing elit.
-            Pariatur quibusdam obcaecati accusamus voluptatem doloremque, dicta
-            ab eaque aliquid suscipit animi numquam ipsum cupiditate repellendus
-            nam possimus rerum quo. Exercitationem, sequi? Laboriosam adipisci
-            saepe ullam enim, molestiae consequatur voluptates temporibus unde
-            labore tempora quae aliquid distinctio accusantium amet ipsam
-            reprehenderit nemo?
+            Наша компания специализируется на разработке систем противодействия
+            беспилотным летательным аппаратам (БпЛА). Мы создаем устройства
+            нейтрализации дронов с использованием физических методов, таких как
+            захват сетью или таран. В сферу наших компетенций входят разработка
+            сложных алгоритмов наведения и навигации в условиях радиоэлектронной
+            борьбы (РЭБ), а также автономных дронов, способных выполнять задачи
+            по перехвату целей.
           </p>
         }
       />
@@ -54,24 +64,23 @@ export default function About() {
             : "Войдите, чтобы оставить отзыв"
         }
       >
-        {store.isAuth ? (
-          <Button onClick={() => setIsModalVisible(true)}>
-            Оставить отзыв
-          </Button>
-        ) : (
-          <Button onClick={handleNavigateToLogin}>Войти</Button>
-        )}
+       {!store.isAuth ? (
+  <Button onClick={handleNavigateToLogin}>Войти</Button>
+) : !hasUserReview ? (
+  <Button onClick={() => setIsModalVisible(true)}>
+    Оставить отзыв
+  </Button>
+) : null}
       </PageHeader>
-      <CommentsShell showStatuses={false}/>
+      <CommentsShell showStatuses={false} />
       <Modal isOpen={isModalVisible} onClose={() => setIsModalVisible(false)}>
         <div className="modal-wrapper">
-          <h3>Оставить отзыв</h3>
+          <h2>Оставить отзыв</h2>
           <SelectMenu
             value={reviewData.theme}
             options={themeOptions}
             onChange={(e) => setReviewData({ ...reviewData, theme: e })}
             placeholder="Выбрать тему"
-            
           />
           <div className="input-wrapper">
             <textarea
@@ -97,3 +106,5 @@ export default function About() {
     </div>
   );
 }
+
+export default observer(About);

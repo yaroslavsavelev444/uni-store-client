@@ -88,8 +88,10 @@ export default function Step2({
   };
 
   useEffect(() => {
+  if (productStore.userCompanies.length === 0) {
     productStore.fetchUserCompanies();
-  }, []);
+  }
+}, []);
 
   const fillCompanyData = (company) => ({
     companyName: company.companyName || "",
@@ -160,6 +162,27 @@ export default function Step2({
               alignItems: "center",
             }}
           >
+            {productStore.userCompanies.length > 0 && (
+              <>
+              <h2>Мои компании</h2>
+                {productStore.userCompanies.map((company) => (
+                  <OfferUserCompany
+                    key={company._id}
+                    company={company}
+                    selected={selectedUserCompany}
+                    onCancelSelection={() => {
+                      setSelectedUserCompany(null);
+                      updateOrder("companyData", fillCompanyData({}));
+                    }}
+                    onSelect={(company) => {
+                      updateOrder("companyData", fillCompanyData(company));
+                      setSelectedUserCompany(company._id); // для визуальной подсветки
+                    }}
+                  />
+                ))}
+              </>
+            )}
+            
             <h3>Данные компании</h3>
             <Input
               placeholder="Название компании"
@@ -249,26 +272,6 @@ export default function Step2({
                   : ""
               }
             />
-            {productStore.userCompanies.length > 0 && (
-              <>
-              <h2>Мои компании</h2>
-                {productStore.userCompanies.map((company) => (
-                  <OfferUserCompany
-                    key={company._id}
-                    company={company}
-                    selected={selectedUserCompany}
-                    onCancelSelection={() => {
-                      setSelectedUserCompany(null);
-                      updateOrder("companyData", fillCompanyData({}));
-                    }}
-                    onSelect={(company) => {
-                      updateOrder("companyData", fillCompanyData(company));
-                      setSelectedUserCompany(company._id); // для визуальной подсветки
-                    }}
-                  />
-                ))}
-              </>
-            )}
             {!selectedUserCompany && (
               <label style={{ marginTop: "0.5rem" }}>
               <input

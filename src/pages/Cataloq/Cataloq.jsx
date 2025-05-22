@@ -50,7 +50,7 @@ const Cataloq = () => {
         </div>
       )}
 
-      {categories.length > 2 && (
+      {categories.length >= 2 && (
         <div
           style={{ width: "100%", justifyContent: "center", display: "flex" }}
         >

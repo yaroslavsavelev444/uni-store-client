@@ -21,17 +21,17 @@ export default function ProductReviewItem({
       <StarRating rating={rating} />
 
       <div className="review-section">
-        <div className="review-label">Плюсы:</div>
-        <div className="review-text">{pros || "-"}</div>
+        <div className="review-label"><p>Плюсы:</p></div>
+        <div className="review-text"><p>{pros || "-"}</p></div>
       </div>
 
       <div className="review-section">
-        <div className="review-label">Минусы:</div>
-        <div className="review-text">{cons || "-"}</div>
+        <div className="review-label"><p>Минусы:</p></div>
+        <div className="review-text"><p>{cons || "-"}</p></div>
       </div>
 
       <div className="review-section">
-        <div className="review-label">Комментарий:</div>
+        <div className="review-label"><p>Комментарий:</p></div>
         <div className="review-text">{comment || "-"} </div>
       </div>
       {review.status !== "active" && <h3>Статус: {reviewStatus.find((item) => item.value === review.status).label}</h3>}

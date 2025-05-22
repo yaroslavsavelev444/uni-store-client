@@ -7,9 +7,6 @@ import "./CommentsShell.css";
 import Loader from "../Loader/Loader";
 
 const CommentsShell = ({ showStatuses }) => {
-  useEffect(() => {
-    productStore.fetchOrgReviews();
-  }, []);
 
   return (
     <div className="comments-shell">

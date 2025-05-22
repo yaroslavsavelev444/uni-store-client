@@ -3,13 +3,12 @@ import { FaRegCommentDots } from "react-icons/fa";
 import "./FloatingMessageButton.css";
 import Form from "../Form/Form";
 
-const FloatingMessageButton = ({ setIsScrollTopVisible }) => {
+const FloatingMessageButton = () => {
   const [isFormVisible, setIsFormVisible] = useState(false); // Стейт для отображения формы
 
   // Показать/скрыть форму
   const toggleForm = () => {
     setIsFormVisible((prevState) => !prevState);
-    setIsScrollTopVisible((prevState) => !prevState);
   };
 
   // Закрыть форму, если кликнули вне её
@@ -19,10 +18,8 @@ const FloatingMessageButton = ({ setIsScrollTopVisible }) => {
       !e.target.closest(".floating-message-button")
     ) {
       setIsFormVisible(false);
-      setIsScrollTopVisible(true); // ← вернуть кнопку
     }
   };
-
 
   // Обработчик кликов вне формы
   useEffect(() => {
@@ -32,7 +29,6 @@ const FloatingMessageButton = ({ setIsScrollTopVisible }) => {
     };
   }, []);
 
-
   return (
     <>
       {/* Иконка сообщения */}
@@ -41,9 +37,7 @@ const FloatingMessageButton = ({ setIsScrollTopVisible }) => {
       </div>
 
       {/* Мини-форма рядом с иконкой */}
-      {isFormVisible && (
-       <Form onClose={toggleForm} />
-      )}
+      {isFormVisible && <Form onClose={toggleForm} />}
     </>
   );
 };

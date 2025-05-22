@@ -173,10 +173,6 @@ export default class Store {
       // }
     } catch (e) {
       error(e.response?.data?.message);
-      showToast({
-        text1: e.response?.data?.message,
-        type: "error",
-      });
     } finally {
       this.setLoading(false);
     }

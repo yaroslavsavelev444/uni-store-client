@@ -27,9 +27,11 @@ export default class userService {
     });
   }
 
-  static async logout() {
-    return $api.post("auth/logout");
-  }
+ static async logout() {
+  return $api.post("auth/logout", {}, {
+    withCredentials: true,
+  });
+}
 
   static async resendActivation(email) {
     return $api.post("auth/resendActivationLink", { email });

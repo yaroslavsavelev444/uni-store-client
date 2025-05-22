@@ -14,24 +14,34 @@ const PromoSection = ({ page = "home" }) => {
   const [editableBlock, setEditableBlock] = useState(null);
 
   useEffect(() => {
-    productStore.getPromoBlocks(page); // Просто загружаем
+    // Обернул в try/catch на всякий случай
+    try {
+      productStore.getPromoBlocks(page);
+    } catch (error) {
+      console.error("Error loading promo blocks:", error);
+    }
   }, [page]);
 
-  const blocks = productStore.promoBlocks || [];
+  const blocks = Array.isArray(productStore.promoBlocks)
+    ? productStore.promoBlocks
+    : [];
+
+  // Проверка ролей и авторизации
+  const canEdit = store?.user?.role !== "user" && store?.isAuth;
 
   return (
     <div className="promo-section">
       {productStore.isLoading ? (
         <Loader size={40} />
-      ) : blocks.length !== 0 ? (
+      ) : blocks.length > 0 ? (
         <div className="plus-wrapper">
           <PageHeader title="Может быть интересно" />
           {blocks.map((block) => (
             <PromoBlock
-              key={block._id}
+              key={block._id || block.id || Math.random()}
               {...block}
               onClick={() => {
-                if (store.user.role !== "user" && store.isAuth) {
+                if (canEdit) {
                   setEditableBlock(block);
                   setIsOpen(true);
                 }
@@ -41,33 +51,40 @@ const PromoSection = ({ page = "home" }) => {
         </div>
       ) : (
         <>
-          {store.user.role !== "user" && store.isAuth && (
+          {canEdit && (
             <div className="plus-wrapper">
-              <Plus className="plus-icon" onClick={() => setIsOpen(true)} />
+              <Plus
+                className="plus-icon"
+                onClick={() => setIsOpen(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setIsOpen(true);
+                }}
+                aria-label="Добавить промо блок"
+              />
             </div>
           )}
         </>
       )}
 
-      <>
-        {store.user.role !== "user" && store.isAuth && (
-          <Modal
-            isOpen={isOpen}
-            onClose={() => {
+      {canEdit && (
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false);
+            setEditableBlock(null);
+          }}
+        >
+          <PromoBlockForm
+            onSuccess={() => {
               setIsOpen(false);
               setEditableBlock(null);
             }}
-          >
-            <PromoBlockForm
-              onSuccess={() => {
-                setIsOpen(false);
-                setEditableBlock(null);
-              }}
-              initialData={editableBlock}
-            />
-          </Modal>
-        )}
-      </>
+            initialData={editableBlock}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

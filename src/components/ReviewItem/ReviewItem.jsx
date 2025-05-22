@@ -34,7 +34,7 @@ export default function ReviewItem({
             )}
           </span>
         </div>
-        {theme && <div className="review-theme">Тема: {commentThemeTranslate[theme]}</div>}
+        {theme && <div className="review-theme"><p style={{color: 'aliceblue', margin: 0}}>Тема: {commentThemeTranslate[theme]}</p></div>}
         <div className="review-text">{comment}</div>
       </div>
       {isEditable && status === "pending" && (

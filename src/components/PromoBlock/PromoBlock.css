@@ -28,12 +28,13 @@
     flex-direction: row-reverse;
   }
   
-  .promo-image img {
+  .promo-image img,  .promo-image video {
     max-width: 100%;
     height: auto;
     border-radius: 10px;
-    width: 300px;
+    width: 350px;
   }
+
   
   .promo-content {
     text-align: left;

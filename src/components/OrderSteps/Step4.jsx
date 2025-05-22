@@ -84,7 +84,8 @@ export default function Step4({
   order,
   updateOrder,
   onBack,
-  prices,
+  totalPrice,
+  oldTotal,
   handleOrder,
 }) {
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -253,28 +254,28 @@ export default function Step4({
 
         <div style={{ marginTop: 30, width: "100%", textAlign: "right" }}>
           <h3>ИТОГО:</h3>
-          {prices[0] !== prices[1] ? (
+          {oldTotal !== totalPrice ? (
             <>
               <div>
                 <span style={{ fontWeight: "bold", fontSize: 18 }}>
                   Со скидкой:
                 </span>
                 <span style={{ fontSize: 18, color: "#28a745" }}>
-                  {formatPrice(prices[0])}
+                  {" "}{formatPrice(totalPrice)}
                 </span>
               </div>
               <div>
                 <span
                   style={{ fontWeight: "bold", fontSize: 14, color: "#777" }}
                 >
-                  Без скидки: {formatPrice(prices[1])}
+                  Без скидки: {formatPrice(oldTotal)}
                 </span>
               </div>
             </>
           ) : (
             <div>
               <span style={{ fontWeight: "bold", fontSize: 18 }}>
-                {formatPrice(prices[0])}
+                {formatPrice(totalPrice)}
               </span>
             </div>
           )}

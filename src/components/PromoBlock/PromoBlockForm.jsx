@@ -13,7 +13,6 @@ const PromoBlockForm = ({ onSuccess, initialData = null }) => {
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
-    productId: "",
     link: "",
     reversed: false,
     page: "home",
@@ -25,7 +24,6 @@ const PromoBlockForm = ({ onSuccess, initialData = null }) => {
       setForm({
         title: initialData.title || "",
         subtitle: initialData.subtitle || "",
-        productId: initialData.productId || "",
         link: initialData.link || "",
         reversed: initialData.reversed || false,
         page: initialData.page || "home",
@@ -35,7 +33,7 @@ const PromoBlockForm = ({ onSuccess, initialData = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.link || !form.page ) return showToast({ text1: "Заполните данные", type: "error" });
+    if (!form.title.trim()) return showToast({ text1: "Заполните данные", type: "error" });
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       formData.append(key, value);
@@ -70,14 +68,6 @@ const PromoBlockForm = ({ onSuccess, initialData = null }) => {
         onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
         value={form.subtitle}
         label={form.subtitle ? "Подзаголовок" : ""}
-        style={{ width: "100%" }}
-      />
-      <Input
-        type="text"
-        placeholder="Product ID"
-        onChange={(e) => setForm({ ...form, productId: e.target.value })}
-        value={form.productId}
-        label={form.productId ? "Product ID" : ""}
         style={{ width: "100%" }}
       />
       <Input

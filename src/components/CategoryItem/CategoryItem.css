@@ -33,9 +33,18 @@
   font-size: 14px;
   color: #555;
   margin-top: 8px;
+
   display: -webkit-box;
-  -webkit-line-clamp: 2;     /* Ограничение в 2 строки */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+
   overflow: hidden;
   text-overflow: ellipsis;
+
+  /* ВАЖНО: задать минимальную высоту в 2 строки */
+  line-height: 1.4em;                 /* Высота одной строки */
+  min-height: calc(1.4em * 2);        /* Держим 2 строки */
+
+  /* Альтернатива, если line-height нестандартный */
+  /* min-height: 2.8em; */
 }

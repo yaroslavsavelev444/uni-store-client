@@ -1,6 +1,6 @@
 .scroll-to-top-wrapper {
     position: fixed;
-    bottom: 20px;
+    bottom: 100px;
     right: 20px;
     z-index: 999;
     opacity: 0;

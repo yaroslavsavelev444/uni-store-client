@@ -24,7 +24,7 @@ const OrderModal = () => {
         alignItems: "center",
       }}
     >
-      <h2>Мои отзывы</h2>
+      <h2>Мои заказы</h2>
       {productStore.orders.length === 0 ? (
         <Empty text="Отзывы отсутствуют" />
       ) : (

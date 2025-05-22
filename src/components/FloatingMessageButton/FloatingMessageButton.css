@@ -1,7 +1,7 @@
 /* Позиционирование иконки в правом нижнем углу */
 .floating-message-button {
     position: fixed;
-    bottom: 100px;
+    bottom: 20px;
     right: 20px;
     background-color: #333;
     border-radius: 50%;
@@ -46,6 +46,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
   }
   
   .close-button {
@@ -108,4 +110,11 @@
   /* При клике вне формы скрываем её */
   body {
     overflow-x: hidden;
+  }
+  .form-layout{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }

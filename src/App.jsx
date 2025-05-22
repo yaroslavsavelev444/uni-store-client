@@ -10,7 +10,7 @@ import NavBar from "./components/navbar/NavBar";
 import FooterBar from "./components/FooterBar/FooterBar";
 import "./App.css";
 import { observer } from "mobx-react-lite";
-import { ToastProvider } from './providers/ToastProvider';
+import { ToastProvider } from "./providers/ToastProvider";
 import EmailConfirmationOverlay from "./components/EmailConfirmationOverlay/EmailConfirmationOverlay";
 import { Context, productStore } from "./main";
 import Home from "./pages/Home/Home";
@@ -69,12 +69,11 @@ const AppContent = observer(() => {
   }, []);
 
   if (!isLoaded) {
-    return (
-        <Loader />
-    );
+    return <Loader />;
   }
 
   const hideFooter = [
+    "/cart",
     "/reset-password",
     "/register",
     "/login",
@@ -84,7 +83,7 @@ const AppContent = observer(() => {
   ].some((path) => location.pathname.startsWith(path));
 
   const isSpecialPage = [
-    '/', 
+    "/",
     "/reset-password",
     "/login",
     "/register",
@@ -92,11 +91,15 @@ const AppContent = observer(() => {
 
   return (
     <div className="App">
-      <ZeroMenu
-        time={productStore?.company?.workTime}
-        address={productStore?.company?.address}
-        phone={productStore?.company?.phone}
-      />
+      {productStore?.company?.workTime &&
+        productStore?.company?.address &&
+        productStore?.company?.phone && (
+          <ZeroMenu
+            time={productStore?.company?.workTime}
+            address={productStore?.company?.address}
+            phone={productStore?.company?.phone}
+          />
+        )}
       <ThemeProvider>
         <ScrollToTop />
         <ToastProvider>
@@ -119,7 +122,7 @@ const Content = observer(({ isSpecialPage }) => {
   return (
     <div className={isSpecialPage ? "" : "content"}>
       {store.isLoading ? (
-       <Loader  />
+        <Loader />
       ) : (
         <Routes>
           {/* Обычные маршруты */}

@@ -38,19 +38,19 @@ export default function LeaveReview({ productId }) {
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%"}}>
             <h3>Оставьте отзыв о товаре</h3>
 
-            <label>Плюсы:</label>
+            <p>Плюсы:</p>
             <Input value={reviewData.pros} onChange={(e) => setReviewData({...reviewData, pros: e.target.value})} style={{ width: "100%" }} />
 
-            <label>Минусы:</label>
+            <p>Минусы:</p>
             <Input value={reviewData.cons} onChange={(e) => setReviewData({...reviewData, cons: e.target.value})} style={{ width: "100%" }} />
 
-            <label>Комментарий:</label>
+            <p>Комментарий:</p>
             <Input
               value={reviewData.comment}
               onChange={(e) => setReviewData({...reviewData, comment: e.target.value})} style={{ width: "100%" }}
             />
 
-            <label>Оценка:</label>
+            <p>Оценка:</p>
             <div className="stars">
               {[1, 2, 3, 4, 5].map((star) => (
                 <FontAwesomeIcon

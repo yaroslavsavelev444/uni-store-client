@@ -167,7 +167,8 @@ const Cart = () => {
           {step === 4 && (
             <Step4
               cart={cart}
-              prices={[totalPrice, oldTotal]}
+              totalPrice={totalPrice}
+              oldTotal={oldTotal}
               order={order}
               updateOrder={updateOrder}
               onBack={() => setStep(step - 1)}

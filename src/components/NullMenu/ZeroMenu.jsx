@@ -1,10 +1,7 @@
-// components/ZeroMenu.jsx
-import React from 'react';
 import PropTypes from 'prop-types';
-import './ZeroMenu.css'; // стили подключим отдельно
-import { productStore } from '../../main';
+import './ZeroMenu.css';
 
-const ZeroMenu = ({ time , address, phone}) => {
+const ZeroMenu = ({ time  , address, phone}) => {
   return (
     <div className="zero-menu">
       <div className="zero-container">
@@ -18,6 +15,12 @@ const ZeroMenu = ({ time , address, phone}) => {
       </div>
     </div>
   );
+};
+
+ZeroMenu.propTypes = {
+  time: PropTypes.string,
+  address: PropTypes.string,
+  phone: PropTypes.string,
 };
 
 export default ZeroMenu;

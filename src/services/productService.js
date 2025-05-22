@@ -21,10 +21,10 @@ export default class productService {
     return $api.get("/categories/getCategories");
   }
 
-  static async getProducts(categoryId, selectedValue, showOnMainPage) {
+  static async getProducts(categoryId, selectedValue, showOnMainPage, isAdmin) {
     log("getProducts", categoryId, selectedValue, showOnMainPage);
     return $api.get("/products/getProducts", {
-      params: { categoryId, selectedValue, showOnMainPage },
+      params: { categoryId, selectedValue, showOnMainPage, isAdmin },
     });
   }
   static async getUserReviews() {
@@ -38,7 +38,6 @@ export default class productService {
     return $api.get(`/products/getProductDetails`, { params: { id } });
   }
   static async sendContactForm(data) {
-    log("sendContactForm", data);
     return $api.post("/contacts/sendContactForm", data);
   }
   static async fetchOrgReviews() {

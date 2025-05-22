@@ -29,7 +29,7 @@
   height: 100%;
   max-width: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0 0 12px 12px;
 }
 
 .upload-form {

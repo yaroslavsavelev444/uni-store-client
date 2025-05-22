@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const FAQCard = ({title, description }) => {
   const navigate  = useNavigate();
   return (
-    <div className=" block-background info-card">
+    <div className="block-background info-card">
       <div className="info-content">
         <h3>{title}</h3>
         <p>{description}</p>

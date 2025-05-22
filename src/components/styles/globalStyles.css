@@ -77,6 +77,7 @@
 
 .btn-vert-wrapper{
     display: flex;
+    gap: 10px;
     flex-direction: column;
     justify-content: center;
     align-items: center;

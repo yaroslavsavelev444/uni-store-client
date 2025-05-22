@@ -160,10 +160,10 @@ export default function OrderCard({ order, role }) {
       </div>
 
       <div className="order-total">
-        <h3>
+        <h3 style={{  color: "aliceblue"}}>
           Сумма без скидки: <strong>{formatPrice(order.priceDetails.totalPrice) || "?"}</strong>
         </h3>
-        <h3>
+       <h3 style={{color: "aliceblue"}}>
           Сумма со скидкой:{" "}
           <strong>{formatPrice(order.priceDetails.totalPriceWithDiscount) || "?"}</strong>
         </h3>

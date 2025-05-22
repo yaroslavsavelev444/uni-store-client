@@ -82,7 +82,7 @@ const ContactFormModal = ({ isLoggedIn = false }) => {
   };
 
   return (
-    <div style={{display:"flex", justifyContent:"center"}}>
+    <div style={{display:"flex", justifyContent:"center", width:"100%"}}>
       <ContactSection
         setModalVisible={setModalVisible}
         phone={productStore?.company?.phone}

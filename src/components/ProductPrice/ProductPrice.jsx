@@ -9,9 +9,9 @@ const ProductPrice = ({ price, discountPercentage = 0, discountFromQuantity = 0 
       <span className="price-individual">
         {formatPrice(price)}
       </span>
-      {discountPercentage > 0 && (
+      {discountPercentage > 0 && discountFromQuantity > 0 && (
         <span className="discount">
-          −{formatPrice(discountPercentage)}% от {discountFromQuantity} шт.
+          −{discountPercentage}% от {discountFromQuantity} шт.
         </span>
       )}
     </div>

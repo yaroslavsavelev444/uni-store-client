@@ -14,15 +14,15 @@ const MainMaterialList = () => {
   const [editingMaterial, setEditingMaterial] = useState(null);
 
   useEffect(() => {
-  const fetchMaterials = async () => {
-    try {
-      await productStore.getMainMaterials();
-    } catch (e) {
-      showToast({ text1: `Ошибка загрузки материалов ${e}`, type: "error" });
-    }
-  };
-  fetchMaterials();
-}, []);
+    const fetchMaterials = async () => {
+      try {
+        await productStore.getMainMaterials();
+      } catch (e) {
+        showToast({ text1: `Ошибка загрузки материалов ${e}`, type: "error" });
+      }
+    };
+    fetchMaterials();
+  }, []);
 
   const handleAddClick = () => {
     setEditingMaterial(null);
@@ -44,22 +44,25 @@ const MainMaterialList = () => {
 
   const isAdmin = store.user?.role !== "user";
 
-  if(productStore.isLoading) {
+  if (productStore.isLoading) {
     return (
-       <div className="main-material-wrapper">
+      <div className="main-material-wrapper">
         <Loader />
-       </div>
+      </div>
     );
   }
   return (
     <div className="main-material-wrapper">
-      {isAdmin && store.isAuth && !isFormOpen && productStore.mainMaterials.length === 0 && (
-        <div className="plus-wrapper">
-          <Button onClick={handleAddClick} className="add-material-btn">
-            + Добавить материал
-          </Button>
-        </div>
-      )}
+      {isAdmin &&
+        store.isAuth &&
+        !isFormOpen &&
+        productStore.mainMaterials.length === 0 && (
+          <div className="plus-wrapper">
+            <Button onClick={handleAddClick} className="add-material-btn">
+              + Добавить материал
+            </Button>
+          </div>
+        )}
 
       {isFormOpen && (
         <Modal onClose={() => setIsFormOpen(false)} isOpen={isFormOpen}>
@@ -69,8 +72,9 @@ const MainMaterialList = () => {
           />
         </Modal>
       )}
-
-      <MainMaterialDisplay handleEditClick={handleEditClick} />
+      {productStore.mainMaterials.length > 0 && (
+        <MainMaterialDisplay handleEditClick={handleEditClick} />
+      )}
     </div>
   );
 };

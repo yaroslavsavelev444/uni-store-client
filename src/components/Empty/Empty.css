@@ -29,3 +29,21 @@
   [data-theme="light"] .empty-text {
     color: black;
   }
+  @media screen and (max-width: 768px) {
+    .empty-state{
+        flex-direction: column;
+    }
+
+    .empty-icon{
+        font-size: 20px;
+    }
+     .empty-text {
+    margin-top: 10px !important;
+    font-size: 15px !important;
+  }
+
+  .empty-face{
+    font-size: 25px !important; 
+  }
+    
+  }

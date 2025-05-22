@@ -19,6 +19,9 @@ const UserDataModal = function () {
     productStore.deleteUserCompany(id);
   };
 
+  log('productStore.userCompanies', productStore.userCompanies)
+  
+
   return (
     <div className="modal-wrapper">
       <h2>Мои данные</h2>
